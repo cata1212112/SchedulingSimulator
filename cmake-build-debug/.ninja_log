@@ -1,0 +1,24 @@
+# ninja log v5
+4	95	7307589752239217	Licenta_autogen/timestamp	20ae2013ef3a375f
+4	95	7307589752239217	C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/mocs_compilation.cpp	20ae2013ef3a375f
+325	1268	7307570006698565	CMakeFiles/Licenta.dir/Licenta_autogen/mocs_compilation.cpp.obj	32c3fe3bb469ca1
+2	394	7307593513317786	build.ninja	35416fc806c5a974
+4	95	7307589752239217	Licenta_autogen/mocs_compilation.cpp	20ae2013ef3a375f
+4	95	7307589752239217	C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/timestamp	20ae2013ef3a375f
+328	1298	7307570007004369	CMakeFiles/Licenta.dir/main.cpp.obj	9763f5be4cfabe15
+1036	1242	7307589774740965	Licenta.exe	4007634a2f22c39b
+4	1035	7307589773729654	CMakeFiles/Licenta.dir/Pages/MainWindow/mainwindow.cpp.obj	dc0347743da0c4b7
+351	1414	7307566330940432	CMakeFiles/Licenta.dir/Pages/SingleCore/singlecore.cpp.obj	1e707ccd81140a9b
+5	104	7307593526606434	Licenta_autogen/timestamp	20ae2013ef3a375f
+5	104	7307593526606434	Licenta_autogen/mocs_compilation.cpp	20ae2013ef3a375f
+5	104	7307593526606434	C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/timestamp	20ae2013ef3a375f
+5	104	7307593526606434	C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/mocs_compilation.cpp	20ae2013ef3a375f
+120	152	7307593527092578	CMakeFiles/Licenta.dir/Scheduler/FIFO/FifoCppWrapper.cpp.obj	4a6db3afdbebcaf9
+118	152	7307593527092578	CMakeFiles/Licenta.dir/Scheduler/FIFO/FIFO.c.obj	11945218cf708d6
+116	259	7307593528173416	CMakeFiles/Licenta.dir/Process/Process.cpp.obj	2c0b0ebf18dc7069
+111	328	7307593528864635	CMakeFiles/Licenta.dir/DiscreteEventSimulator/Event/Event.cpp.obj	da710e8d12089693
+113	415	7307593529736086	CMakeFiles/Licenta.dir/Utils/Random.cpp.obj	82cd45748644fc2a
+109	694	7307593532507862	CMakeFiles/Licenta.dir/DiscreteEventSimulator/DES.cpp.obj	d6d89df3f1f2d0ed
+694	922	7307593533747576	Licenta.exe	b768a8e737758ffb
+4	1022	7307593581532845	CMakeFiles/Licenta.dir/Pages/MainWindow/mainwindow.cpp.obj	dc0347743da0c4b7
+1022	1241	7307593582673006	Licenta.exe	b768a8e737758ffb
