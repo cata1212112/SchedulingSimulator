@@ -23,7 +23,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -113,6 +113,7 @@ QPushButton:hover {
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="RunSimulation"/>
       <widget class="QWidget" name="SingleCore"/>
      </widget>
     </item>

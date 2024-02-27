@@ -573,8 +573,10 @@ Licenta_autogen/timestamp: \
   C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FifoCppWrapper.cpp \
   C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FifoCppWrapper.h \
+  C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Random.cpp \
   C:/Users/Cata/Desktop/Licenta/Utils/Random.h \
+  C:/Users/Cata/Desktop/Licenta/Utils/Style.h \
   CMakeFiles/3.27.8/CMakeCCompiler.cmake \
   CMakeFiles/3.27.8/CMakeCXXCompiler.cmake \
   CMakeFiles/3.27.8/CMakeRCCompiler.cmake \

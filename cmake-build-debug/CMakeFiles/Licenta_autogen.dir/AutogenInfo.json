@@ -299,9 +299,21 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h",
+			"MU",
+			"3AKZUBQRRA/moc_ImplementedAlgorithms.cpp",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Utils/Random.h",
 			"MU",
 			"3AKZUBQRRA/moc_Random.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/Style.h",
+			"MU",
+			"3AKZUBQRRA/moc_Style.cpp",
 			null
 		]
 	],

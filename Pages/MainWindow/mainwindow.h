@@ -6,7 +6,8 @@
 #define LICENTA_MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include "../../Utils/ImplementedAlgorithms.h"
+#include "../../Utils/Style.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,6 +23,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    std::string selectedAlgorithm;
 
     void handleSingleCoreButton();
 };

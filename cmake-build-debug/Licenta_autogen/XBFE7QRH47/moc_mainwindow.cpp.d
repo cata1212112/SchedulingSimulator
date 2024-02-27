@@ -354,4 +354,6 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgets-config.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgetsexports.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
-  C:/Qt/6.7.0/mingw_64/include/QtWidgets/qwidget.h
+  C:/Qt/6.7.0/mingw_64/include/QtWidgets/qwidget.h \
+  C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h \
+  C:/Users/Cata/Desktop/Licenta/Utils/Style.h

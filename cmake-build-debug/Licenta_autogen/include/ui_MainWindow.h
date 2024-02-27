@@ -30,6 +30,7 @@ public:
     QPushButton *singlecore;
     QPushButton *multicore;
     QPushButton *realtime;
+    QWidget *RunSimulation;
     QWidget *SingleCore;
 
     void setupUi(QMainWindow *MainWindow)
@@ -104,6 +105,9 @@ public:
         horizontalLayout_2->addWidget(realtime);
 
         stackedWidget->addWidget(StartPage);
+        RunSimulation = new QWidget();
+        RunSimulation->setObjectName("RunSimulation");
+        stackedWidget->addWidget(RunSimulation);
         SingleCore = new QWidget();
         SingleCore->setObjectName("SingleCore");
         stackedWidget->addWidget(SingleCore);
@@ -114,7 +118,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

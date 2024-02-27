@@ -358,6 +358,8 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgetsglobal.h
  mdp:C:/Qt/6.7.0/mingw_64/include/QtWidgets/qwidget.h
  mdp:C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Utils/Style.h
  mdp:C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/moc_predefs.h
 C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.cpp
  uic:ui_MainWindow.h
@@ -732,3 +734,5 @@ C:/Users/Cata/Desktop/Licenta/Process/Process.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.c
 C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FifoCppWrapper.cpp
 C:/Users/Cata/Desktop/Licenta/Utils/Random.cpp
+C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h
+C:/Users/Cata/Desktop/Licenta/Utils/Style.h

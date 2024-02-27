@@ -23,7 +23,9 @@ add_executable(Licenta main.cpp
         Process/Process.cpp
         Scheduler/FIFO/FIFO.c
         Scheduler/FIFO/FifoCppWrapper.cpp
-        Utils/Random.cpp)
+        Utils/Random.cpp
+        Utils/ImplementedAlgorithms.h
+        Utils/Style.h)
 target_link_libraries(Licenta
         Qt::Core
         Qt::Gui
