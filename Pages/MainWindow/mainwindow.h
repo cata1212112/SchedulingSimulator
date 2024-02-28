@@ -8,6 +8,8 @@
 #include <QMainWindow>
 #include "../../Utils/ImplementedAlgorithms.h"
 #include "../../Utils/Style.h"
+#include "../../DiscreteEventSimulator/DES.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,6 +28,8 @@ private:
     std::string selectedAlgorithm;
 
     void handleSingleCoreButton();
+
+    void gotoRunning(DES *des);
 };
 
 

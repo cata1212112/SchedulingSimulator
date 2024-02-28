@@ -22,16 +22,24 @@ using namespace std;
 
 class DES {
 private:
-    priority_queue<Event> events;
-
-    static int getMultiplier(bool flag) {return 10 ? flag : 5;}
+    static int getMultiplier(bool flag) {
+        if (flag) {
+            return 10;
+        } else {
+            return 5;
+        }
+    }
 
 public:
-    char* generateInputData(int numProcesses, int maximumTime);
+    priority_queue<Event> *events;
 
-    unordered_map<string, vector<Event>> readInputDataFromFile(const string& filename);
+    DES() {
+        events = new priority_queue<Event>();
+    }
 
-    unordered_map<string, vector<Event>> readInputDataFromJSON(const string& json);
+    string generateInputData(int numProcesses, int maximumTime);
+
+    void readInputDataFromFile(const string& filename);
 
     void startSimulation(SchedulingAlgorithm &schedAlgo, int numCPUS);
 };

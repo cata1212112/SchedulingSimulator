@@ -21,9 +21,25 @@ private:
     int id;
 
 public:
+
+    void setCpUburst(const vector<int> &cpUburst);
+
+    void setIOburst(const vector<int> &iOburst);
+
+    void setPriority(int priority);
+
+    void setId(int id);
+
+    Process();
+
     Process(const vector<int> &cpUburst, const vector<int> &iOburst, int priority);
 
-    Process(const Process &other);
+    Process(const Process& other) :
+            CPUburst(other.CPUburst),
+            IOburst(other.IOburst),
+            currentBurst(other.currentBurst),
+            priority(other.priority),
+            id(ID++) {}
 
     const vector<int> &getCpUburst() const;
 

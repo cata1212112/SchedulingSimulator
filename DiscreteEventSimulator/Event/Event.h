@@ -24,11 +24,17 @@ private:
     int time;
     Process process;
 public:
+    Event();
+
     bool operator<(const Event &other) const {
         return time < other.time;
     }
 
     Event(eventType type, int time, const Process& process) : type(type), time(time), process(process) {}
+
+    string toString();
+
+    static Event fromStrings(const string &firstLine, const string &secondLine, const string &thirdLine);
 };
 
 
