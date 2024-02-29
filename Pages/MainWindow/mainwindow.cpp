@@ -4,7 +4,6 @@
 
 // You may need to build the project (run Qt uic code generator) to get "ui_MainWindow.h" resolved
 
-#include <iostream>
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
 #include <string>
@@ -52,7 +51,7 @@ void MainWindow::handleSingleCoreButton() {
                 ui->proceseselectate->setText(QString::fromStdString(to_string(value)));
             });
 
-            DES *des = new DES();
+            DES *des = new DES(algorithm);
 
             connect(ui->generate, &QPushButton::clicked, this, [=]() {
                 string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt());
@@ -85,8 +84,21 @@ void MainWindow::handleSingleCoreButton() {
                     }
                 });
 
+                auto *button1 = new QPushButton(QString::fromStdString("Run Simulation"));
+                button1->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                button1->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+                QFont font1;
+                font1.setPointSize(12);
+                button1->setFont(font1);
+
+                connect(button1, &QPushButton::clicked, this, [=]() {
+                    gotoRunning(des);
+                });
+
 
                 ui->InputData->layout()->addWidget(button);
+                ui->InputData->layout()->addWidget(button1);
             });
 
             connect(ui->usefileasinput, &QPushButton::clicked, this, [=]() {
@@ -113,12 +125,21 @@ void MainWindow::gotoRunning(DES *des) {
     layout->setSpacing(0);
     ui->running->setLayout(layout);
 
-    auto *movie = new QMovie("../../Assets/loading.gif");
-    auto *processLabel = new QLabel(this);
+    Metrics metrics = des->startSimulation(1);
 
-    processLabel->setMovie(movie);
-    movie->start();
+    std::string source_dir = __FILE__;
+    source_dir = source_dir.substr(0, source_dir.find_last_of("\\/") + 1);
 
-    ui->running->layout()->addWidget(processLabel);
+    std::string python_executable = "../../Python/plotting/Scripts/python.exe";
+    std::string python_script = "../../Python/plotting/gantt_chart.py";
 
+    // Construct the command
+    std::string command = source_dir + python_executable + " " + source_dir + python_script + " \"" + metrics.getGanttData() + "\"";
+    system(command.c_str());
+
+    QPixmap pixmap("gantt_chart.png");
+    auto *imageLabel = new QLabel;
+    imageLabel->setPixmap(pixmap);
+    imageLabel->setAlignment(Qt::AlignCenter);
+    ui->running->layout()->addWidget(imageLabel);
 }

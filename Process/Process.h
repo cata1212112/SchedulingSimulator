@@ -19,6 +19,9 @@ private:
     int currentBurst;
     int priority;
     int id;
+    int remainingBurst = 0;
+
+    int flag = 0;
 
 public:
 
@@ -30,6 +33,8 @@ public:
 
     void setId(int id);
 
+    int getRemainingBurst() const;
+
     Process();
 
     Process(const vector<int> &cpUburst, const vector<int> &iOburst, int priority);
@@ -39,7 +44,10 @@ public:
             IOburst(other.IOburst),
             currentBurst(other.currentBurst),
             priority(other.priority),
-            id(ID++) {}
+            id(other.id),
+            remainingBurst(other.remainingBurst),
+            flag(other.flag)
+            {}
 
     const vector<int> &getCpUburst() const;
 
@@ -48,6 +56,14 @@ public:
     int getPriority() const;
 
     int getId() const;
+
+    Process* consumeBurst();
+
+    bool finished() {
+        return currentBurst >= CPUburst.size();
+    }
+
+
 };
 
 

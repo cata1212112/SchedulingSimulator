@@ -10,6 +10,7 @@ Process::Process(const vector<int> &cpUburst, const vector<int> &iOburst, int pr
         : CPUburst(cpUburst), IOburst(iOburst), priority(priority) {
     id = ID++;
     currentBurst = 0;
+    remainingBurst = cpUburst[0];
 }
 
 const vector<int> &Process::getCpUburst() const {
@@ -46,4 +47,19 @@ void Process::setPriority(int priority) {
 
 void Process::setId(int id) {
     Process::id = id;
+}
+
+int Process::getRemainingBurst() const {
+    return remainingBurst;
+}
+
+Process *Process::consumeBurst() {
+    if (!flag) {
+        remainingBurst = IOburst[currentBurst++];
+        flag = !flag;
+    } else {
+        remainingBurst = CPUburst[currentBurst];
+        flag = !flag;
+    }
+    return this;
 }

@@ -68,3 +68,15 @@ Event Event::fromStrings(const string& firstLine, const string &secondLine, cons
 }
 
 Event::Event() {}
+
+eventType Event::getType() const {
+    return type;
+}
+
+int Event::getTime() const {
+    return time;
+}
+
+const Process &Event::getProcess() const {
+    return process;
+}

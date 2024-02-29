@@ -11,7 +11,7 @@ string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) 
     string inputData;
     for (int i=0; i<numProcesses; i++) {
         int arrival = Random::randomInteger(maximumTime);
-        int numBursts = Random::randomInteger(MAXIMUMNUMCPUBURSTS);
+        int numBursts = Random::randomInteger(MAXIMUMNUMCPUBURSTS) + 1;
         bool processType = Random::randomBit();
         int priority = Random::randomInteger(10);
 
@@ -34,7 +34,7 @@ string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) 
 
         events->push(event);
     }
-
+    input = inputData;
     return inputData;
 }
 
@@ -52,6 +52,38 @@ void DES::readInputDataFromFile(const string& filename) {
     in.close();
 }
 
-void DES::startSimulation(SchedulingAlgorithm &schedAlgo, int numCPUS) {
-//    char* json = generateInputData(numCPUS);
+Metrics DES::startSimulation(int numCPUS) {
+    SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algorithm);
+    Metrics stats;
+    int currentTime = 0;
+    while (!events->empty()) {
+        Event e = events->top();
+        events->pop();
+
+        currentTime = e.getTime();
+
+        vector<Event> eventsGenerated;
+
+        switch (e.getType()) {
+            case ARRIVAL:
+                eventsGenerated = schedAlgo.processArrived(e.getProcess(), currentTime, stats);
+                break;
+            case CPUBURSTCOMPLETE:
+                eventsGenerated = schedAlgo.processCPUComplete(e.getProcess(), currentTime, stats);
+                break;
+            case IOBURSTCOMPLETE:
+                eventsGenerated = schedAlgo.processIOComplete(e.getProcess(), currentTime, stats);
+                break;
+            case PREEMT:
+                eventsGenerated = schedAlgo.processPreempt(e.getProcess(), currentTime, stats);
+                break;
+            case TIMEREXPIRED:
+                break;
+        }
+
+        for (const auto& eventGenerated : eventsGenerated) {
+            events->push(eventGenerated);
+        }
+    }
+    return stats;
 }

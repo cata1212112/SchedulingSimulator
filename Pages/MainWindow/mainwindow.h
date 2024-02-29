@@ -6,8 +6,8 @@
 #define LICENTA_MAINWINDOW_H
 
 #include <QMainWindow>
-#include "../../Utils/ImplementedAlgorithms.h"
 #include "../../Utils/Style.h"
+#include "../../Utils/Metrics.h"
 #include "../../DiscreteEventSimulator/DES.h"
 
 

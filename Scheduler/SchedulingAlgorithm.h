@@ -5,9 +5,21 @@
 #ifndef CPUSCHED_SCHEDULINGALGORITHM_H
 #define CPUSCHED_SCHEDULINGALGORITHM_H
 
+#include "../DiscreteEventSimulator/Event/Event.h"
+#include <queue>
+#include "../Utils/WrapperPriorityQueue.h"
+#include "../Utils/Metrics.h"
+#include <vector>
+
 class SchedulingAlgorithm {
+protected:
+    Process* currentProcess = nullptr;
 public:
-    virtual void start()=0;
+    virtual std::vector<Event> processArrived(Process p, int time, Metrics &stats)=0;
+    virtual std::vector<Event> processCPUComplete(Process p, int time, Metrics &stats)=0;
+    virtual std::vector<Event> processIOComplete(Process p, int time, Metrics &stats)=0;
+    virtual std::vector<Event> processPreempt(Process p, int time, Metrics &stats)=0;
+    virtual std::vector<Event> schedule(int time, Metrics &stats)=0;
 };
 
 #endif //CPUSCHED_SCHEDULINGALGORITHM_H

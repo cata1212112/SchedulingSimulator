@@ -9,10 +9,16 @@
 
 #include <vector>
 #include <string>
+#include "../Scheduler/FIFO/FIFO.h"
 
 class ImplementedAlgorithms {
 public:
     static std::vector<std::string> getSingleCoreAlgorithms() {
         return {"First In First Out", "Shortest Job First", "Preemtive Shortest Job First"};
+    }
+
+    static SchedulingAlgorithm& getAlgorithm(const std::string &name) {
+        FIFO *fifo = new FIFO();
+        return *fifo;
     }
 };

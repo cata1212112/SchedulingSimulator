@@ -7,13 +7,12 @@
 
 #include <string>
 #include "../Utils/Random.h"
-#include "Event/Event.h"
-#include "../Process/Process.h"
+#include "../Utils/ImplementedAlgorithms.h"
 #include <queue>
 #include <unordered_map>
-#include "../Scheduler/SchedulingAlgorithm.h"
 #include <fstream>
-#include<sstream>
+#include <sstream>
+#include <utility>
 
 #define MAXIMUMNUMCPUBURSTS 20
 #define MAXIMUMARRIVAL 300
@@ -22,6 +21,10 @@ using namespace std;
 
 class DES {
 private:
+    priority_queue<Event> *events;
+    string input;
+    string algorithm;
+
     static int getMultiplier(bool flag) {
         if (flag) {
             return 10;
@@ -31,9 +34,7 @@ private:
     }
 
 public:
-    priority_queue<Event> *events;
-
-    DES() {
+    DES(string algorithm) : algorithm(std::move(algorithm)) {
         events = new priority_queue<Event>();
     }
 
@@ -41,7 +42,7 @@ public:
 
     void readInputDataFromFile(const string& filename);
 
-    void startSimulation(SchedulingAlgorithm &schedAlgo, int numCPUS);
+    Metrics startSimulation(int numCPUS);
 };
 
 

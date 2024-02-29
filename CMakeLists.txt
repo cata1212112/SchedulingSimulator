@@ -21,11 +21,14 @@ add_executable(Licenta main.cpp
         DiscreteEventSimulator/Event/Event.cpp
         DiscreteEventSimulator/DES.cpp
         Process/Process.cpp
-        Scheduler/FIFO/FIFO.c
-        Scheduler/FIFO/FifoCppWrapper.cpp
         Utils/Random.cpp
         Utils/ImplementedAlgorithms.h
-        Utils/Style.h)
+        Utils/Style.h
+        Scheduler/FIFO/FIFO.cpp
+        Scheduler/FIFO/FIFO.h
+        Utils/WrapperPriorityQueue.h
+        Utils/Metrics.h
+)
 target_link_libraries(Licenta
         Qt::Core
         Qt::Gui

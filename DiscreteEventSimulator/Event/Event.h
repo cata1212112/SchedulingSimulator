@@ -15,7 +15,8 @@ enum eventType {
     ARRIVAL,
     CPUBURSTCOMPLETE,
     IOBURSTCOMPLETE,
-    TIMEREXPIRED
+    TIMEREXPIRED,
+    PREEMT
 };
 
 class Event {
@@ -24,6 +25,12 @@ private:
     int time;
     Process process;
 public:
+    eventType getType() const;
+
+    int getTime() const;
+
+    const Process &getProcess() const;
+
     Event();
 
     bool operator<(const Event &other) const {

@@ -293,15 +293,15 @@
 			null
 		],
 		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FifoCppWrapper.h",
-			"MU",
-			"NTOCRTWZS5/moc_FifoCppWrapper.cpp",
-			null
-		],
-		[
 			"C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h",
 			"MU",
 			"3AKZUBQRRA/moc_ImplementedAlgorithms.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/Metrics.h",
+			"MU",
+			"3AKZUBQRRA/moc_Metrics.cpp",
 			null
 		],
 		[
@@ -314,6 +314,12 @@
 			"C:/Users/Cata/Desktop/Licenta/Utils/Style.h",
 			"MU",
 			"3AKZUBQRRA/moc_Style.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/WrapperPriorityQueue.h",
+			"MU",
+			"3AKZUBQRRA/moc_WrapperPriorityQueue.cpp",
 			null
 		]
 	],
@@ -403,12 +409,7 @@
 			null
 		],
 		[ "C:/Users/Cata/Desktop/Licenta/Process/Process.cpp", "MU", null ],
-		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.c", "MU", null ],
-		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FifoCppWrapper.cpp",
-			"MU",
-			null
-		],
+		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Utils/Random.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/main.cpp", "MU", null ]
 	],
