@@ -9,6 +9,7 @@ std::function<bool(const Process&, const Process&)> FIFO::FIFOQueue = [](const P
 };
 
 std::vector<Event> FIFO::processArrived(Process p, int time, Metrics &stats) {
+    p.setEnteredReadyQueue(time);
     readyQueue->push(p);
     return schedule(time, stats);
 }
@@ -16,15 +17,20 @@ std::vector<Event> FIFO::processArrived(Process p, int time, Metrics &stats) {
 std::vector<Event> FIFO::processCPUComplete(Process p, int time, Metrics &stats) {
     currentProcess = nullptr;
     std::vector<Event> events = schedule(time, stats);
-//    waitingQueue->push(p);
-    events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
+    if (p.hasRemainingIO()) {
+        events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
+    } else {
+        stats.addToTT(time - p.getArrivalTime());
+    }
     return events;
 }
 
 std::vector<Event> FIFO::processIOComplete(Process p, int time, Metrics &stats) {
     if (p.finished()) {
+        stats.addToTT(time - p.getArrivalTime());
         return {};
     } else {
+        p.setEnteredReadyQueue(time);
         readyQueue->push(p);
         return schedule(time, stats);
     }
@@ -39,9 +45,19 @@ vector<Event> FIFO::schedule(int time, Metrics &stats) {
         currentProcess = new Process(readyQueue->top());
         readyQueue->pop();
 
+        if (!currentProcess->getAssigned()) {
+            stats.addToRT(time - currentProcess->getArrivalTime());
+            currentProcess->setAssigned(true);
+        }
+
         stats.addToGanttChart(currentProcess->getId(), time, time + currentProcess->getRemainingBurst());
 
-        return {Event(CPUBURSTCOMPLETE, time + currentProcess->getRemainingBurst(), Process(*currentProcess->consumeBurst()))};
+        int remainingBurst = currentProcess->getRemainingBurst();
+
+        stats.addToCPUUtilization(remainingBurst);
+        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
+
+        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
     }
     return {};
 }

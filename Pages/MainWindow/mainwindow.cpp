@@ -8,7 +8,9 @@
 #include "ui_MainWindow.h"
 #include <string>
 #include <QFileDialog>
+#include <iostream>
 #include <QMovie>
+#include <QScrollArea>
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -125,21 +127,43 @@ void MainWindow::gotoRunning(DES *des) {
     layout->setSpacing(0);
     ui->running->setLayout(layout);
 
+    auto *scrollArea = new QScrollArea;
+    scrollArea->setWidgetResizable(true);
+
+    auto *containerWidget = new QWidget;
+    auto *containerLayout = new QVBoxLayout(containerWidget);
+
     Metrics metrics = des->startSimulation(1);
 
+    auto ganttChartWidget = getPlotFromPythonScript("gantt_chart.py", "gantt_chart.png", metrics.getGanttData());
+    auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", metrics.getMetrics());
+    auto metricsTableWidget = getPlotFromPythonScript("metrics_table.py", "performance_metrics_table.png", metrics.getMetrics());
+
+    if (des->isUsedFileAsInput()) {
+        containerLayout->addWidget(ganttChartWidget);
+    }
+    containerLayout->addWidget(metricsChartWidget);
+    containerLayout->addWidget(metricsTableWidget);
+
+
+    scrollArea->setWidget(containerWidget);
+    ui->running->layout()->addWidget(scrollArea);
+}
+
+QWidget *MainWindow::getPlotFromPythonScript(std::string scriptName, std::string imageName, std::string parameters) {
     std::string source_dir = __FILE__;
     source_dir = source_dir.substr(0, source_dir.find_last_of("\\/") + 1);
 
     std::string python_executable = "../../Python/plotting/Scripts/python.exe";
-    std::string python_script = "../../Python/plotting/gantt_chart.py";
+    std::string python_script = "../../Python/plotting/" + scriptName;
 
-    // Construct the command
-    std::string command = source_dir + python_executable + " " + source_dir + python_script + " \"" + metrics.getGanttData() + "\"";
+    std::string command = source_dir + python_executable + " " + source_dir + python_script + " " + parameters;
     system(command.c_str());
 
-    QPixmap pixmap("gantt_chart.png");
+    QPixmap pixmap(QString::fromStdString(imageName));
     auto *imageLabel = new QLabel;
     imageLabel->setPixmap(pixmap);
     imageLabel->setAlignment(Qt::AlignCenter);
-    ui->running->layout()->addWidget(imageLabel);
+
+    return imageLabel;
 }

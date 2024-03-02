@@ -13,8 +13,12 @@ private:
     double averageWaitingTime = 0;
     double averageTurnaroundTime = 0;
     double averageResponseTime = 0;
+    std::string algorithm;
     std::vector<std::tuple<int, int, int>> gantt;
 public:
+    explicit Metrics(const std::string &algorithm) : algorithm(algorithm) {}
+
+
     void addToGanttChart(int pid, int left, int right) {
         gantt.push_back({pid, left, right});
     }
@@ -27,6 +31,27 @@ public:
         data.pop_back();
         data += "]";
         return data;
+    }
+
+    void addToCPUUtilization(int val) {
+        cpuUtilization += val;
+    }
+
+    void addToWT(int val) {
+        averageWaitingTime += val;
+    }
+
+    void addToTT(int val) {
+        averageTurnaroundTime += val;
+    }
+
+    void addToRT(int val) {
+        averageResponseTime += val;
+    }
+
+    std::string getMetrics() {
+        return "\"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
+                std::to_string(averageResponseTime);
     }
 };
 

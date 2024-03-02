@@ -20,8 +20,10 @@ private:
     int priority;
     int id;
     int remainingBurst = 0;
-
+    int enteredReadyQueue = 0;
+    int arrivalTime = 0;
     int flag = 0;
+    bool assigned = 0;
 
 public:
 
@@ -46,7 +48,10 @@ public:
             priority(other.priority),
             id(other.id),
             remainingBurst(other.remainingBurst),
-            flag(other.flag)
+            flag(other.flag),
+            enteredReadyQueue(other.enteredReadyQueue),
+            arrivalTime(other.arrivalTime),
+            assigned(other.assigned)
             {}
 
     const vector<int> &getCpUburst() const;
@@ -63,6 +68,23 @@ public:
         return currentBurst >= CPUburst.size();
     }
 
+    bool hasRemainingIO() {
+        return currentBurst < IOburst.size();
+    }
+
+    void setRemainingBurst(int remainingBurst);
+
+    int getEnteredReadyQueue() const;
+
+    void setEnteredReadyQueue(int enteredReadyQueue);
+
+    int getArrivalTime() const;
+
+    void setArrivalTime(int arrivalTime);
+
+    bool getAssigned() const;
+
+    void setAssigned(bool assigned);
 
 };
 

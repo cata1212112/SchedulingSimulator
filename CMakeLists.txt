@@ -28,6 +28,13 @@ add_executable(Licenta main.cpp
         Scheduler/FIFO/FIFO.h
         Utils/WrapperPriorityQueue.h
         Utils/Metrics.h
+        Scheduler/RR/RR.cpp
+        Scheduler/RR/RR.h
+        Scheduler/RR/RR.h
+        Scheduler/SJF/SJF.cpp
+        Scheduler/SJF/SJF.h
+        Scheduler/SRTF/SRTF.cpp
+        Scheduler/SRTF/SRTF.h
 )
 target_link_libraries(Licenta
         Qt::Core

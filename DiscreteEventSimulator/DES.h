@@ -24,6 +24,7 @@ private:
     priority_queue<Event> *events;
     string input;
     string algorithm;
+    bool usedFileAsInput = false;
 
     static int getMultiplier(bool flag) {
         if (flag) {
@@ -43,6 +44,10 @@ public:
     void readInputDataFromFile(const string& filename);
 
     Metrics startSimulation(int numCPUS);
+
+    bool isUsedFileAsInput() const;
+
+
 };
 
 

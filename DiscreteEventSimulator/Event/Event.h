@@ -34,7 +34,7 @@ public:
     Event();
 
     bool operator<(const Event &other) const {
-        return time < other.time;
+        return time > other.time;
     }
 
     Event(eventType type, int time, const Process& process) : type(type), time(time), process(process) {}

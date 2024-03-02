@@ -64,6 +64,8 @@ Event Event::fromStrings(const string& firstLine, const string &secondLine, cons
     event.process.setCpUburst(cpuBursts);
     event.process.setIOburst(ioBursts);
 
+    event.process.setRemainingBurst(cpuBursts[0]);
+
     return event;
 }
 

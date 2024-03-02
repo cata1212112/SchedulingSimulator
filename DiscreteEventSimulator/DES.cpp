@@ -28,6 +28,8 @@ string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) 
 
         Process p(cpuBursts, ioBursts, priority);
 
+        p.setArrivalTime(arrival);
+
         Event event = Event(ARRIVAL, arrival, p);
 
         inputData += event.toString();
@@ -39,6 +41,7 @@ string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) 
 }
 
 void DES::readInputDataFromFile(const string& filename) {
+    usedFileAsInput = true;
     events = new priority_queue<Event>();
 
     ifstream in(filename);
@@ -54,7 +57,7 @@ void DES::readInputDataFromFile(const string& filename) {
 
 Metrics DES::startSimulation(int numCPUS) {
     SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algorithm);
-    Metrics stats;
+    Metrics stats(algorithm);
     int currentTime = 0;
     while (!events->empty()) {
         Event e = events->top();
@@ -86,4 +89,8 @@ Metrics DES::startSimulation(int numCPUS) {
         }
     }
     return stats;
+}
+
+bool DES::isUsedFileAsInput() const {
+    return usedFileAsInput;
 }

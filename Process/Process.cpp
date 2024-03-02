@@ -55,11 +55,41 @@ int Process::getRemainingBurst() const {
 
 Process *Process::consumeBurst() {
     if (!flag) {
-        remainingBurst = IOburst[currentBurst++];
+        if (hasRemainingIO()) {
+            remainingBurst = IOburst[currentBurst++];
+        }
         flag = !flag;
     } else {
         remainingBurst = CPUburst[currentBurst];
         flag = !flag;
     }
     return this;
+}
+
+void Process::setRemainingBurst(int remainingBurst) {
+    Process::remainingBurst = remainingBurst;
+}
+
+int Process::getEnteredReadyQueue() const {
+    return enteredReadyQueue;
+}
+
+void Process::setEnteredReadyQueue(int enteredReadyQueue) {
+    Process::enteredReadyQueue = enteredReadyQueue;
+}
+
+int Process::getArrivalTime() const {
+    return arrivalTime;
+}
+
+void Process::setArrivalTime(int arrivalTime) {
+    Process::arrivalTime = arrivalTime;
+}
+
+bool Process::getAssigned() const {
+    return assigned;
+}
+
+void Process::setAssigned(bool assigned) {
+    Process::assigned = assigned;
 }
