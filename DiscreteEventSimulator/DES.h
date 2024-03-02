@@ -25,6 +25,10 @@ private:
     string input;
     string algorithm;
     bool usedFileAsInput = false;
+    int numberOfProcesses = 0;
+    string partialMetricsInput = "";
+    vector<pair<string, string>> partialGantt;
+    int roundRobinQuant;
 
     static int getMultiplier(bool flag) {
         if (flag) {
@@ -35,6 +39,11 @@ private:
     }
 
 public:
+    int getRoundRobinQuant() const;
+
+    void setRoundRobinQuant(int roundRobinQuant);
+
+
     DES(string algorithm) : algorithm(std::move(algorithm)) {
         events = new priority_queue<Event>();
     }
@@ -43,11 +52,33 @@ public:
 
     void readInputDataFromFile(const string& filename);
 
+    void setInputFromString(const string& input);
+
     Metrics startSimulation(int numCPUS);
 
     bool isUsedFileAsInput() const;
 
+    void setAlgorithm(const string &algorithm);
 
+    const string &getAlgorithm() const;
+
+    const string &getInput() const;
+
+    void setInput(const string &input);
+
+    const string &getPartialMetricsInput() const;
+
+    void setPartialMetricsInput(const string &partialMetricsInput);
+
+    void addToGantt(const pair<string, string> &gantt) {
+        partialGantt.push_back(gantt);
+    }
+
+    vector<pair<string, string>> getGantt() {
+        return partialGantt;
+    }
+
+    void addEventToQueue(Event e);
 };
 
 

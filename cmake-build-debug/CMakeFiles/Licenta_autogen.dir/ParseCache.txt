@@ -398,6 +398,9 @@ C:/Users/cata_/CLionProjects/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/cata_/CLionProjects/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/cata_/CLionProjects/Licenta/Process/Process.h
  mdp:C:/Users/cata_/CLionProjects/Licenta/Scheduler/FIFO/FIFO.h
+ mdp:C:/Users/cata_/CLionProjects/Licenta/Scheduler/RR/RR.h
+ mdp:C:/Users/cata_/CLionProjects/Licenta/Scheduler/SJF/SJF.h
+ mdp:C:/Users/cata_/CLionProjects/Licenta/Scheduler/SRTF/SRTF.h
  mdp:C:/Users/cata_/CLionProjects/Licenta/Scheduler/SchedulingAlgorithm.h
  mdp:C:/Users/cata_/CLionProjects/Licenta/Utils/ImplementedAlgorithms.h
  mdp:C:/Users/cata_/CLionProjects/Licenta/Utils/Metrics.h

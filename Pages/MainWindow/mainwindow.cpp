@@ -11,6 +11,8 @@
 #include <iostream>
 #include <QMovie>
 #include <QScrollArea>
+#include <QMenu>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -27,10 +29,13 @@ MainWindow::~MainWindow() {
 
 void MainWindow::handleSingleCoreButton() {
     ui->stackedWidget->setCurrentWidget(ui->SingleCore);
+    lastWidget = ui->StartPage;
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(0);
-    ui->SingleCore->setLayout(layout);
+    if (ui->SingleCore->layout() == nullptr) {
+        ui->SingleCore->setLayout(layout);
+    }
 
     for (const auto& algorithm : ImplementedAlgorithms::getSingleCoreAlgorithms()) {
         auto *button = new QPushButton(QString::fromStdString(algorithm));
@@ -43,7 +48,15 @@ void MainWindow::handleSingleCoreButton() {
 
         connect(button, &QPushButton::clicked, this, [=]() {
             selectedAlgorithm = algorithm;
+
+            int quantum = 0;
+            if (selectedAlgorithm == "Round Robin") {
+                bool ok = false;
+                quantum = QInputDialog::getInt(this, tr("Enter Quantum"), tr("Quantum:"), 1, 1, 100, 1, &ok);
+            }
+
             ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
+            lastWidget = ui->SingleCore;
 
             connect(ui->maximumTime, &QSlider::valueChanged, this, [=] (int value){
                 ui->timpselectat->setText(QString::fromStdString(to_string(value)));
@@ -54,53 +67,72 @@ void MainWindow::handleSingleCoreButton() {
             });
 
             DES *des = new DES(algorithm);
+            des->setRoundRobinQuant(quantum);
 
             connect(ui->generate, &QPushButton::clicked, this, [=]() {
                 string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt());
                 ui->stackedWidget->setCurrentWidget(ui->InputData);
+                lastWidget = ui->RunSimulation;
 
-                auto layout = new QVBoxLayout();
-                layout->setSpacing(0);
-                ui->InputData->setLayout(layout);
 
-                auto *button = new QPushButton(QString::fromStdString("Download Input Data"));
-                button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+                if (ui->InputData->layout() == nullptr) {
 
-                QFont font;
-                font.setPointSize(12);
-                button->setFont(font);
+                    auto layout = new QVBoxLayout();
+                    layout->setSpacing(0);
+                    ui->InputData->setLayout(layout);
 
-                connect(button, &QPushButton::clicked, this, [=]() {
-                    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Text files (*.txt);;All Files (*)"));
+                    auto *button = new QPushButton(QString::fromStdString("Download Input Data"));
+                    button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                    button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
 
-                    if (!fileName.isEmpty()) {
-                        QFile file(fileName);
-                        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                            QTextStream out(&file);
-                            out << QString::fromStdString(inputData);
-                            file.close();
-                            gotoRunning(des);
-                        } else {
+                    QFont font;
+                    font.setPointSize(12);
+                    button->setFont(font);
+
+                    connect(button, &QPushButton::clicked, this, [=]() {
+                        QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
+                                                                        tr("Text files (*.txt);;All Files (*)"));
+
+                        if (!fileName.isEmpty()) {
+                            QFile file(fileName);
+                            if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                                QTextStream out(&file);
+                                out << QString::fromStdString(inputData);
+                                file.close();
+                                gotoRunning(des);
+                            } else {
+                            }
                         }
-                    }
-                });
+                    });
 
-                auto *button1 = new QPushButton(QString::fromStdString("Run Simulation"));
-                button1->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                button1->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+                    auto *button1 = new QPushButton(QString::fromStdString("Run Simulation"));
+                    button1->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                    button1->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
 
-                QFont font1;
-                font1.setPointSize(12);
-                button1->setFont(font1);
+                    QFont font1;
+                    font1.setPointSize(12);
+                    button1->setFont(font1);
 
-                connect(button1, &QPushButton::clicked, this, [=]() {
-                    gotoRunning(des);
-                });
+                    connect(button1, &QPushButton::clicked, this, [=]() {
+                        gotoRunning(des);
+                    });
 
 
-                ui->InputData->layout()->addWidget(button);
-                ui->InputData->layout()->addWidget(button1);
+                    ui->InputData->layout()->addWidget(button);
+                    ui->InputData->layout()->addWidget(button1);
+
+                    auto *button3 = new QPushButton(QString::fromStdString("Go back"));
+                    button3->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                    button3->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+                    button3->setFont(font);
+
+                    connect(button3, &QPushButton::clicked, this, [=]() {
+                        ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
+                    });
+
+                    ui->InputData->layout()->addWidget(button3);
+                }
             });
 
             connect(ui->usefileasinput, &QPushButton::clicked, this, [=]() {
@@ -113,15 +145,35 @@ void MainWindow::handleSingleCoreButton() {
                 }
             });
 
+            connect(ui->goback, &QPushButton::clicked, this, [=]() {
+                deleteContent(ui->SingleCore);
+                handleSingleCoreButton();
+            });
         });
 
         ui->SingleCore->layout()->addWidget(button);
 
     }
+
+    auto *button = new QPushButton(QString::fromStdString("Go back"));
+    button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+    QFont font;
+    font.setPointSize(12);
+    button->setFont(font);
+
+    connect(button, &QPushButton::clicked, this, [=]() {
+        deleteContent(ui->SingleCore);
+        ui->stackedWidget->setCurrentWidget(lastWidget);
+    });
+
+    ui->SingleCore->layout()->addWidget(button);
 }
 
 void MainWindow::gotoRunning(DES *des) {
     ui->stackedWidget->setCurrentWidget(ui->running);
+    lastWidget = ui->InputData;
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(0);
@@ -135,19 +187,51 @@ void MainWindow::gotoRunning(DES *des) {
 
     Metrics metrics = des->startSimulation(1);
 
-    auto ganttChartWidget = getPlotFromPythonScript("gantt_chart.py", "gantt_chart.png", metrics.getGanttData());
-    auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", metrics.getMetrics());
-    auto metricsTableWidget = getPlotFromPythonScript("metrics_table.py", "performance_metrics_table.png", metrics.getMetrics());
+    des->setPartialMetricsInput(des->getPartialMetricsInput() + metrics.getMetrics() + " ");
+    string algo = des->getAlgorithm();
+    std::transform(algo.begin(), algo.end(), algo.begin(),
+                   [](unsigned char c){ return std::tolower(c); });
 
-    if (des->isUsedFileAsInput()) {
-        containerLayout->addWidget(ganttChartWidget);
+    des->addToGantt({"\"" + des->getAlgorithm() + "\" " + metrics.getGanttData(), algo});
+
+    for (auto gantt: des->getGantt()) {
+        auto ganttChartWidget = getPlotFromPythonScript("gantt_chart.py", "gantt_chart_" + gantt.second + ".png", gantt.first);
+        if (des->isUsedFileAsInput()) {
+            containerLayout->addWidget(ganttChartWidget);
+        }
     }
+    auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", des->getPartialMetricsInput());
+    auto metricsTableWidget = getPlotFromPythonScript("metrics_table.py", "performance_metrics_table.png", des->getPartialMetricsInput());
+
     containerLayout->addWidget(metricsChartWidget);
     containerLayout->addWidget(metricsTableWidget);
 
 
     scrollArea->setWidget(containerWidget);
     ui->running->layout()->addWidget(scrollArea);
+
+    auto *menuButton = new QPushButton(QString::fromStdString("Run and compare results with other algorithm"));
+
+    connect(menuButton, &QPushButton::clicked, this, [=]() {
+        QMenu menu(this);
+
+        for (auto algorithm : ImplementedAlgorithms::getSingleCoreAlgorithms()) {
+            if (algorithm != des->getAlgorithm()) {
+                QAction *action = menu.addAction(QString::fromStdString(algorithm));
+
+                connect(action, &QAction::triggered, this, [=](){
+                    des->setAlgorithm(algorithm);
+                    des->setInputFromString(des->getInput());
+                    deleteContent(ui->running);
+                    gotoRunning(des);
+                });
+            }
+        }
+        menu.exec(QCursor::pos());
+        menu.show();
+    });
+
+    ui->running->layout()->addWidget(menuButton);
 }
 
 QWidget *MainWindow::getPlotFromPythonScript(std::string scriptName, std::string imageName, std::string parameters) {
@@ -166,4 +250,13 @@ QWidget *MainWindow::getPlotFromPythonScript(std::string scriptName, std::string
     imageLabel->setAlignment(Qt::AlignCenter);
 
     return imageLabel;
+}
+
+void MainWindow::deleteContent(QWidget *widget) {
+    QLayoutItem *item;
+
+    while ((item = widget->layout()->takeAt(0)) != NULL) {
+        delete item->widget();
+        delete item;
+    }
 }

@@ -58,9 +58,12 @@ Process *Process::consumeBurst() {
         if (hasRemainingIO()) {
             remainingBurst = IOburst[currentBurst++];
         }
+        currentBurst++;
         flag = !flag;
     } else {
-        remainingBurst = CPUburst[currentBurst];
+        if (currentBurst < CPUburst.size()) {
+            remainingBurst = CPUburst[currentBurst];
+        }
         flag = !flag;
     }
     return this;
@@ -92,4 +95,12 @@ bool Process::getAssigned() const {
 
 void Process::setAssigned(bool assigned) {
     Process::assigned = assigned;
+}
+
+int Process::getLastStarted() const {
+    return lastStarted;
+}
+
+void Process::setLastStarted(int lastStarted) {
+    Process::lastStarted = lastStarted;
 }

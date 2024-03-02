@@ -394,6 +394,9 @@ C:/Users/cata_/CLionProjects/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH4
   C:/Users/cata_/CLionProjects/Licenta/DiscreteEventSimulator/Event/Event.h \
   C:/Users/cata_/CLionProjects/Licenta/Process/Process.h \
   C:/Users/cata_/CLionProjects/Licenta/Scheduler/FIFO/FIFO.h \
+  C:/Users/cata_/CLionProjects/Licenta/Scheduler/RR/RR.h \
+  C:/Users/cata_/CLionProjects/Licenta/Scheduler/SJF/SJF.h \
+  C:/Users/cata_/CLionProjects/Licenta/Scheduler/SRTF/SRTF.h \
   C:/Users/cata_/CLionProjects/Licenta/Scheduler/SchedulingAlgorithm.h \
   C:/Users/cata_/CLionProjects/Licenta/Utils/ImplementedAlgorithms.h \
   C:/Users/cata_/CLionProjects/Licenta/Utils/Metrics.h \

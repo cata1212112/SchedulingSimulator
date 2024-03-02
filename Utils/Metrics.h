@@ -53,6 +53,13 @@ public:
         return "\"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
                 std::to_string(averageResponseTime);
     }
+
+    void divide(double timespan, double numOfProcs) {
+        cpuUtilization = cpuUtilization / timespan * 100;
+        averageWaitingTime /= numOfProcs;
+        averageResponseTime /= numOfProcs;
+        averageTurnaroundTime /= numOfProcs;
+    }
 };
 
 

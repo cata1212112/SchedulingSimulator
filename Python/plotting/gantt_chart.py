@@ -1,10 +1,8 @@
 import argparse
-
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-def generate_gantt_chart(process_data):
+def generate_gantt_chart(algorithm_name, process_data):
     process_data.sort(key=lambda x: x[1])
 
     y_positions = {}
@@ -28,16 +26,17 @@ def generate_gantt_chart(process_data):
 
     plt.xlabel('Time')
     plt.ylabel('Processes')
-    plt.title('Gantt Chart')
+    plt.title(f'Gantt Chart - {algorithm_name}')
 
-    plt.savefig("gantt_chart.png")
-
+    plt.savefig(f"gantt_chart_{algorithm_name.lower()}.png")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate Gantt chart')
+    parser.add_argument('algorithm_name', type=str, help='Name of the algorithm')
     parser.add_argument('process_data_str', type=str, help='Process data as a string')
     args = parser.parse_args()
 
+    algorithm_name = args.algorithm_name
     process_data = eval(args.process_data_str)
 
-    generate_gantt_chart(process_data)
+    generate_gantt_chart(algorithm_name, process_data)

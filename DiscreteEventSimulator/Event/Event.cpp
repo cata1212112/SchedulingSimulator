@@ -66,6 +66,8 @@ Event Event::fromStrings(const string& firstLine, const string &secondLine, cons
 
     event.process.setRemainingBurst(cpuBursts[0]);
 
+    event.process.setArrivalTime(event.time);
+
     return event;
 }
 

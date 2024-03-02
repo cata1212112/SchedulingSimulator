@@ -22,8 +22,9 @@ private:
     int remainingBurst = 0;
     int enteredReadyQueue = 0;
     int arrivalTime = 0;
-    int flag = 0;
+    bool flag = false;
     bool assigned = 0;
+    int lastStarted;
 
 public:
 
@@ -51,7 +52,8 @@ public:
             flag(other.flag),
             enteredReadyQueue(other.enteredReadyQueue),
             arrivalTime(other.arrivalTime),
-            assigned(other.assigned)
+            assigned(other.assigned),
+            lastStarted(other.lastStarted)
             {}
 
     const vector<int> &getCpUburst() const;
@@ -63,6 +65,10 @@ public:
     int getId() const;
 
     Process* consumeBurst();
+
+    int getLastStarted() const;
+
+    void setLastStarted(int lastStarted);
 
     bool finished() {
         return currentBurst >= CPUburst.size();

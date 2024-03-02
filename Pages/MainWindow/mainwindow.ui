@@ -43,7 +43,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -318,6 +318,25 @@ QPushButton:hover {
           </property>
           <property name="text">
            <string>Use File as Input</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="goback">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background: rgb(0, 170, 255);
+	border-radius: 20px;
+}
+
+QPushButton:hover {
+	background: rgb(0, 145, 217)
+}
+
+</string>
+          </property>
+          <property name="text">
+           <string>Go back</string>
           </property>
          </widget>
         </item>

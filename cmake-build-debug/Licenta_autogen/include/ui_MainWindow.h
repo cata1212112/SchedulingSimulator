@@ -43,6 +43,7 @@ public:
     QSlider *numarprocese;
     QPushButton *generate;
     QPushButton *usefileasinput;
+    QPushButton *goback;
     QWidget *running;
     QWidget *InputData;
     QWidget *SingleCore;
@@ -250,6 +251,21 @@ public:
 
         verticalLayout->addWidget(usefileasinput);
 
+        goback = new QPushButton(RunSimulation);
+        goback->setObjectName("goback");
+        goback->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background: rgb(0, 170, 255);\n"
+"	border-radius: 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: rgb(0, 145, 217)\n"
+"}\n"
+"\n"
+""));
+
+        verticalLayout->addWidget(goback);
+
         stackedWidget->addWidget(RunSimulation);
         running = new QWidget();
         running->setObjectName("running");
@@ -267,7 +283,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(0);
+        stackedWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -285,6 +301,7 @@ public:
         proceseselectate->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         generate->setText(QCoreApplication::translate("MainWindow", "Generate New Data", nullptr));
         usefileasinput->setText(QCoreApplication::translate("MainWindow", "Use File as Input", nullptr));
+        goback->setText(QCoreApplication::translate("MainWindow", "Go back", nullptr));
     } // retranslateUi
 
 };

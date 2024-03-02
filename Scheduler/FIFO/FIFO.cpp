@@ -8,15 +8,17 @@ std::function<bool(const Process&, const Process&)> FIFO::FIFOQueue = [](const P
     return false;
 };
 
-std::vector<Event> FIFO::processArrived(Process p, int time, Metrics &stats) {
-    p.setEnteredReadyQueue(time);
-    readyQueue->push(p);
-    return schedule(time, stats);
+std::vector<Event> FIFO::processArrived(std::vector<Process> p, int time, Metrics &stats) {
+    for (auto &process : p) {
+        process.setEnteredReadyQueue(time);
+        readyQueue->push(process);
+    }
+    return {};
 }
 
 std::vector<Event> FIFO::processCPUComplete(Process p, int time, Metrics &stats) {
     currentProcess = nullptr;
-    std::vector<Event> events = schedule(time, stats);
+    std::vector<Event> events;
     if (p.hasRemainingIO()) {
         events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
     } else {
@@ -25,24 +27,28 @@ std::vector<Event> FIFO::processCPUComplete(Process p, int time, Metrics &stats)
     return events;
 }
 
-std::vector<Event> FIFO::processIOComplete(Process p, int time, Metrics &stats) {
-    if (p.finished()) {
-        stats.addToTT(time - p.getArrivalTime());
-        return {};
-    } else {
-        p.setEnteredReadyQueue(time);
-        readyQueue->push(p);
-        return schedule(time, stats);
+std::vector<Event> FIFO::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
+    vector<Process> addToReadyQueue;
+    for (auto &process:p) {
+        if (process.finished()) {
+            stats.addToTT(time - process.getArrivalTime());
+        } else {
+            addToReadyQueue.push_back(process);
+        }
     }
-}
-
-std::vector<Event> FIFO::processPreempt(Process p, int time, Metrics &stats) {
+    for (auto p:addToReadyQueue) {
+        readyQueue->push(p);
+    }
     return {};
 }
 
-vector<Event> FIFO::schedule(int time, Metrics &stats) {
+std::vector<Event> FIFO::processPreempt(std::vector<Process> p, int time, Metrics &stats) {
+    return {};
+}
+
+std::vector<Event> FIFO::schedule(int time, Metrics &stats, bool timerExpired) {
     if (currentProcess == nullptr && !readyQueue->empty()) {
-        currentProcess = new Process(readyQueue->top());
+        currentProcess = new Process(readyQueue->front());
         readyQueue->pop();
 
         if (!currentProcess->getAssigned()) {

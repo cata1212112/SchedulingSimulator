@@ -26,12 +26,15 @@ public:
 private:
     Ui::MainWindow *ui;
     std::string selectedAlgorithm;
+    QWidget *lastWidget;
 
     void handleSingleCoreButton();
 
     void gotoRunning(DES *des);
 
     QWidget* getPlotFromPythonScript(std::string scriptName, std::string imageName, std::string parameters);
+
+    void deleteContent(QWidget *widget);
 };
 
 
