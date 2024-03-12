@@ -136,7 +136,7 @@ Metrics DES::startSimulation(int numCPUS) {
                 lock_guard lk(updatedMutex);
                 osTimeUpdated = false;
             }
-            updatedCV.notify_all();
+            updatedCV.notify_all(); // pana ajunge aici, threadul copil a dat deja wait pe updatedCV, iar threadul asta ajunge aici cvNumThreads.wait, unde numThreadsFinished e deja facut 0
         }
 
     }
