@@ -35,6 +35,12 @@ add_executable(Licenta main.cpp
         Scheduler/SJF/SJF.h
         Scheduler/SRTF/SRTF.cpp
         Scheduler/SRTF/SRTF.h
+        Scheduler/CompletlyFairScheduler/CFS.cpp
+        Scheduler/CompletlyFairScheduler/CFS.h
+        Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp
+        Scheduler/CompletlyFairScheduler/SingleCoreCFS.h
+        DiscreteEventSimulator/Core/Core.cpp
+        DiscreteEventSimulator/Core/Core.h
 )
 target_link_libraries(Licenta
         Qt::Core

@@ -12,13 +12,13 @@ class FIFO : public SchedulingAlgorithm{
 private:
     static std::function<bool(const Process&, const Process&)> FIFOQueue;
 
-//    WrapperPriorityQueue<Process, decltype(FIFOQueue)>* readyQueue;
-    queue<Process> *readyQueue;
+    WrapperPriorityQueue<Process, decltype(FIFOQueue)>* readyQueue;
+//    queue<Process> *readyQueue;
 public:
     FIFO() {
-//        readyQueue = new WrapperPriorityQueue<Process, decltype(FIFOQueue)>(FIFOQueue);
+        readyQueue = new WrapperPriorityQueue<Process, decltype(FIFOQueue)>(FIFOQueue);
 //        waitingQueue = new WrapperPriorityQueue<Process, decltype(FIFOQueue)>(FIFOQueue);
-        readyQueue = new queue<Process>();
+//        readyQueue = new queue<Process>();
     }
 
     std::vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;

@@ -3,7 +3,9 @@
 //
 
 #include "DES.h"
+#include "Core/Core.h"
 #include <map>
+#include <iostream>
 
 string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) {
 
@@ -60,88 +62,91 @@ void DES::readInputDataFromFile(const string& filename) {
 }
 
 Metrics DES::startSimulation(int numCPUS) {
+
     SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algorithm, roundRobinQuant);
 
-    Metrics stats(algorithm);
+    int osTime = 0;
     int currentTime = 0;
+    int numThreadsFinished = 0;
+    std::mutex threadsNumMutex;
+    std::condition_variable cvNumThreads;
 
-    while (!events->empty()) {
-        Event e = events->top();
-        events->pop();
-
-        currentTime = e.getTime();
-
-        vector<Event> currentEvents;
-        currentEvents.push_back(e);
-
-        while (!events->empty() && events->top().getTime() == currentTime) {
-            e = events->top();
-            currentEvents.push_back(e);
-            events->pop();
-        }
-
-        vector<Event> arrived;
-        vector<Event> cpuComplete;
-        vector<Event> ioComplete;
-        vector<Event> preemnt;
-        vector<Event> timerExpired;
-
-        copy_if(currentEvents.begin(), currentEvents.end(), back_inserter(arrived), [](const Event& a) {return a.getType() == ARRIVAL;});
-        copy_if(currentEvents.begin(), currentEvents.end(), back_inserter(cpuComplete), [](const Event& a) {return a.getType() == CPUBURSTCOMPLETE;});
-        copy_if(currentEvents.begin(), currentEvents.end(), back_inserter(ioComplete), [](const Event& a) {return a.getType() == IOBURSTCOMPLETE;});
-        copy_if(currentEvents.begin(), currentEvents.end(), back_inserter(preemnt), [](const Event& a) {return a.getType() == PREEMT;});
-        copy_if(currentEvents.begin(), currentEvents.end(), back_inserter(timerExpired), [](const Event& a) {return a.getType() == TIMEREXPIRED;});
+    std::mutex updatedMutex;
+    std::condition_variable updatedCV;
 
 
+    Core *core[numCPUS];
 
-        if (!preemnt.empty()) {
-            priority_queue<Event> tmp;
-            map<int, bool> toPreempt;
-            for (const auto &event : preemnt) {
-                toPreempt[event.getProcess().getId()] = true;
+    for (int i=0; i<numCPUS; i++) {
+        core[i] = new Core(&osTime, &cv, &cvNumThreads, &cvMutex, &updatedMutex, &updatedCV,  &continueExecution, algorithm, &osTimeUpdated, &numThreadsFinished, &threadsNumMutex, roundRobinQuant);
+    }
+
+    vector<Event> currentEvents;
+
+    while (true) {
+        if (events->empty()) {
+            bool allFinished = true;
+            for (int i=0; i<numCPUS; i++) {
+                core[i]->addEvent(Event(FINISHEXECUTION, 10000000, Process()));
+                allFinished = (allFinished && core[i]->isFinished());
             }
-            while (!events->empty()) {
-                if (!toPreempt[events->top().getProcess().getId()]) {
-                    tmp.push(events->top());
-                }
+
+            if (allFinished) {
+                break;
+            }
+
+            osTime = 1000000;
+        } else {
+            Event e = events->top();
+            events->pop();
+            currentTime = e.getTime();
+
+            currentEvents.clear();
+
+            currentEvents.push_back(e);
+
+            while (!events->empty() && events->top().getTime() == currentTime) {
+                e = events->top();
+                currentEvents.push_back(e);
                 events->pop();
             }
 
-            while (!tmp.empty()) {
-                events->push(tmp.top());
-                tmp.pop();
+            for (const auto &event : currentEvents) {
+                if (event.getType() == ARRIVAL) {
+                    core[schedAlgo.assignCPU(event.getProcess())]->addEvent(event);
+                }
             }
-            continue;
+
+            osTime = currentTime;
         }
 
+//        std:this_thread::sleep_for(chrono::milliseconds(200)); //// ??????????
 
-        vector<Process> arrivedProcesses;
-        vector<Process> ioCompleteProcesses;
+        {
+            std::lock_guard lk(cvMutex);
+            osTimeUpdated = true;
+        }
+        cv.notify_all();
+        {
+            std::unique_lock<std::mutex> lock(threadsNumMutex);
+            cvNumThreads.wait(lock, [&] { return numThreadsFinished == numCPUS; }); /// deadlock
+            numThreadsFinished = 0;
 
-        for (const auto& event : arrived) {
-            arrivedProcesses.push_back(event.getProcess());
+            {
+                lock_guard lk(updatedMutex);
+                osTimeUpdated = false;
+            }
+            updatedCV.notify_all();
         }
 
-        for (const auto &event : ioComplete) {
-            ioCompleteProcesses.push_back(event.getProcess());
-        }
-        vector<Event> eventsGenerated;
-
-        schedAlgo.processArrived(arrivedProcesses, currentTime, stats);
-        schedAlgo.processIOComplete(ioCompleteProcesses, currentTime, stats);
-        if (!cpuComplete.empty()) {
-            eventsGenerated = schedAlgo.processCPUComplete(cpuComplete[0].getProcess(), currentTime, stats);
-        }
-
-        vector<Event> aux = schedAlgo.schedule(currentTime, stats, !timerExpired.empty());
-        eventsGenerated.insert(eventsGenerated.end(), aux.begin(), aux.end());
-
-        for (const auto& eventGenerated : eventsGenerated) {
-            addEventToQueue(eventGenerated);
-        }
     }
-    stats.divide(currentTime, numberOfProcesses);
-    return stats;
+    vector<Metrics> vec;
+
+    for (int i=0; i<numCPUS; i++) {
+        vec.push_back(core[i]->join());
+    }
+    return vec[0];
+
 }
 
 bool DES::isUsedFileAsInput() const {

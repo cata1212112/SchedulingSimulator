@@ -1,4 +1,5 @@
-C:/Users/cata_/CLionProjects/Licenta/cmake-build-debug/CMakeFiles/Licenta.dir
-C:/Users/cata_/CLionProjects/Licenta/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/cata_/CLionProjects/Licenta/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/cata_/CLionProjects/Licenta/cmake-build-debug/CMakeFiles/Licenta_autogen.dir
+C:/Users/Cata/Desktop/Licenta/cmake-build-debug/CMakeFiles/Licenta.dir
+C:/Users/Cata/Desktop/Licenta/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Cata/Desktop/Licenta/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Cata/Desktop/Licenta/cmake-build-debug/CMakeFiles/Licenta_autogen_timestamp_deps.dir
+C:/Users/Cata/Desktop/Licenta/cmake-build-debug/CMakeFiles/Licenta_autogen.dir

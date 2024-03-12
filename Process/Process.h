@@ -25,6 +25,7 @@ private:
     bool flag = false;
     bool assigned = 0;
     int lastStarted;
+    double vtime = 0;
 
 public:
 
@@ -53,7 +54,8 @@ public:
             enteredReadyQueue(other.enteredReadyQueue),
             arrivalTime(other.arrivalTime),
             assigned(other.assigned),
-            lastStarted(other.lastStarted)
+            lastStarted(other.lastStarted),
+            vtime(other.vtime)
             {}
 
     const vector<int> &getCpUburst() const;

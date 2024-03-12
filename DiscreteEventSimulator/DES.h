@@ -13,6 +13,9 @@
 #include <fstream>
 #include <sstream>
 #include <utility>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 #define MAXIMUMNUMCPUBURSTS 20
 #define MAXIMUMARRIVAL 300
@@ -29,6 +32,10 @@ private:
     string partialMetricsInput = "";
     vector<pair<string, string>> partialGantt;
     int roundRobinQuant;
+    std::condition_variable cv;
+    std::mutex cvMutex;
+    bool continueExecution = true;
+    bool osTimeUpdated = false;
 
     static int getMultiplier(bool flag) {
         if (flag) {

@@ -5,7 +5,10 @@
 #include "FIFO.h"
 
 std::function<bool(const Process&, const Process&)> FIFO::FIFOQueue = [](const Process &a, const Process &b) {
-    return false;
+    if (a.getArrivalTime() == b.getArrivalTime()) {
+        return a.getId() > b.getId();
+    }
+    return a.getArrivalTime() > b.getArrivalTime();
 };
 
 std::vector<Event> FIFO::processArrived(std::vector<Process> p, int time, Metrics &stats) {
@@ -48,7 +51,7 @@ std::vector<Event> FIFO::processPreempt(std::vector<Process> p, int time, Metric
 
 std::vector<Event> FIFO::schedule(int time, Metrics &stats, bool timerExpired) {
     if (currentProcess == nullptr && !readyQueue->empty()) {
-        currentProcess = new Process(readyQueue->front());
+        currentProcess = new Process(readyQueue->top());
         readyQueue->pop();
 
         if (!currentProcess->getAssigned()) {

@@ -16,7 +16,8 @@ enum eventType {
     CPUBURSTCOMPLETE,
     IOBURSTCOMPLETE,
     TIMEREXPIRED,
-    PREEMT
+    PREEMT,
+    FINISHEXECUTION
 };
 
 class Event {
