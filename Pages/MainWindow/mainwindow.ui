@@ -43,7 +43,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -343,6 +343,96 @@ QPushButton:hover {
        </layout>
       </widget>
       <widget class="QWidget" name="running"/>
+      <widget class="QWidget" name="SelectMultiCoreAlgorithm"/>
+      <widget class="QWidget" name="MultiCore">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="numberofcores">
+          <property name="text">
+           <string>NUMBER OF CORES</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="selectednumberofcores">
+          <property name="font">
+           <font>
+            <pointsize>24</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="coreselector">
+          <property name="styleSheet">
+           <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid #4682B4;
+    height: 8px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4682B4, stop:1 #87CEEB);
+    margin: 2px 0;
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #4682B4);
+    border: 1px solid #4682B4;
+    width: 20px;
+    margin: -2px 0;
+    border-radius: 10px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #1E90FF);
+}
+</string>
+          </property>
+          <property name="maximum">
+           <number>4</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="next">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background: rgb(0, 170, 255);
+	border-radius: 20px;
+}
+
+QPushButton:hover {
+	background: rgb(0, 145, 217)
+}</string>
+          </property>
+          <property name="text">
+           <string>Next</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="back">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background: rgb(0, 170, 255);
+	border-radius: 20px;
+}
+
+QPushButton:hover {
+	background: rgb(0, 145, 217)
+}</string>
+          </property>
+          <property name="text">
+           <string>Back</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="InputData"/>
       <widget class="QWidget" name="SingleCore"/>
      </widget>

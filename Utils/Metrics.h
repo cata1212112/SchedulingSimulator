@@ -9,6 +9,7 @@
 
 class Metrics {
 private:
+    int core;
     double cpuUtilization = 0;
     double averageWaitingTime = 0;
     double averageTurnaroundTime = 0;
@@ -50,7 +51,7 @@ public:
     }
 
     std::string getMetrics() {
-        return "\"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
+        return std::to_string(core) + " \"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
                 std::to_string(averageResponseTime);
     }
 
@@ -59,6 +60,14 @@ public:
         averageWaitingTime /= numOfProcs;
         averageResponseTime /= numOfProcs;
         averageTurnaroundTime /= numOfProcs;
+    }
+
+    int getCore() const {
+        return core;
+    }
+
+    void setCore(int core) {
+        Metrics::core = core;
     }
 };
 

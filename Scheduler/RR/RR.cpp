@@ -75,7 +75,6 @@ std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
         if (readyQueue->empty()) {
             return {};
         }
-
         currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
         currentProcess->setEnteredReadyQueue(time);
 
@@ -88,6 +87,11 @@ std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
         currentProcess->setLastStarted(time);
         readyQueue->pop();
         readyQueue->push(currentCopy);
+
+        if (!currentProcess->getAssigned()) {
+            stats.addToRT(time - currentProcess->getArrivalTime());
+            currentProcess->setAssigned(true);
+        }
 
         stats.addToWT(time - currentProcess->getEnteredReadyQueue());
         int remainingBurst = currentProcess->getRemainingBurst();

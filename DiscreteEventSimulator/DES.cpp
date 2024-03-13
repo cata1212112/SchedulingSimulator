@@ -7,6 +7,8 @@
 #include <map>
 #include <iostream>
 
+vector<string> DES::algortihms;
+
 string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) {
 
     events = new priority_queue<Event>();
@@ -61,24 +63,20 @@ void DES::readInputDataFromFile(const string& filename) {
     in.close();
 }
 
-Metrics DES::startSimulation(int numCPUS) {
+vector<Metrics> DES::startSimulation(int numCPUS) {
 
     SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algorithm, roundRobinQuant);
 
     int osTime = 0;
     int currentTime = 0;
-    int numThreadsFinished = 0;
-    std::mutex threadsNumMutex;
-    std::condition_variable cvNumThreads;
-
-    std::mutex updatedMutex;
-    std::condition_variable updatedCV;
 
 
     Core *core[numCPUS];
 
+    std::barrier barrier(numCPUS + 1);
+
     for (int i=0; i<numCPUS; i++) {
-        core[i] = new Core(&osTime, &cv, &cvNumThreads, &cvMutex, &updatedMutex, &updatedCV,  &continueExecution, algorithm, &osTimeUpdated, &numThreadsFinished, &threadsNumMutex, roundRobinQuant);
+        core[i] = new Core(&osTime, &cv, &cvMutex, algorithm, &osTimeUpdated,&barrier, roundRobinQuant);
     }
 
     vector<Event> currentEvents;
@@ -120,23 +118,16 @@ Metrics DES::startSimulation(int numCPUS) {
             osTime = currentTime;
         }
 
-//        std:this_thread::sleep_for(chrono::milliseconds(200)); //// ??????????
-
         {
             std::lock_guard lk(cvMutex);
             osTimeUpdated = true;
         }
         cv.notify_all();
-        {
-            std::unique_lock<std::mutex> lock(threadsNumMutex);
-            cvNumThreads.wait(lock, [&] { return numThreadsFinished == numCPUS; }); /// deadlock
-            numThreadsFinished = 0;
 
-            {
-                lock_guard lk(updatedMutex);
-                osTimeUpdated = false;
-            }
-            updatedCV.notify_all(); // pana ajunge aici, threadul copil a dat deja wait pe updatedCV, iar threadul asta ajunge aici cvNumThreads.wait, unde numThreadsFinished e deja facut 0
+        barrier.arrive_and_wait();
+        {
+            std::lock_guard lk(cvMutex);
+            osTimeUpdated = false;
         }
 
     }
@@ -145,7 +136,7 @@ Metrics DES::startSimulation(int numCPUS) {
     for (int i=0; i<numCPUS; i++) {
         vec.push_back(core[i]->join());
     }
-    return vec[0];
+    return vec;
 
 }
 
@@ -166,6 +157,7 @@ void DES::setInput(const string &input) {
 }
 
 void DES::setAlgorithm(const string &algorithm) {
+    algortihms.push_back(algorithm);
     DES::algorithm = algorithm;
 }
 
@@ -189,10 +181,6 @@ const string &DES::getPartialMetricsInput() const {
 
 void DES::setPartialMetricsInput(const string &partialMetricsInput) {
     DES::partialMetricsInput = partialMetricsInput;
-}
-
-void DES::addEventToQueue(Event e) {
-    events->push(e);
 }
 
 int DES::getRoundRobinQuant() const {

@@ -30,6 +30,8 @@ private:
 
     void handleSingleCoreButton();
 
+    void handleMultiCoreButton();
+
     void gotoRunning(DES *des);
 
     QWidget* getPlotFromPythonScript(std::string scriptName, std::string imageName, std::string parameters);

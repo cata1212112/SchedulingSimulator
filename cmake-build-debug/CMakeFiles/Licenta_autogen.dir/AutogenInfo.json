@@ -411,6 +411,7 @@
 	"MOC_PREDEFS_CMD" : 
 	[
 		"C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/g++.exe",
+		"-std=gnu++20",
 		"-dM",
 		"-E",
 		"-c",

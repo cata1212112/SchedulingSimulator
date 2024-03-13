@@ -52,7 +52,7 @@ build cmake_object_order_depends_target_Licenta: phony || Licenta_autogen Licent
 build CMakeFiles/Licenta.dir/Licenta_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Licenta_autogen\mocs_compilation.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Licenta_autogen
@@ -60,7 +60,7 @@ build CMakeFiles/Licenta.dir/Licenta_autogen/mocs_compilation.cpp.obj: CXX_COMPI
 build CMakeFiles/Licenta.dir/main.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/main.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\main.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir
@@ -68,7 +68,7 @@ build CMakeFiles/Licenta.dir/main.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug
 build CMakeFiles/Licenta.dir/Pages/MainWindow/mainwindow.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Pages\MainWindow\mainwindow.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Pages\MainWindow
@@ -76,7 +76,7 @@ build CMakeFiles/Licenta.dir/Pages/MainWindow/mainwindow.cpp.obj: CXX_COMPILER__
 build CMakeFiles/Licenta.dir/DiscreteEventSimulator/Event/Event.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Event/Event.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\DiscreteEventSimulator\Event\Event.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\DiscreteEventSimulator\Event
@@ -84,7 +84,7 @@ build CMakeFiles/Licenta.dir/DiscreteEventSimulator/Event/Event.cpp.obj: CXX_COM
 build CMakeFiles/Licenta.dir/DiscreteEventSimulator/DES.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/DES.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\DiscreteEventSimulator\DES.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\DiscreteEventSimulator
@@ -92,7 +92,7 @@ build CMakeFiles/Licenta.dir/DiscreteEventSimulator/DES.cpp.obj: CXX_COMPILER__L
 build CMakeFiles/Licenta.dir/Process/Process.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Process/Process.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Process\Process.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Process
@@ -100,7 +100,7 @@ build CMakeFiles/Licenta.dir/Process/Process.cpp.obj: CXX_COMPILER__Licenta_unsc
 build CMakeFiles/Licenta.dir/Utils/Random.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Utils/Random.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Utils\Random.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Utils
@@ -108,7 +108,7 @@ build CMakeFiles/Licenta.dir/Utils/Random.cpp.obj: CXX_COMPILER__Licenta_unscann
 build CMakeFiles/Licenta.dir/Scheduler/FIFO/FIFO.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Scheduler\FIFO\FIFO.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Scheduler\FIFO
@@ -116,7 +116,7 @@ build CMakeFiles/Licenta.dir/Scheduler/FIFO/FIFO.cpp.obj: CXX_COMPILER__Licenta_
 build CMakeFiles/Licenta.dir/Scheduler/RR/RR.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Scheduler\RR\RR.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Scheduler\RR
@@ -124,7 +124,7 @@ build CMakeFiles/Licenta.dir/Scheduler/RR/RR.cpp.obj: CXX_COMPILER__Licenta_unsc
 build CMakeFiles/Licenta.dir/Scheduler/SJF/SJF.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Scheduler\SJF\SJF.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Scheduler\SJF
@@ -132,7 +132,7 @@ build CMakeFiles/Licenta.dir/Scheduler/SJF/SJF.cpp.obj: CXX_COMPILER__Licenta_un
 build CMakeFiles/Licenta.dir/Scheduler/SRTF/SRTF.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Scheduler\SRTF\SRTF.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Scheduler\SRTF
@@ -140,7 +140,7 @@ build CMakeFiles/Licenta.dir/Scheduler/SRTF/SRTF.cpp.obj: CXX_COMPILER__Licenta_
 build CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/CFS.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/CFS.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Scheduler\CompletlyFairScheduler\CFS.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Scheduler\CompletlyFairScheduler
@@ -148,7 +148,7 @@ build CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/CFS.cpp.obj: CXX_C
 build CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\Scheduler\CompletlyFairScheduler\SingleCoreCFS.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Scheduler\CompletlyFairScheduler
@@ -156,7 +156,7 @@ build CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp.
 build CMakeFiles/Licenta.dir/DiscreteEventSimulator/Core/Core.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Core/Core.cpp || cmake_object_order_depends_target_Licenta
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Licenta.dir\DiscreteEventSimulator\Core\Core.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\DiscreteEventSimulator\Core

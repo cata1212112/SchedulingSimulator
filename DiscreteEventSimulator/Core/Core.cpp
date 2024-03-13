@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <map>
 #include "Core.h"
-#include "../../Utils/Metrics.h"
 #include "../../Scheduler/SchedulingAlgorithm.h"
 #include "../../Utils/ImplementedAlgorithms.h"
 
@@ -19,6 +18,7 @@ void Core::runSimulation() {
     int numberOfProcesses = 0;
 
     Metrics stats(algortihm);
+    stats.setCore(coreID);
     SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant);
 
     while (true) {
@@ -36,12 +36,10 @@ void Core::runSimulation() {
                 break;
             }
 
-            cantContinue= false;
             events->pop();
 
             coreTime = e.getTime();
             if (coreTime != e.getTime()) {
-                cantContinue = true;
             }
 
             currentEvents.clear();
@@ -102,20 +100,12 @@ void Core::runSimulation() {
             }
         }
 
-        {
-            std::lock_guard<std::mutex> lk(*threadsNumMutex);
-            *numThreadsFinished += 1;
-        }
-        cvNumThreads->notify_all();
+        barrier->arrive_and_wait();
 
         if (finished) {
             break;
         }
 
-        {
-            std::unique_lock lk(*updatedMutex);
-            updatedCV->wait(lk, [this]{return !*osTimeUpdated;}); /// deadlock
-        }
     }
 
     stats.divide(coreTime, numberOfProcesses);
@@ -123,18 +113,12 @@ void Core::runSimulation() {
     finished = true;
 }
 
-Core::Core(int *osTime, condition_variable *cv, condition_variable *cvNumThreads,mutex *cvMutex,mutex *updatedMutex,condition_variable *updatedCV, bool *continueExecution, string algorithm, bool* osTimeUpdated, int* numThreadsFinished, std::mutex *threadsNumMutex, int roundRobinQuant) : osTime(osTime), cv(cv),
-                                                                                           cvMutex(cvMutex),
-                                                                                           cvNumThreads(cvNumThreads),
-                                                                                           roundRobinQuant(roundRobinQuant),
-                                                                                           updatedMutex(updatedMutex),
-                                                                                           updatedCV(updatedCV),
-                                                                                           continueExecution(
-                                                                                                   continueExecution), algortihm(algorithm), osTimeUpdated(osTimeUpdated), numThreadsFinished(numThreadsFinished), threadsNumMutex(threadsNumMutex) {
+Core::Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
+           bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant)
+        : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID){
     events = new priority_queue<Event>();
 
     runningThread = new std::thread(&Core::runSimulation, this);
-//    runningThread->detach();
 }
 
 Metrics Core::join() {
@@ -145,10 +129,6 @@ Metrics Core::join() {
 
 int Core::getCoreTime() const {
     return coreTime;
-}
-
-bool Core::isCantContinue() const {
-    return cantContinue;
 }
 
 bool Core::isFinished() const {

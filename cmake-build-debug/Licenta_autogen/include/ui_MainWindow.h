@@ -45,6 +45,14 @@ public:
     QPushButton *usefileasinput;
     QPushButton *goback;
     QWidget *running;
+    QWidget *SelectMultiCoreAlgorithm;
+    QWidget *MultiCore;
+    QVBoxLayout *verticalLayout_3;
+    QLabel *numberofcores;
+    QLabel *selectednumberofcores;
+    QSlider *coreselector;
+    QPushButton *next;
+    QPushButton *back;
     QWidget *InputData;
     QWidget *SingleCore;
 
@@ -270,6 +278,78 @@ public:
         running = new QWidget();
         running->setObjectName("running");
         stackedWidget->addWidget(running);
+        SelectMultiCoreAlgorithm = new QWidget();
+        SelectMultiCoreAlgorithm->setObjectName("SelectMultiCoreAlgorithm");
+        stackedWidget->addWidget(SelectMultiCoreAlgorithm);
+        MultiCore = new QWidget();
+        MultiCore->setObjectName("MultiCore");
+        verticalLayout_3 = new QVBoxLayout(MultiCore);
+        verticalLayout_3->setObjectName("verticalLayout_3");
+        numberofcores = new QLabel(MultiCore);
+        numberofcores->setObjectName("numberofcores");
+
+        verticalLayout_3->addWidget(numberofcores, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        selectednumberofcores = new QLabel(MultiCore);
+        selectednumberofcores->setObjectName("selectednumberofcores");
+        selectednumberofcores->setFont(font);
+
+        verticalLayout_3->addWidget(selectednumberofcores, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        coreselector = new QSlider(MultiCore);
+        coreselector->setObjectName("coreselector");
+        coreselector->setStyleSheet(QString::fromUtf8("QSlider::groove:horizontal {\n"
+"    border: 1px solid #4682B4;\n"
+"    height: 8px;\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4682B4, stop:1 #87CEEB);\n"
+"    margin: 2px 0;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"QSlider::handle:horizontal {\n"
+"    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #4682B4);\n"
+"    border: 1px solid #4682B4;\n"
+"    width: 20px;\n"
+"    margin: -2px 0;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QSlider::handle:horizontal:hover {\n"
+"    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #1E90FF);\n"
+"}\n"
+""));
+        coreselector->setMaximum(4);
+        coreselector->setOrientation(Qt::Orientation::Horizontal);
+
+        verticalLayout_3->addWidget(coreselector);
+
+        next = new QPushButton(MultiCore);
+        next->setObjectName("next");
+        next->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background: rgb(0, 170, 255);\n"
+"	border-radius: 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: rgb(0, 145, 217)\n"
+"}"));
+
+        verticalLayout_3->addWidget(next);
+
+        back = new QPushButton(MultiCore);
+        back->setObjectName("back");
+        back->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background: rgb(0, 170, 255);\n"
+"	border-radius: 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: rgb(0, 145, 217)\n"
+"}"));
+
+        verticalLayout_3->addWidget(back);
+
+        stackedWidget->addWidget(MultiCore);
         InputData = new QWidget();
         InputData->setObjectName("InputData");
         stackedWidget->addWidget(InputData);
@@ -283,7 +363,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(2);
+        stackedWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -302,6 +382,10 @@ public:
         generate->setText(QCoreApplication::translate("MainWindow", "Generate New Data", nullptr));
         usefileasinput->setText(QCoreApplication::translate("MainWindow", "Use File as Input", nullptr));
         goback->setText(QCoreApplication::translate("MainWindow", "Go back", nullptr));
+        numberofcores->setText(QCoreApplication::translate("MainWindow", "NUMBER OF CORES", nullptr));
+        selectednumberofcores->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        next->setText(QCoreApplication::translate("MainWindow", "Next", nullptr));
+        back->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
     } // retranslateUi
 
 };

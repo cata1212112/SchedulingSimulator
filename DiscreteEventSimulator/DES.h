@@ -34,8 +34,8 @@ private:
     int roundRobinQuant;
     std::condition_variable cv;
     std::mutex cvMutex;
-    bool continueExecution = true;
     bool osTimeUpdated = false;
+    static vector<string> algortihms;
 
     static int getMultiplier(bool flag) {
         if (flag) {
@@ -51,7 +51,8 @@ public:
     void setRoundRobinQuant(int roundRobinQuant);
 
 
-    DES(string algorithm) : algorithm(std::move(algorithm)) {
+    DES(string algorithm) : algorithm(algorithm) {
+        algortihms.push_back(algorithm);
         events = new priority_queue<Event>();
     }
 
@@ -61,7 +62,7 @@ public:
 
     void setInputFromString(const string& input);
 
-    Metrics startSimulation(int numCPUS);
+    vector<Metrics> startSimulation(int numCPUS);
 
     bool isUsedFileAsInput() const;
 
@@ -85,7 +86,9 @@ public:
         return partialGantt;
     }
 
-    void addEventToQueue(Event e);
+    static vector<string> getAlgorithms() {
+        return algortihms;
+    }
 };
 
 

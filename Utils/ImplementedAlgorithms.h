@@ -35,4 +35,8 @@ public:
             return *rr;
         }
     }
+
+    static std::vector<std::string> getMultiCoreAlgortihms() {
+        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)", "Completely Fair Scheduler"};
+    }
 };

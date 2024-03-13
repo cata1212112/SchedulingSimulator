@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->singlecore, &QPushButton::clicked, this, &MainWindow::handleSingleCoreButton);
 
+    connect(ui->multicore, &QPushButton::clicked, this, &MainWindow::handleMultiCoreButton);
+
     ui->stackedWidget->setCurrentWidget(ui->StartPage);
 }
 
@@ -66,7 +68,7 @@ void MainWindow::handleSingleCoreButton() {
                 ui->proceseselectate->setText(QString::fromStdString(to_string(value)));
             });
 
-            DES *des = new DES(algorithm);
+            DES *des = new DES(selectedAlgorithm);
             des->setRoundRobinQuant(quantum);
 
             connect(ui->generate, &QPushButton::clicked, this, [=]() {
@@ -171,6 +173,43 @@ void MainWindow::handleSingleCoreButton() {
     ui->SingleCore->layout()->addWidget(button);
 }
 
+void MainWindow::handleMultiCoreButton() {
+    ui->stackedWidget->setCurrentWidget(ui->MultiCore);
+    int coreValues[] = {2, 4, 8, 16, 32};
+    int selectedNumberOfCores = 2;
+    ui->selectednumberofcores->setText(QString::fromStdString(to_string(2)));
+    connect(ui->coreselector, &QSlider::valueChanged, this, [=, &selectedNumberOfCores](int value) {
+        selectedNumberOfCores = coreValues[value];
+        ui->selectednumberofcores->setText(QString::fromStdString(to_string(coreValues[value])));
+    });
+
+    connect(ui->back, &QPushButton::clicked, this, [&]() {
+       ui->stackedWidget->setCurrentWidget(ui->StartPage);
+    });
+
+    connect(ui->next, &QPushButton::clicked, this, [&]() {
+        ui->stackedWidget->setCurrentWidget(ui->SelectMultiCoreAlgorithm);
+
+        auto layout = new QVBoxLayout();
+        layout->setSpacing(0);
+
+        ui->SelectMultiCoreAlgorithm->setLayout(layout);
+
+        for (const auto& algorithm : ImplementedAlgorithms::getMultiCoreAlgortihms()) {
+            auto *button = new QPushButton(QString::fromStdString(algorithm));
+            button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+            QFont font;
+            font.setPointSize(12);
+            button->setFont(font);
+
+            ui->SelectMultiCoreAlgorithm->layout()->addWidget(button);
+        }
+    });
+
+}
+
 void MainWindow::gotoRunning(DES *des) {
     ui->stackedWidget->setCurrentWidget(ui->running);
     lastWidget = ui->InputData;
@@ -185,26 +224,28 @@ void MainWindow::gotoRunning(DES *des) {
     auto *containerWidget = new QWidget;
     auto *containerLayout = new QVBoxLayout(containerWidget);
 
-    Metrics metrics = des->startSimulation(1);
+    vector<Metrics> metrics = des->startSimulation(1);
 
-    des->setPartialMetricsInput(des->getPartialMetricsInput() + metrics.getMetrics() + " ");
-    string algo = des->getAlgorithm();
-    std::transform(algo.begin(), algo.end(), algo.begin(),
-                   [](unsigned char c){ return std::tolower(c); });
+    for (auto metric : metrics) {
+        des->setPartialMetricsInput(des->getPartialMetricsInput() + metric.getMetrics() + " ");
+        string algo = des->getAlgorithm();
+        std::transform(algo.begin(), algo.end(), algo.begin(),
+                       [](unsigned char c){ return std::tolower(c); });
 
-    des->addToGantt({"\"" + des->getAlgorithm() + "\" " + metrics.getGanttData(), algo});
+        des->addToGantt({"\"" + des->getAlgorithm() + "\" " + metric.getGanttData(), algo});
 
-    for (auto gantt: des->getGantt()) {
-        auto ganttChartWidget = getPlotFromPythonScript("gantt_chart.py", "gantt_chart_" + gantt.second + ".png", gantt.first);
-        if (des->isUsedFileAsInput()) {
-            containerLayout->addWidget(ganttChartWidget);
+        for (auto gantt: des->getGantt()) {
+            auto ganttChartWidget = getPlotFromPythonScript("gantt_chart.py", "gantt_chart_" + gantt.second + ".png", gantt.first);
+            if (des->isUsedFileAsInput()) {
+                containerLayout->addWidget(ganttChartWidget);
+            }
         }
-    }
-    auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", des->getPartialMetricsInput());
-    auto metricsTableWidget = getPlotFromPythonScript("metrics_table.py", "performance_metrics_table.png", des->getPartialMetricsInput());
+        auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", des->getPartialMetricsInput());
+        auto metricsTableWidget = getPlotFromPythonScript("metrics_table.py", "performance_metrics_table.png", des->getPartialMetricsInput());
 
-    containerLayout->addWidget(metricsChartWidget);
-    containerLayout->addWidget(metricsTableWidget);
+        containerLayout->addWidget(metricsChartWidget);
+        containerLayout->addWidget(metricsTableWidget);
+    }
 
 
     scrollArea->setWidget(containerWidget);
@@ -215,8 +256,9 @@ void MainWindow::gotoRunning(DES *des) {
     connect(menuButton, &QPushButton::clicked, this, [=]() {
         QMenu menu(this);
 
+        vector<string> alreadyTried = DES::getAlgorithms();
         for (auto algorithm : ImplementedAlgorithms::getSingleCoreAlgorithms()) {
-            if (algorithm != des->getAlgorithm()) {
+            if (std::find(alreadyTried.begin(), alreadyTried.end(), algorithm) == alreadyTried.end()) {
                 QAction *action = menu.addAction(QString::fromStdString(algorithm));
 
                 connect(action, &QAction::triggered, this, [=](){
