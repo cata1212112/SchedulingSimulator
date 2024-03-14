@@ -1,78 +1,82 @@
-import argparse
 import matplotlib.pyplot as plt
+import argparse
+import numpy as np
+
+# Exemplu input
+# 0 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000 1 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
+
+# cores_data = {core_id : {algorithm : {cpu_utilization, avg_waiting_time, avg_response_time, avg_turnaround_time}}}
 
 def plot_data(cores_data):
     num_cores = len(cores_data)
-    num_algorithms = len(cores_data[0]['algorithms'])
+    number_of_algorithms = len(cores_data[0])
 
-    fig, axs = plt.subplots(num_cores, num_algorithms + 1, figsize=(10, 4 * num_cores))  # Adjust the figsize parameter here
+    fig, axes = plt.subplots(num_cores, 2, figsize=(4 * number_of_algorithms, 2 * num_cores))
 
-    # if num_cores == 1:
-    #     axs = [axs]  # Convert to a single-element list to handle single-core case
+    for index in cores_data.keys():
+        core_data = cores_data[index]
+        axes[index, 0].set_title("Core {} : CPU Utilization".format(index))
+        axes[index, 0].bar(core_data.keys(), [core_data[alg]['cpu_utilization'] for alg in core_data.keys()])
 
-    for i, core_data in enumerate(cores_data):
-        for j, algorithm_data in enumerate(core_data['algorithms']):
-            # Plot CPU utilization
-            if num_cores > 1:
-                axs[i, 0].bar(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}',
-                              algorithm_data['cpu_utilization'],
-                              color='blue')  # You can change color here
-                axs[i, 0].set_ylabel('CPU Utilization')
-                axs[i, 0].set_title('CPU Utilization')
-            else:
-                axs[0].bar(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}',
-                        algorithm_data['cpu_utilization'],
-                        color='blue')  # You can change color here
-                axs[0].set_ylabel('CPU Utilization')
-                axs[0].set_title('CPU Utilization')
+        axes[index, 1].set_title("Core {} : Metrics".format(index))
 
-            # Plot other metrics
-            if num_cores > 1:
-                axs[i, j + 1].bar(['Avg Waiting Time', 'Avg Turnaround Time', 'Avg Response Time'],
-                                  [algorithm_data['avg_waiting_time'], algorithm_data['avg_turnaround_time'], algorithm_data['avg_response_time']],
-                                  color=['red', 'green', 'orange'])  # You can specify different colors here
-                axs[i, j + 1].set_title(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}')
-            else:
-                axs[j + 1].bar(['Avg Waiting Time', 'Avg Turnaround Time', 'Avg Response Time'],
-                               [algorithm_data['avg_waiting_time'], algorithm_data['avg_turnaround_time'], algorithm_data['avg_response_time']],
-                               color=['red', 'green', 'orange'])  # You can specify different colors here
-                axs[j + 1].set_title(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}')
+        algortihms = core_data.keys()
+        metrics = {}
+        metrics['avg_turnaround_time'] = []
+        metrics['avg_waiting_time'] = []
+        metrics['avg_response_time'] = []
 
-    plt.tight_layout()
+        for alg in algortihms:
+            metrics['avg_turnaround_time'].append(core_data[alg]['avg_turnaround_time'])
+            metrics['avg_waiting_time'].append(core_data[alg]['avg_waiting_time'])
+            metrics['avg_response_time'].append(core_data[alg]['avg_response_time'])
+
+        x = np.arange(len(algortihms))
+        width = 0.25
+        multiplier = 0
+
+        for attribute, measurement in metrics.items():
+            offset = width * multiplier
+            rects = axes[index, 1].bar(x + offset, measurement, width, label=attribute)
+            axes[index, 1].bar_label(rects, padding=3)
+            multiplier += 1
+
+        axes[index, 1].set_ylabel('Time unit')
+        axes[index, 1].set_xticks(x + width, algortihms)
+        axes[index, 1].legend(loc='center left', ncols=1, bbox_to_anchor=(1, 0.5))
+
+    fig.tight_layout()
     plt.savefig('performance_metrics_plot.png')
 
+# --algortihm "First In First Out" 100.000000 3.000000 7.000000 3.000000 --algortihm "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
+
+# --core 0 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000 --core 1 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
 def main():
-    parser = argparse.ArgumentParser(description='Plot CPU utilization, average waiting time, average turnaround time, and average response time.')
-    parser.add_argument('data', nargs='+', help='Data for each core and algorithm')
-    args = parser.parse_args()
+    core_values_args = argparse.ArgumentParser()
+    core_values_args.add_argument('--core', nargs='+', action='append', metavar=('CORE_NUMBER', 'OBJECTS'))
 
-    cores_data = []
-    current_core_data = None
+    args = core_values_args.parse_args()
 
-    for idx, item in enumerate(args.data):
-        if idx % 6 == 0:
-            if current_core_data:
-                cores_data.append(current_core_data)
-            current_core_data = {'core_number': int(item), 'algorithms': []}
-        else:
-            if idx % 5 == 0:
-                current_core_data['algorithms'].append({'algorithm_name': item})
-            elif idx % 5 == 1:
-                try:
-                    current_core_data['algorithms'][-1]['cpu_utilization'] = float(item)
-                except ValueError:
-                    print(f"Invalid CPU utilization value for algorithm {current_core_data['algorithms'][-1]['algorithm_name']}: {item}")
-            elif idx % 5 == 2:
-                current_core_data['algorithms'][-1]['avg_waiting_time'] = float(item)
-            elif idx % 5 == 3:
-                current_core_data['algorithms'][-1]['avg_turnaround_time'] = float(item)
-            elif idx % 5 == 4:
-                current_core_data['algorithms'][-1]['avg_response_time'] = float(item)
+    cores_data = args.core
 
-    if current_core_data:
-        cores_data.append(current_core_data)
+    data = {}
 
-    plot_data(cores_data)
+    for core_data in cores_data:
+        core_id = int(core_data[0])
+        core_data = core_data[1:]
+        algortihms = {}
+        for i in range(0, len(core_data), 5):
+            algortihms_data = {}
+            algortihms_data['cpu_utilization'] = float(core_data[i+1])
+            algortihms_data['avg_waiting_time'] = float(core_data[i+2])
+            algortihms_data['avg_response_time'] = float(core_data[i+3])
+            algortihms_data['avg_turnaround_time'] = float(core_data[i+4])
 
-if __name__ == "__main__":
+            algortihms[core_data[i]] = algortihms_data
+
+        data[core_id] = algortihms
+
+    plot_data(data)
+
+if __name__ == '__main__':
     main()

@@ -1,37 +1,71 @@
-import sys
 import matplotlib.pyplot as plt
+import argparse
 
-def plot_table(algorithms, cpu_utilizations, avg_waiting_times, avg_turnaround_times, avg_response_times):
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.axis('tight')
-    ax.axis('off')
+# Exemplu input
+# 0 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000 1 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
 
-    table_data = []
-    for i in range(len(algorithms)):
-        table_data.append([algorithms[i], cpu_utilizations[i], avg_waiting_times[i], avg_turnaround_times[i], avg_response_times[i]])
+# cores_data = {core_id : {algorithm : {cpu_utilization, avg_waiting_time, avg_response_time, avg_turnaround_time}}}
 
-    column_labels = ["Algorithm", "CPU Utilization", "Avg Waiting Time", "Avg Turnaround Time", "Avg Response Time"]
-    ax.table(cellText=table_data, colLabels=column_labels, loc='center')
+def plot_data(cores_data):
+    num_cores = len(cores_data)
+    number_of_algorithms = len(cores_data[0])
 
-    plt.title('Performance Metrics Table')
-    plt.savefig('performance_metrics_table.png')
+    table_data = {}
 
-if __name__ == "__main__":
-    if len(sys.argv) < 6:
-        print("Usage: python script.py <algorithm1> <cpu_utilization1> <avg_waiting_time1> <avg_turnaround_time1> <avg_response_time1> ...")
-        sys.exit(1)
+    for index in cores_data.keys():
+        core_data = cores_data[index]
+        for alg in core_data.keys():
+            table_data[alg] = []
 
-    algorithms = []
-    cpu_utilizations = []
-    avg_waiting_times = []
-    avg_turnaround_times = []
-    avg_response_times = []
+    for index in cores_data.keys():
+        core_data = cores_data[index]
+        for alg in core_data.keys():
+            table_data[alg].append([index, core_data[alg]['cpu_utilization'], core_data[alg]['avg_turnaround_time'],
+                                    core_data[alg]['avg_waiting_time'], core_data[alg]['avg_response_time']])
 
-    for i in range(1, len(sys.argv), 5):
-        algorithms.append(sys.argv[i])
-        cpu_utilizations.append(float(sys.argv[i+1]))
-        avg_waiting_times.append(float(sys.argv[i+2]))
-        avg_turnaround_times.append(float(sys.argv[i+3]))
-        avg_response_times.append(float(sys.argv[i+4]))
+    labels = ["Core number", "CPU utilization", "Average turnaround time", "Average waiting time",
+              "Average response time"]
 
-    plot_table(algorithms, cpu_utilizations, avg_waiting_times, avg_turnaround_times, avg_response_times)
+    fig, ax = plt.subplots(number_of_algorithms, 1, figsize=(10, 10))
+
+    for index, alg in enumerate(table_data.keys()):
+        ax[index].table(cellText=table_data[alg], colLabels=labels, loc='center')
+        ax[index].axis('off')
+        ax[index].axis('tight')
+        ax[index].set_title(alg)
+
+    plt.tight_layout()
+    plt.savefig('performance_metrics_table.png', bbox_inches='tight')
+
+# --algortihm "First In First Out" 100.000000 3.000000 7.000000 3.000000 --algortihm "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
+
+# --core 0 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000 --core 1 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
+def main():
+    core_values_args = argparse.ArgumentParser()
+    core_values_args.add_argument('--core', nargs='+', action='append', metavar=('CORE_NUMBER', 'OBJECTS'))
+
+    args = core_values_args.parse_args()
+
+    cores_data = args.core
+
+    data = {}
+
+    for core_data in cores_data:
+        core_id = int(core_data[0])
+        core_data = core_data[1:]
+        algortihms = {}
+        for i in range(0, len(core_data), 5):
+            algortihms_data = {}
+            algortihms_data['cpu_utilization'] = float(core_data[i+1])
+            algortihms_data['avg_waiting_time'] = float(core_data[i+2])
+            algortihms_data['avg_response_time'] = float(core_data[i+3])
+            algortihms_data['avg_turnaround_time'] = float(core_data[i+4])
+
+            algortihms[core_data[i]] = algortihms_data
+
+        data[core_id] = algortihms
+
+    plot_data(data)
+
+if __name__ == '__main__':
+    main()
