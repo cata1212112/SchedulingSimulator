@@ -1,60 +1,78 @@
-import sys
+import argparse
 import matplotlib.pyplot as plt
-import numpy as np
 
-def save_plot(cores, algorithms, cpu_utilizations, avg_waiting_times, avg_turnaround_times, avg_response_times):
-    num_cores = len(cores)
-    num_algorithms = len(algorithms)
-    width = 0.15
-    ind = np.arange(num_algorithms)
+def plot_data(cores_data):
+    num_cores = len(cores_data)
+    num_algorithms = len(cores_data[0]['algorithms'])
 
-    fig, axs = plt.subplots(num_cores, 2, figsize=(12, 5*num_cores))
+    fig, axs = plt.subplots(num_cores, num_algorithms + 1, figsize=(10, 4 * num_cores))  # Adjust the figsize parameter here
 
-    for i, core in enumerate(cores):
-        # Plot CPU Utilization separately
-        axs[i, 0].bar(ind, cpu_utilizations[i], width, label='CPU Utilization', color='orange')
-        axs[i, 0].set_title(f'CPU Utilization (Core {core})')
-        axs[i, 0].set_ylabel('CPU Utilization')
-        axs[i, 0].set_xticks(ind)
-        axs[i, 0].set_xticklabels(algorithms)
-        axs[i, 0].legend()
-        axs[i, 0].grid(True)
+    # if num_cores == 1:
+    #     axs = [axs]  # Convert to a single-element list to handle single-core case
 
-        # Plot other performance metrics
-        axs[i, 1].bar(ind - 3*width/2, avg_waiting_times[i], width, label='Average Waiting Time')
-        axs[i, 1].bar(ind - width/2, avg_turnaround_times[i], width, label='Average Turnaround Time')
-        axs[i, 1].bar(ind + width/2, avg_response_times[i], width, label='Average Response Time')
+    for i, core_data in enumerate(cores_data):
+        for j, algorithm_data in enumerate(core_data['algorithms']):
+            # Plot CPU utilization
+            if num_cores > 1:
+                axs[i, 0].bar(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}',
+                              algorithm_data['cpu_utilization'],
+                              color='blue')  # You can change color here
+                axs[i, 0].set_ylabel('CPU Utilization')
+                axs[i, 0].set_title('CPU Utilization')
+            else:
+                axs[0].bar(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}',
+                        algorithm_data['cpu_utilization'],
+                        color='blue')  # You can change color here
+                axs[0].set_ylabel('CPU Utilization')
+                axs[0].set_title('CPU Utilization')
 
-        axs[i, 1].set_xlabel('Algorithm')
-        axs[i, 1].set_ylabel('Values')
-        axs[i, 1].set_title(f'Performance Metrics (Core {core})')
-        axs[i, 1].set_xticks(ind)
-        axs[i, 1].set_xticklabels(algorithms)
-        axs[i, 1].legend()
-        axs[i, 1].grid(True)
+            # Plot other metrics
+            if num_cores > 1:
+                axs[i, j + 1].bar(['Avg Waiting Time', 'Avg Turnaround Time', 'Avg Response Time'],
+                                  [algorithm_data['avg_waiting_time'], algorithm_data['avg_turnaround_time'], algorithm_data['avg_response_time']],
+                                  color=['red', 'green', 'orange'])  # You can specify different colors here
+                axs[i, j + 1].set_title(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}')
+            else:
+                axs[j + 1].bar(['Avg Waiting Time', 'Avg Turnaround Time', 'Avg Response Time'],
+                               [algorithm_data['avg_waiting_time'], algorithm_data['avg_turnaround_time'], algorithm_data['avg_response_time']],
+                               color=['red', 'green', 'orange'])  # You can specify different colors here
+                axs[j + 1].set_title(f'Core {core_data["core_number"]} - {algorithm_data["algorithm_name"]}')
 
-    plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig('performance_metrics_plot.png')
 
+def main():
+    parser = argparse.ArgumentParser(description='Plot CPU utilization, average waiting time, average turnaround time, and average response time.')
+    parser.add_argument('data', nargs='+', help='Data for each core and algorithm')
+    args = parser.parse_args()
+
+    cores_data = []
+    current_core_data = None
+
+    for idx, item in enumerate(args.data):
+        if idx % 6 == 0:
+            if current_core_data:
+                cores_data.append(current_core_data)
+            current_core_data = {'core_number': int(item), 'algorithms': []}
+        else:
+            if idx % 5 == 0:
+                current_core_data['algorithms'].append({'algorithm_name': item})
+            elif idx % 5 == 1:
+                try:
+                    current_core_data['algorithms'][-1]['cpu_utilization'] = float(item)
+                except ValueError:
+                    print(f"Invalid CPU utilization value for algorithm {current_core_data['algorithms'][-1]['algorithm_name']}: {item}")
+            elif idx % 5 == 2:
+                current_core_data['algorithms'][-1]['avg_waiting_time'] = float(item)
+            elif idx % 5 == 3:
+                current_core_data['algorithms'][-1]['avg_turnaround_time'] = float(item)
+            elif idx % 5 == 4:
+                current_core_data['algorithms'][-1]['avg_response_time'] = float(item)
+
+    if current_core_data:
+        cores_data.append(current_core_data)
+
+    plot_data(cores_data)
+
 if __name__ == "__main__":
-    if len(sys.argv) < 7:
-        print("Usage: python script.py <core> <algorithm1> <cpu_utilization1> <avg_waiting_time1> <avg_turnaround_time1> <avg_response_time1> ...")
-        sys.exit(1)
-
-    cores = []
-    algorithms = []
-    cpu_utilizations = []
-    avg_waiting_times = []
-    avg_turnaround_times = []
-    avg_response_times = []
-
-    for i in range(1, len(sys.argv), 6):
-        cores.append(sys.argv[i])
-        algorithms.append(sys.argv[i+1])
-        cpu_utilizations.append(float(sys.argv[i+2]))
-        avg_waiting_times.append(float(sys.argv[i+3]))
-        avg_turnaround_times.append(float(sys.argv[i+4]))
-        avg_response_times.append(float(sys.argv[i+5]))
-
-    save_plot(cores, algorithms, cpu_utilizations, avg_waiting_times, avg_turnaround_times, avg_response_times)
+    main()

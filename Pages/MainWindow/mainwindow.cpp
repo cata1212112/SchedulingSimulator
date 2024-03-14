@@ -226,26 +226,45 @@ void MainWindow::gotoRunning(DES *des) {
 
     vector<Metrics> metrics = des->startSimulation(1);
 
+    string chart_parameters = "";
+    string gantt_parameters = "";
+
     for (auto metric : metrics) {
-        des->setPartialMetricsInput(des->getPartialMetricsInput() + metric.getMetrics() + " ");
+        des->setPartialMetricsInput(des->getPartialMetricsInput(metric.getCore()) + metric.getMetrics() + " ", metric.getCore());
         string algo = des->getAlgorithm();
         std::transform(algo.begin(), algo.end(), algo.begin(),
                        [](unsigned char c){ return std::tolower(c); });
 
-        des->addToGantt({"\"" + des->getAlgorithm() + "\" " + metric.getGanttData(), algo});
-
-        for (auto gantt: des->getGantt()) {
-            auto ganttChartWidget = getPlotFromPythonScript("gantt_chart.py", "gantt_chart_" + gantt.second + ".png", gantt.first);
-            if (des->isUsedFileAsInput()) {
-                containerLayout->addWidget(ganttChartWidget);
-            }
+        des->addToGantt({"\"" + des->getAlgorithm() + "\" " + metric.getGanttData(), algo}, metric.getCore());
+        gantt_parameters += std::to_string(metric.getCore());
+        for (auto gantt: des->getGantt(metric.getCore())) {
+            gantt_parameters += " " + gantt.first;
+//            auto ganttChartWidget = getPlotFromPythonScript("gantt_chart.py", "gantt_chart_" + gantt.second + ".png", gantt.first);
+//            if (des->isUsedFileAsInput()) {
+//                containerLayout->addWidget(ganttChartWidget);
+//            }
         }
-        auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", des->getPartialMetricsInput());
-        auto metricsTableWidget = getPlotFromPythonScript("metrics_table.py", "performance_metrics_table.png", des->getPartialMetricsInput());
+        chart_parameters += std::to_string(metric.getCore()) + " " + des->getPartialMetricsInput(metric.getCore());
+//        auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", std::to_string(metric.getCore()) + " " + des->getPartialMetricsInput(metric.getCore()));
+        auto metricsTableWidget = getPlotFromPythonScript("metrics_table.py", "performance_metrics_table.png", std::to_string(metric.getCore()) + " " + des->getPartialMetricsInput(metric.getCore()));
 
-        containerLayout->addWidget(metricsChartWidget);
+//        containerLayout->addWidget(metricsChartWidget);
         containerLayout->addWidget(metricsTableWidget);
     }
+    cout << chart_parameters << "\n";
+    cout << gantt_parameters << "\n";
+    // exemplu input pentru chart + table
+//    https://matplotlib.org/stable/gallery/lines_bars_and_markers/barchart.html#sphx-glr-gallery-lines-bars-and-markers-barchart-py
+//    https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html
+    // 0 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
+    // 0 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000 1 "First In First Out" 100.000000 3.000000 7.000000 3.000000 "Shortest Job First" 100.000000 1.000000 5.000000 1.000000
+
+    // pentru gantt
+    // 0 "Shortest Job First" [[2,0,2],[1,2,8]] "First In First Out" [[1,0,6],[2,6,8]]
+    // 0 "Shortest Job First" [[2,0,2],[1,2,8]] "First In First Out" [[1,0,6],[2,6,8]] 1 "Shortest Job First" [[2,0,2],[1,2,8]] "First In First Out" [[1,0,6],[2,6,8]]
+
+    auto metricsChartWidget = getPlotFromPythonScript("metrics_chart.py", "performance_metrics_plot.png", chart_parameters);
+    containerLayout->addWidget(metricsChartWidget);
 
 
     scrollArea->setWidget(containerWidget);

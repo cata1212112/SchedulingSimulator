@@ -29,8 +29,8 @@ private:
     string algorithm;
     bool usedFileAsInput = false;
     int numberOfProcesses = 0;
-    string partialMetricsInput = "";
-    vector<pair<string, string>> partialGantt;
+    string partialMetricsInput[32];
+    vector<pair<string, string>> partialGantt[32];
     int roundRobinQuant;
     std::condition_variable cv;
     std::mutex cvMutex;
@@ -74,16 +74,16 @@ public:
 
     void setInput(const string &input);
 
-    const string &getPartialMetricsInput() const;
+    const string &getPartialMetricsInput(int core) const;
 
-    void setPartialMetricsInput(const string &partialMetricsInput);
+    void setPartialMetricsInput(const string &partialMetricsInput, int core);
 
-    void addToGantt(const pair<string, string> &gantt) {
-        partialGantt.push_back(gantt);
+    void addToGantt(const pair<string, string> &gantt, int core) {
+        partialGantt[core].push_back(gantt);
     }
 
-    vector<pair<string, string>> getGantt() {
-        return partialGantt;
+    vector<pair<string, string>> getGantt(int core) {
+        return partialGantt[core];
     }
 
     static vector<string> getAlgorithms() {

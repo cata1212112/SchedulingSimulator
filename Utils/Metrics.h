@@ -51,7 +51,7 @@ public:
     }
 
     std::string getMetrics() {
-        return std::to_string(core) + " \"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
+        return "\"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
                 std::to_string(averageResponseTime);
     }
 

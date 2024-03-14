@@ -175,12 +175,12 @@ void DES::setInputFromString(const string &input) {
     }
 }
 
-const string &DES::getPartialMetricsInput() const {
-    return partialMetricsInput;
+const string &DES::getPartialMetricsInput(int core) const {
+    return partialMetricsInput[core];
 }
 
-void DES::setPartialMetricsInput(const string &partialMetricsInput) {
-    DES::partialMetricsInput = partialMetricsInput;
+void DES::setPartialMetricsInput(const string &partialMetricsInput, int core) {
+    DES::partialMetricsInput[core] = partialMetricsInput;
 }
 
 int DES::getRoundRobinQuant() const {
