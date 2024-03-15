@@ -21,6 +21,7 @@ public:
     virtual std::vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats)=0;
     virtual std::vector<Event> schedule(int time, Metrics &stats, bool timerExpired) =0;
     virtual int assignCPU(Process p) {return 0;}
+    virtual string getCoreAlgortihm(int coreID)=0;
 
 };
 

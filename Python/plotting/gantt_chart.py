@@ -24,30 +24,72 @@ def plot_data(cores_data):
     # fig, axes = plt.subplots(num_algs, num_cores)
 
     for index1, alg in enumerate(gantt_charts.keys()):
-        axes = subfigures[index1].subplots(1, num_cores)
-        subfigures[index1].suptitle(alg)
-        for index2, core_id in enumerate(gantt_charts[alg]):
-            proecsses_bars = {}
-            for proc in gantt_charts[alg][core_id]:
-                if proc[0] not in proecsses_bars:
-                    proecsses_bars[proc[0]] = [(proc[1], proc[2] - proc[1])]
+        if num_algs > 1:
+            axes = subfigures[index1].subplots(1, num_cores)
+            subfigures[index1].suptitle(alg)
+            for index2, core_id in enumerate(gantt_charts[alg]):
+                proecsses_bars = {}
+                for proc in gantt_charts[alg][core_id]:
+                    if proc[0] not in proecsses_bars:
+                        proecsses_bars[proc[0]] = [(proc[1], proc[2] - proc[1])]
+                    else:
+                        proecsses_bars[proc[0]].append((proc[1], proc[2] - proc[1]))
+
+                procs = []
+                for proc in proecsses_bars.keys():
+                    procs.append(f"Process {proc}")
+
+                num_proc = len(set(procs))
+                colors = matplotlib.colormaps.get_cmap('hsv')
+                # print(len(colors))
+
+                if num_cores > 1:
+                    axes[index2].set_title(f"Core {core_id}")
+                    axes[index2].set_yticks([6 * i + 3 for i in range(1, num_proc + 1)])
+                    axes[index2].set_yticklabels(procs)
+                    # axes[index1, index2].set_xticks()
+                    for proc in proecsses_bars.keys():
+                        axes[index2].broken_barh(proecsses_bars[proc], (6 * proc, 6), color=colors((proc * 65337) % 211))
+            else:
+                axes.set_title(f"Core {core_id}")
+                axes.set_yticks([6 * i + 3 for i in range(1, num_proc + 1)])
+                axes.set_yticklabels(procs)
+                # axes[index1, index2].set_xticks()
+                for proc in proecsses_bars.keys():
+                    axes.broken_barh(proecsses_bars[proc], (6 * proc, 6), color=colors((proc * 65337) % 211))
+        else:
+            axes = subfigures.subplots(1, num_cores)
+            subfigures.suptitle(alg)
+            for index2, core_id in enumerate(gantt_charts[alg]):
+                proecsses_bars = {}
+                for proc in gantt_charts[alg][core_id]:
+                    if proc[0] not in proecsses_bars:
+                        proecsses_bars[proc[0]] = [(proc[1], proc[2] - proc[1])]
+                    else:
+                        proecsses_bars[proc[0]].append((proc[1], proc[2] - proc[1]))
+
+                procs = []
+                for proc in proecsses_bars.keys():
+                    procs.append(f"Process {proc}")
+
+                num_proc = len(set(procs))
+                colors = matplotlib.colormaps.get_cmap('hsv')
+                # print(len(colors))
+
+                if num_cores > 1:
+                    axes[index2].set_title(f"Core {core_id}")
+                    axes[index2].set_yticks([6 * i + 3 for i in range(1, num_proc + 1)])
+                    axes[index2].set_yticklabels(procs)
+                    # axes[index1, index2].set_xticks()
+                    for proc in proecsses_bars.keys():
+                        axes[index2].broken_barh(proecsses_bars[proc], (6 * proc, 6), color=colors((proc * 65337) % 211))
                 else:
-                    proecsses_bars[proc[0]].append((proc[1], proc[2] - proc[1]))
-
-            procs = []
-            for proc in proecsses_bars.keys():
-                procs.append(f"Process {proc}")
-
-            num_proc = len(set(procs))
-            colors = matplotlib.colormaps.get_cmap('hsv')
-            # print(len(colors))
-
-            axes[index2].set_title(f"Core {core_id}")
-            axes[index2].set_yticks([6 * i + 3 for i in range(1, num_algs + 1)])
-            axes[index2].set_yticklabels(procs)
-            # axes[index1, index2].set_xticks()
-            for proc in proecsses_bars.keys():
-                axes[index2].broken_barh(proecsses_bars[proc], (6 * proc, 6), color=colors((proc * 65337) % 211))
+                    axes.set_title(f"Core {core_id}")
+                    axes.set_yticks([6 * i + 3 for i in range(1, num_proc + 1)])
+                    axes.set_yticklabels(procs)
+                    # axes[index1, index2].set_xticks()
+                    for proc in proecsses_bars.keys():
+                        axes.broken_barh(proecsses_bars[proc], (6 * proc, 6), color=colors((proc * 65337) % 211))
 
     plt.savefig("gantt_chart.png")
 
@@ -62,6 +104,8 @@ def main():
     args = core_values_args.parse_args()
 
     cores_data = args.core
+
+    print(cores_data)
 
     for core_data in cores_data:
         core_id = int(core_data[0])

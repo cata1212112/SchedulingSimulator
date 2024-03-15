@@ -4,6 +4,7 @@
 
 #include <unordered_map>
 #include <map>
+#include <iostream>
 #include "Core.h"
 #include "../../Scheduler/SchedulingAlgorithm.h"
 #include "../../Utils/ImplementedAlgorithms.h"
@@ -27,7 +28,7 @@ void Core::runSimulation() {
             cv->wait(lk, [this] { return *osTimeUpdated; });
         }
 
-        while (!events->empty()) {
+        while (!events->empty() && !finished) {
             Event e = events->top();
             if (e.getTime() > *osTime) {
                 if (e.getType() == FINISHEXECUTION) {
@@ -100,14 +101,15 @@ void Core::runSimulation() {
             }
         }
 
-        barrier->arrive_and_wait();
 
         if (finished) {
+            barrier->arrive_and_drop();
             break;
+        } else {
+            barrier->arrive_and_wait();
         }
 
     }
-
     stats.divide(coreTime, numberOfProcesses);
     p.set_value(stats);
     finished = true;

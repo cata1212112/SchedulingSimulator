@@ -67,3 +67,7 @@ std::vector<Event> SJF::schedule(int time, Metrics &stats, bool timerExpired) {
     }
     return {};
 }
+
+string SJF::getCoreAlgortihm(int coreID) {
+    return "Shortest Job First";
+}

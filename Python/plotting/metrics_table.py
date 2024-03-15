@@ -28,11 +28,18 @@ def plot_data(cores_data):
 
     fig, ax = plt.subplots(number_of_algorithms, 1, figsize=(10, 10))
 
-    for index, alg in enumerate(table_data.keys()):
-        ax[index].table(cellText=table_data[alg], colLabels=labels, loc='center')
-        ax[index].axis('off')
-        ax[index].axis('tight')
-        ax[index].set_title(alg)
+    if number_of_algorithms > 1:
+        for index, alg in enumerate(table_data.keys()):
+            ax[index].table(cellText=table_data[alg], colLabels=labels, loc='center')
+            ax[index].axis('off')
+            ax[index].axis('tight')
+            ax[index].set_title(alg)
+    else:
+        for index, alg in enumerate(table_data.keys()):
+            ax.table(cellText=table_data[alg], colLabels=labels, loc='center')
+            ax.axis('off')
+            ax.axis('tight')
+            ax.set_title(alg)
 
     plt.tight_layout()
     plt.savefig('performance_metrics_table.png', bbox_inches='tight')
@@ -58,8 +65,8 @@ def main():
             algortihms_data = {}
             algortihms_data['cpu_utilization'] = float(core_data[i+1])
             algortihms_data['avg_waiting_time'] = float(core_data[i+2])
-            algortihms_data['avg_response_time'] = float(core_data[i+3])
-            algortihms_data['avg_turnaround_time'] = float(core_data[i+4])
+            algortihms_data['avg_turnaround_time'] = float(core_data[i+3])
+            algortihms_data['avg_response_time'] = float(core_data[i+4])
 
             algortihms[core_data[i]] = algortihms_data
 

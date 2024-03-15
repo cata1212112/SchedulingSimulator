@@ -13,6 +13,7 @@
 #include "../Scheduler/SJF/SJF.h"
 #include "../Scheduler/RR/RR.h"
 #include "../Scheduler/SRTF/SRTF.h"
+#include "../Scheduler/TestMultiCore1/TestMultiCore1.h"
 
 class ImplementedAlgorithms {
 public:
@@ -33,6 +34,9 @@ public:
         } else if (name == "Round Robin") {
             RR *rr = new RR(quant);
             return *rr;
+        } else if (name == "Combinatie FIFO SRTF(test 2 coruri)") {
+            TestMultiCore1 *tmc1 = new TestMultiCore1();
+            return *tmc1;
         }
     }
 

@@ -70,3 +70,7 @@ std::vector<Event> FIFO::schedule(int time, Metrics &stats, bool timerExpired) {
     }
     return {};
 }
+
+string FIFO::getCoreAlgortihm(int coreID) {
+    return "First In First Out";
+}

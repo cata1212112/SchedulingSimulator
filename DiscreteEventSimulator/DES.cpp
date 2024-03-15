@@ -76,14 +76,16 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     std::barrier barrier(numCPUS + 1);
 
     for (int i=0; i<numCPUS; i++) {
-        core[i] = new Core(&osTime, &cv, &cvMutex, algorithm, &osTimeUpdated,&barrier, roundRobinQuant);
+        core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier, i, roundRobinQuant);
     }
 
     vector<Event> currentEvents;
 
+    bool allFinished = true;
+
     while (true) {
         if (events->empty()) {
-            bool allFinished = true;
+            allFinished = true;
             for (int i=0; i<numCPUS; i++) {
                 core[i]->addEvent(Event(FINISHEXECUTION, 10000000, Process()));
                 allFinished = (allFinished && core[i]->isFinished());

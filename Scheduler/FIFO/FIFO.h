@@ -29,6 +29,8 @@ public:
 
     std::vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) override;
 
+    string getCoreAlgortihm(int coreID) override;
+
 private:
     std::vector<Event> schedule(int time, Metrics &stats, bool timerExpired) override;
 };

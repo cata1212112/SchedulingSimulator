@@ -105,3 +105,7 @@ std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
     }
     return {};
 }
+
+string RR::getCoreAlgortihm(int coreID) {
+    return "Round Robin";
+}

@@ -22,6 +22,8 @@ public:
 
     vector<Event> processCPUComplete(Process p, int time, Metrics &stats) override;
 
+    string getCoreAlgortihm(int coreID) override;
+
     vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats) override;
 
     vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) override;

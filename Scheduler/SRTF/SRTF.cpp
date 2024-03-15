@@ -94,3 +94,7 @@ std::vector<Event> SRTF::schedule(int time, Metrics &stats, bool timerExpired) {
     }
     return {};
 }
+
+string SRTF::getCoreAlgortihm(int coreID) {
+    return "Shortest Remaining Time First";
+}

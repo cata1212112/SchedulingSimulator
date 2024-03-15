@@ -10,15 +10,48 @@ import numpy as np
 def plot_data(cores_data):
     num_cores = len(cores_data)
     number_of_algorithms = len(cores_data[0])
+    if num_cores > 1:
+        fig, axes = plt.subplots(num_cores, 2, figsize=(10 * number_of_algorithms, 4 * num_cores))
 
-    fig, axes = plt.subplots(num_cores, 2, figsize=(4 * number_of_algorithms, 2 * num_cores))
+        for index in cores_data.keys():
+            core_data = cores_data[index]
+            axes[index, 0].set_title("Core {} : CPU Utilization".format(index))
+            axes[index, 0].bar(core_data.keys(), [core_data[alg]['cpu_utilization'] for alg in core_data.keys()])
 
-    for index in cores_data.keys():
-        core_data = cores_data[index]
-        axes[index, 0].set_title("Core {} : CPU Utilization".format(index))
-        axes[index, 0].bar(core_data.keys(), [core_data[alg]['cpu_utilization'] for alg in core_data.keys()])
+            axes[index, 1].set_title("Core {} : Metrics".format(index))
 
-        axes[index, 1].set_title("Core {} : Metrics".format(index))
+            algortihms = core_data.keys()
+            metrics = {}
+            metrics['avg_turnaround_time'] = []
+            metrics['avg_waiting_time'] = []
+            metrics['avg_response_time'] = []
+
+            for alg in algortihms:
+                metrics['avg_turnaround_time'].append(core_data[alg]['avg_turnaround_time'])
+                metrics['avg_waiting_time'].append(core_data[alg]['avg_waiting_time'])
+                metrics['avg_response_time'].append(core_data[alg]['avg_response_time'])
+
+            x = np.arange(len(algortihms))
+            width = 0.25
+            multiplier = 0
+
+            for attribute, measurement in metrics.items():
+                offset = width * multiplier
+                rects = axes[index, 1].bar(x + offset, measurement, width, label=attribute)
+                axes[index, 1].bar_label(rects, padding=3)
+                multiplier += 1
+
+            axes[index, 1].set_ylabel('Time unit')
+            axes[index, 1].set_xticks(x + width, algortihms)
+            axes[index, 1].legend(loc='center left', ncols=1, bbox_to_anchor=(1, 0.5))
+    else:
+        fig, axes = plt.subplots(num_cores, 2, figsize = (5 * number_of_algorithms, 4))
+
+        core_data = cores_data[0]
+        axes[0].set_title("Core {} : CPU Utilization".format(0))
+        axes[0].bar(core_data.keys(), [core_data[alg]['cpu_utilization'] for alg in core_data.keys()])
+
+        axes[1].set_title("Core {} : Metrics".format(0))
 
         algortihms = core_data.keys()
         metrics = {}
@@ -37,13 +70,13 @@ def plot_data(cores_data):
 
         for attribute, measurement in metrics.items():
             offset = width * multiplier
-            rects = axes[index, 1].bar(x + offset, measurement, width, label=attribute)
-            axes[index, 1].bar_label(rects, padding=3)
+            rects = axes[1].bar(x + offset, measurement, width, label=attribute)
+            axes[1].bar_label(rects, padding=3)
             multiplier += 1
 
-        axes[index, 1].set_ylabel('Time unit')
-        axes[index, 1].set_xticks(x + width, algortihms)
-        axes[index, 1].legend(loc='center left', ncols=1, bbox_to_anchor=(1, 0.5))
+        axes[1].set_ylabel('Time unit')
+        axes[1].set_xticks(x + width, algortihms)
+        axes[1].legend(loc='center left', ncols=1, bbox_to_anchor=(1, 0.5))
 
     fig.tight_layout()
     plt.savefig('performance_metrics_plot.png')
@@ -69,8 +102,8 @@ def main():
             algortihms_data = {}
             algortihms_data['cpu_utilization'] = float(core_data[i+1])
             algortihms_data['avg_waiting_time'] = float(core_data[i+2])
-            algortihms_data['avg_response_time'] = float(core_data[i+3])
-            algortihms_data['avg_turnaround_time'] = float(core_data[i+4])
+            algortihms_data['avg_turnaround_time'] = float(core_data[i+3])
+            algortihms_data['avg_response_time'] = float(core_data[i+4])
 
             algortihms[core_data[i]] = algortihms_data
 

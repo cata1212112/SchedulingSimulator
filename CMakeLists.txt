@@ -41,6 +41,8 @@ add_executable(Licenta main.cpp
         Scheduler/CompletlyFairScheduler/SingleCoreCFS.h
         DiscreteEventSimulator/Core/Core.cpp
         DiscreteEventSimulator/Core/Core.h
+        Scheduler/TestMultiCore1/TestMultiCore1.cpp
+        Scheduler/TestMultiCore1/TestMultiCore1.h
 )
 target_link_libraries(Licenta
         Qt::Core
