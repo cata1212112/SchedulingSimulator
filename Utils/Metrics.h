@@ -17,7 +17,11 @@ private:
     std::string algorithm;
     std::vector<std::tuple<int, int, int>> gantt;
 public:
-    explicit Metrics(const std::string &algorithm) : algorithm(algorithm) {}
+    explicit Metrics(const std::string &algorithm, int roundRobinQuant=0) : algorithm(algorithm) {
+        if (algorithm == "Round Robin") {
+            Metrics::algorithm = algorithm + " TQ = " + std::to_string(roundRobinQuant);
+        }
+    }
 
 
     void addToGanttChart(int pid, int left, int right) {

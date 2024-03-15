@@ -367,12 +367,18 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
 
         vector<string> alreadyTried = DES::getAlgorithms();
         for (auto algorithm : ImplementedAlgorithms::getSingleCoreAlgorithms()) {
-            if (std::find(alreadyTried.begin(), alreadyTried.end(), algorithm) == alreadyTried.end()) {
+            if (algorithm == "Round Robin" || std::find(alreadyTried.begin(), alreadyTried.end(), algorithm) == alreadyTried.end()) {
                 QAction *action = menu.addAction(QString::fromStdString(algorithm));
 
                 connect(action, &QAction::triggered, this, [=](){
+                    int quantum = 0;
+                    if (algorithm == "Round Robin") {
+                        bool ok;
+                        quantum = QInputDialog::getInt(this, tr("Enter Quantum"), tr("Quantum:"), 1, 1, 100, 1, &ok);
+                    }
                     des->setAlgorithm(algorithm);
                     des->setInputFromString(des->getInput());
+                    des->setRoundRobinQuant(quantum);
                     deleteContent(ui->running);
                     gotoRunning(des, numCores);
                 });

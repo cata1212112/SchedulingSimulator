@@ -30,7 +30,9 @@ string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) 
             int ioBurst = Random::randomBurst(getMultiplier(!processType));
 
             cpuBursts.push_back(cpuBurst);
-            ioBursts.push_back(ioBurst);
+            if (j < numBursts - 1) {
+                ioBursts.push_back(ioBurst);
+            }
         }
 
         Process p(cpuBursts, ioBursts, priority);
@@ -146,7 +148,10 @@ bool DES::isUsedFileAsInput() const {
     return usedFileAsInput;
 }
 
-const string &DES::getAlgorithm() const {
+string DES::getAlgorithm() const {
+    if (algorithm == "Round Robin") {
+        return algorithm + " TQ = " + to_string(roundRobinQuant);
+    }
     return algorithm;
 }
 

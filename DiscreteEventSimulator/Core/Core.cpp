@@ -18,7 +18,7 @@ void Core::runSimulation() {
 
     int numberOfProcesses = 0;
 
-    Metrics stats(algortihm);
+    Metrics stats(algortihm, roundRobinQuant);
     stats.setCore(coreID);
     SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant);
 

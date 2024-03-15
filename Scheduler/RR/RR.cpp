@@ -37,6 +37,7 @@ vector<Event> RR::processIOComplete(std::vector<Process> p, int time, Metrics &s
         if (process.finished()) {
             stats.addToTT(time - process.getArrivalTime());
         } else {
+            process.setEnteredReadyQueue(time);
             addToReadyQueue.push_back(process);
         }
     }

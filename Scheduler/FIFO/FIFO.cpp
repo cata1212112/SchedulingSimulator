@@ -36,6 +36,7 @@ std::vector<Event> FIFO::processIOComplete(std::vector<Process> p, int time, Met
         if (process.finished()) {
             stats.addToTT(time - process.getArrivalTime());
         } else {
+            process.setEnteredReadyQueue(time);
             addToReadyQueue.push_back(process);
         }
     }

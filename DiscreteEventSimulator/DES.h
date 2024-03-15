@@ -68,7 +68,7 @@ public:
 
     void setAlgorithm(const string &algorithm);
 
-    const string &getAlgorithm() const;
+    string getAlgorithm() const;
 
     const string &getInput() const;
 

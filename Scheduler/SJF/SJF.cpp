@@ -33,6 +33,7 @@ vector<Event> SJF::processIOComplete(std::vector<Process> p, int time, Metrics &
         if (process.finished()) {
             stats.addToTT(time - process.getArrivalTime());
         } else {
+            process.setEnteredReadyQueue(time);
             addToReadyQueue.push_back(process);
         }
     }
