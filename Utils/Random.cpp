@@ -15,7 +15,7 @@ bool Random::randomBit() {
 }
 
 int Random::randomBurst(double multiplier) {
-    int randomInteger = exponential(gen);
+    int randomInteger = exponential(gen) + 1;
     return randomInteger * multiplier;
 }
 

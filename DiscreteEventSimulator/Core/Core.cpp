@@ -136,3 +136,11 @@ int Core::getCoreTime() const {
 bool Core::isFinished() const {
     return finished;
 }
+
+bool Core::isSentFinish() const {
+    return sentFinish;
+}
+
+void Core::setSentFinish(bool sentFinish) {
+    Core::sentFinish = sentFinish;
+}

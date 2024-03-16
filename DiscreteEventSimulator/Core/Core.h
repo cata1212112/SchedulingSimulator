@@ -30,8 +30,13 @@ private:
     bool finished = false;
     std::barrier<> *barrier;
     int coreID;
+    bool sentFinish = false;
 
 public:
+    bool isSentFinish() const;
+
+    void setSentFinish(bool sentFinish);
+
     Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
          bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant = 0);
 

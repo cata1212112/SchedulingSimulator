@@ -24,6 +24,7 @@ vector<Event> RR::processCPUComplete(Process p, int time, Metrics &stats) {
     currentProcess = nullptr;
     std::vector<Event> events;
     if (p.hasRemainingIO()) {
+        ioQueue += 1;
         events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
     } else {
         stats.addToTT(time - p.getArrivalTime());
@@ -34,6 +35,7 @@ vector<Event> RR::processCPUComplete(Process p, int time, Metrics &stats) {
 vector<Event> RR::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
     vector<Process> addToReadyQueue;
     for (auto &process:p) {
+        ioQueue -= 1;
         if (process.finished()) {
             stats.addToTT(time - process.getArrivalTime());
         } else {
@@ -74,7 +76,19 @@ std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
         return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
     } else if (timerExpired) {
         if (readyQueue->empty()) {
-            return {};
+            if (currentProcess != nullptr) {
+                currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
+                int remainingBurst = currentProcess->getRemainingBurst();
+                if (remainingBurst > quant) {
+
+                    return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}};
+                }
+
+                return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
+
+            } else if (ioQueue > 0){
+                return {Event{TIMEREXPIRED, time + quant, Process()}};
+            }
         }
         currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
         currentProcess->setEnteredReadyQueue(time);

@@ -43,6 +43,8 @@ add_executable(Licenta main.cpp
         DiscreteEventSimulator/Core/Core.h
         Scheduler/TestMultiCore1/TestMultiCore1.cpp
         Scheduler/TestMultiCore1/TestMultiCore1.h
+        Scheduler/EDRR/EDRR.cpp
+        Scheduler/EDRR/EDRR.h
 )
 target_link_libraries(Licenta
         Qt::Core

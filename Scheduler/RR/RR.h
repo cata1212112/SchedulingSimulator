@@ -10,6 +10,7 @@
 class RR : public SchedulingAlgorithm{
 private:
     int quant;
+    int ioQueue = 0;
 
     static std::function<bool(const Process&, const Process&)> RRQueue;
 

@@ -643,6 +643,8 @@ Licenta_autogen/timestamp: \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/CFS.h \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/SingleCoreCFS.h \
+	C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.cpp \
+	C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.h \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.cpp \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.cpp \

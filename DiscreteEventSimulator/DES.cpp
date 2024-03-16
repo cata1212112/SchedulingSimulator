@@ -89,7 +89,10 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
         if (events->empty()) {
             allFinished = true;
             for (int i=0; i<numCPUS; i++) {
-                core[i]->addEvent(Event(FINISHEXECUTION, 10000000, Process()));
+                if (!core[i]->isSentFinish()) {
+                    core[i]->addEvent(Event(FINISHEXECUTION, 10000000, Process()));
+                    core[i]->setSentFinish(true);
+                }
                 allFinished = (allFinished && core[i]->isFinished());
             }
 
