@@ -24,6 +24,7 @@ private:
     int arrivalTime = 0;
     bool flag = false;
     bool assigned = 0;
+    int waitingTime = 0;
     int lastStarted;
     double vtime = 0;
 
@@ -55,12 +56,17 @@ public:
             arrivalTime(other.arrivalTime),
             assigned(other.assigned),
             lastStarted(other.lastStarted),
-            vtime(other.vtime)
+            vtime(other.vtime),
+            waitingTime(other.waitingTime)
             {}
 
     const vector<int> &getCpUburst() const;
 
     const vector<int> &getIOburst() const;
+
+    int getWaitingTime() const;
+
+    void setWaitingTime(int waitingTime);
 
     int getPriority() const;
 

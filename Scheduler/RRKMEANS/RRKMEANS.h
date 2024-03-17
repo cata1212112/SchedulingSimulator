@@ -5,8 +5,10 @@
 #ifndef LICENTA_RRKMEANS_H
 #define LICENTA_RRKMEANS_H
 
+#include "../SchedulingAlgorithm.h"
 
-class RRKMEANS {
+
+class RRKMEANS : public SchedulingAlgorithm{
 
 };
 

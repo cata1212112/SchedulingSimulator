@@ -371,6 +371,12 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.h",
+			"MU",
+			"OXL34ETBH7/moc_KMEANS.cpp",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Utils/Metrics.h",
 			"MU",
 			"3AKZUBQRRA/moc_Metrics.cpp",
@@ -515,6 +521,7 @@
 			"MU",
 			null
 		],
+		[ "C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Utils/Random.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/main.cpp", "MU", null ]
 	],

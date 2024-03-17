@@ -222,7 +222,7 @@ public:
 "}\n"
 ""));
         numarprocese->setMinimum(1);
-        numarprocese->setMaximum(40);
+        numarprocese->setMaximum(400);
         numarprocese->setOrientation(Qt::Orientation::Horizontal);
 
         verticalLayout->addWidget(numarprocese);
@@ -363,7 +363,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(3);
+        stackedWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

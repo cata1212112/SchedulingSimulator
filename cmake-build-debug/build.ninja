@@ -209,6 +209,14 @@ build CMakeFiles/Licenta.dir/Scheduler/DMFQ/DMFQ.cpp.obj: CXX_COMPILER__Licenta_
   OBJECT_DIR = CMakeFiles\Licenta.dir
   OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Scheduler\DMFQ
 
+build CMakeFiles/Licenta.dir/Utils/KMEANS/KMEANS.cpp.obj: CXX_COMPILER__Licenta_unscanned_Debug C$:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.cpp || cmake_object_order_depends_target_Licenta
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\Licenta.dir\Utils\KMEANS\KMEANS.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -isystem C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/include -isystem C:/Qt/6.7.0/mingw_64/include/QtCore -isystem C:/Qt/6.7.0/mingw_64/include -isystem C:/Qt/6.7.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.0/mingw_64/include/QtGui -isystem C:/Qt/6.7.0/mingw_64/include/QtWidgets
+  OBJECT_DIR = CMakeFiles\Licenta.dir
+  OBJECT_FILE_DIR = CMakeFiles\Licenta.dir\Utils\KMEANS
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Licenta
@@ -217,7 +225,7 @@ build CMakeFiles/Licenta.dir/Scheduler/DMFQ/DMFQ.cpp.obj: CXX_COMPILER__Licenta_
 #############################################
 # Link the executable Licenta.exe
 
-build Licenta.exe: CXX_EXECUTABLE_LINKER__Licenta_Debug CMakeFiles/Licenta.dir/Licenta_autogen/mocs_compilation.cpp.obj CMakeFiles/Licenta.dir/main.cpp.obj CMakeFiles/Licenta.dir/Pages/MainWindow/mainwindow.cpp.obj CMakeFiles/Licenta.dir/DiscreteEventSimulator/Event/Event.cpp.obj CMakeFiles/Licenta.dir/DiscreteEventSimulator/DES.cpp.obj CMakeFiles/Licenta.dir/Process/Process.cpp.obj CMakeFiles/Licenta.dir/Utils/Random.cpp.obj CMakeFiles/Licenta.dir/Scheduler/FIFO/FIFO.cpp.obj CMakeFiles/Licenta.dir/Scheduler/RR/RR.cpp.obj CMakeFiles/Licenta.dir/Scheduler/SJF/SJF.cpp.obj CMakeFiles/Licenta.dir/Scheduler/SRTF/SRTF.cpp.obj CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/CFS.cpp.obj CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp.obj CMakeFiles/Licenta.dir/DiscreteEventSimulator/Core/Core.cpp.obj CMakeFiles/Licenta.dir/Scheduler/TestMultiCore1/TestMultiCore1.cpp.obj CMakeFiles/Licenta.dir/Scheduler/EDRR/EDRR.cpp.obj CMakeFiles/Licenta.dir/Scheduler/ETRR/ETRR.cpp.obj CMakeFiles/Licenta.dir/Scheduler/MTSJ/MTSJ.cpp.obj CMakeFiles/Licenta.dir/Scheduler/RRKMEANS/RRKMEANS.cpp.obj CMakeFiles/Licenta.dir/Scheduler/DMFQ/DMFQ.cpp.obj | C$:/Qt/6.7.0/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.7.0/mingw_64/lib/libQt6Gui.a C$:/Qt/6.7.0/mingw_64/lib/libQt6Core.a || Licenta_autogen Licenta_autogen_timestamp_deps
+build Licenta.exe: CXX_EXECUTABLE_LINKER__Licenta_Debug CMakeFiles/Licenta.dir/Licenta_autogen/mocs_compilation.cpp.obj CMakeFiles/Licenta.dir/main.cpp.obj CMakeFiles/Licenta.dir/Pages/MainWindow/mainwindow.cpp.obj CMakeFiles/Licenta.dir/DiscreteEventSimulator/Event/Event.cpp.obj CMakeFiles/Licenta.dir/DiscreteEventSimulator/DES.cpp.obj CMakeFiles/Licenta.dir/Process/Process.cpp.obj CMakeFiles/Licenta.dir/Utils/Random.cpp.obj CMakeFiles/Licenta.dir/Scheduler/FIFO/FIFO.cpp.obj CMakeFiles/Licenta.dir/Scheduler/RR/RR.cpp.obj CMakeFiles/Licenta.dir/Scheduler/SJF/SJF.cpp.obj CMakeFiles/Licenta.dir/Scheduler/SRTF/SRTF.cpp.obj CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/CFS.cpp.obj CMakeFiles/Licenta.dir/Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp.obj CMakeFiles/Licenta.dir/DiscreteEventSimulator/Core/Core.cpp.obj CMakeFiles/Licenta.dir/Scheduler/TestMultiCore1/TestMultiCore1.cpp.obj CMakeFiles/Licenta.dir/Scheduler/EDRR/EDRR.cpp.obj CMakeFiles/Licenta.dir/Scheduler/ETRR/ETRR.cpp.obj CMakeFiles/Licenta.dir/Scheduler/MTSJ/MTSJ.cpp.obj CMakeFiles/Licenta.dir/Scheduler/RRKMEANS/RRKMEANS.cpp.obj CMakeFiles/Licenta.dir/Scheduler/DMFQ/DMFQ.cpp.obj CMakeFiles/Licenta.dir/Utils/KMEANS/KMEANS.cpp.obj | C$:/Qt/6.7.0/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.7.0/mingw_64/lib/libQt6Gui.a C$:/Qt/6.7.0/mingw_64/lib/libQt6Core.a || Licenta_autogen Licenta_autogen_timestamp_deps
   FLAGS = -g
   LINK_LIBRARIES = C:/Qt/6.7.0/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.7.0/mingw_64/lib/libQt6Gui.a  C:/Qt/6.7.0/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Licenta.dir

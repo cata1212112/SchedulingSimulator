@@ -27,7 +27,8 @@ vector<Event> EDRR::processCPUComplete(Process p, int time, Metrics &stats) {
     currentProcess = nullptr;
     std::vector<Event> events;
     if (p.hasRemainingIO()) {
-        events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
+        int remainingTime = p.getRemainingBurst();
+        events.push_back(Event(IOBURSTCOMPLETE, time + remainingTime, Process(*p.consumeBurst())));
     } else {
         stats.addToTT(time - p.getArrivalTime());
     }
@@ -70,9 +71,8 @@ vector<Event> EDRR::schedule(int time, Metrics &stats, bool timerExpired) {
     }
 
     if (lastArrived == time) {
-        quant = int(0.6 * (maximumBurstTime + 0.0));
+        quant = int(0.8 * (maximumBurstTime + 0.0));
     }
-    std::cout << quant << "\n";
 
     if (currentProcess == nullptr && !readyQueue->empty()) {
         bool assigned = false;

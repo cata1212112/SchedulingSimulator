@@ -53,6 +53,8 @@ add_executable(Licenta main.cpp
         Scheduler/RRKMEANS/RRKMEANS.h
         Scheduler/DMFQ/DMFQ.cpp
         Scheduler/DMFQ/DMFQ.h
+        Utils/KMEANS/KMEANS.cpp
+        Utils/KMEANS/KMEANS.h
 )
 target_link_libraries(Licenta
         Qt::Core

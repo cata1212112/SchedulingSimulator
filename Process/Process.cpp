@@ -104,3 +104,11 @@ int Process::getLastStarted() const {
 void Process::setLastStarted(int lastStarted) {
     Process::lastStarted = lastStarted;
 }
+
+int Process::getWaitingTime() const {
+    return waitingTime;
+}
+
+void Process::setWaitingTime(int waitingTime) {
+    Process::waitingTime = waitingTime;
+}

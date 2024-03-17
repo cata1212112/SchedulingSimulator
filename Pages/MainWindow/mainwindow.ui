@@ -43,7 +43,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -268,7 +268,7 @@ QSlider::handle:horizontal:hover {
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>40</number>
+           <number>400</number>
           </property>
           <property name="orientation">
            <enum>Qt::Orientation::Horizontal</enum>
