@@ -6,9 +6,9 @@
 
 std::function<bool(const Process&, const Process&)> FIFO::FIFOQueue = [](const Process &a, const Process &b) {
     if (a.getArrivalTime() == b.getArrivalTime()) {
-        return a.getId() > b.getId();
+        return a.getId() < b.getId();
     }
-    return a.getArrivalTime() > b.getArrivalTime();
+    return a.getArrivalTime() < b.getArrivalTime();
 };
 
 std::vector<Event> FIFO::processArrived(std::vector<Process> p, int time, Metrics &stats) {

@@ -6,6 +6,7 @@
 #include "Core/Core.h"
 #include <map>
 #include <iostream>
+#include <ranges>
 
 vector<string> DES::algortihms;
 
@@ -20,8 +21,9 @@ string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) 
         int arrival = Random::randomInteger(maximumTime);
         int numBursts = Random::randomInteger(MAXIMUMNUMCPUBURSTS) + 1;
         bool processType = Random::randomBit();
+        processType = true;
         int priority = Random::randomInteger(10);
-
+        numBursts = 1;
         vector<int> cpuBursts;
         vector<int> ioBursts;
 
@@ -176,13 +178,20 @@ void DES::setInputFromString(const string &input) {
     events = new priority_queue<Event>();
 
     string firstLine, secondLine, thirdLine;
+    vector<Event> eventVec;
     while (getline(ss, firstLine) && getline(ss, secondLine) && getline(ss, thirdLine)) {
         if (!firstLine.empty()) {
             numberOfProcesses += 1;
             Event event = Event::fromStrings(firstLine, secondLine, thirdLine);
+//            eventVec.push_back(event);
             events->push(event);
+
         }
     }
+//
+//    for (auto & it : std::ranges::reverse_view(eventVec)) {
+//        events->push(it);
+//    }
 }
 
 const string &DES::getPartialMetricsInput(int core) const {

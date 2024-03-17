@@ -14,7 +14,7 @@ private:
 
     static std::function<bool(const Process&, const Process&)> RRQueue;
 
-    WrapperPriorityQueue<Process, decltype(RRQueue)>* readyQueue;
+    WrapperPriorityQueue<decltype(RRQueue)>* readyQueue;
 public:
     int getQuant() const {
         return quant;
@@ -25,7 +25,7 @@ public:
     }
 
     RR(int quant) :quant(quant){
-        readyQueue = new WrapperPriorityQueue<Process, decltype(RRQueue)>(RRQueue);
+        readyQueue = new WrapperPriorityQueue<decltype(RRQueue)>(RRQueue);
     }
 
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;

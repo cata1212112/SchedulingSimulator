@@ -7,14 +7,16 @@
 
 #include "../SchedulingAlgorithm.h"
 #include <functional>
+#include <queue>
 
 class EDRR : public SchedulingAlgorithm{
 private:
     int quant;
+    int lastArrived = 0;
 
     static std::function<bool(const Process&, const Process&)> RRQueue;
 
-    WrapperPriorityQueue<Process, decltype(RRQueue)>* readyQueue;
+    std::queue<Process>* readyQueue;
 public:
     EDRR();
 

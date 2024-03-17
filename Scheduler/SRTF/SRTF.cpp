@@ -6,7 +6,7 @@
 #include "SRTF.h"
 
 std::function<bool(const Process&, const Process&)> SRTF::SJFQueue = [](const Process &a, const Process &b) {
-    return a.getRemainingBurst() > b.getRemainingBurst();
+    return a.getRemainingBurst() < b.getRemainingBurst();
 };
 
 vector<Event> SRTF::processArrived(std::vector<Process> p, int time, Metrics &stats) {

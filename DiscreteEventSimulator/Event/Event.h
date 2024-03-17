@@ -35,6 +35,9 @@ public:
     Event();
 
     bool operator<(const Event &other) const {
+        if (time == other.time) {
+            return process.getId() > other.process.getId();
+        }
         return time > other.time;
     }
 

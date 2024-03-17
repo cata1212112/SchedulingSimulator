@@ -12,11 +12,11 @@ class SJF : public SchedulingAlgorithm{
 private:
     static std::function<bool(const Process&, const Process&)> SJFQueue;
 
-    WrapperPriorityQueue<Process, decltype(SJFQueue)>* readyQueue;
+    WrapperPriorityQueue<decltype(SJFQueue)>* readyQueue;
 
 public:
     SJF() {
-        readyQueue = new WrapperPriorityQueue<Process, decltype(SJFQueue)>(SJFQueue);
+        readyQueue = new WrapperPriorityQueue<decltype(SJFQueue)>(SJFQueue);
     }
 
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;

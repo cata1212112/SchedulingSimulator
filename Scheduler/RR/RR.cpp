@@ -6,7 +6,7 @@
 #include "RR.h"
 
 std::function<bool(const Process&, const Process&)> RR::RRQueue = [](const Process &a, const Process &b) {
-    return a.getArrivalTime() > b.getArrivalTime();
+    return a.getArrivalTime() < b.getArrivalTime();
 };
 
 vector<Event> RR::processArrived(std::vector<Process> p, int time, Metrics &stats) {

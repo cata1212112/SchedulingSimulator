@@ -45,6 +45,14 @@ add_executable(Licenta main.cpp
         Scheduler/TestMultiCore1/TestMultiCore1.h
         Scheduler/EDRR/EDRR.cpp
         Scheduler/EDRR/EDRR.h
+        Scheduler/ETRR/ETRR.cpp
+        Scheduler/ETRR/ETRR.h
+        Scheduler/MTSJ/MTSJ.cpp
+        Scheduler/MTSJ/MTSJ.h
+        Scheduler/RRKMEANS/RRKMEANS.cpp
+        Scheduler/RRKMEANS/RRKMEANS.h
+        Scheduler/DMFQ/DMFQ.cpp
+        Scheduler/DMFQ/DMFQ.h
 )
 target_link_libraries(Licenta
         Qt::Core

@@ -5,7 +5,7 @@
 #include "SJF.h"
 
 std::function<bool(const Process&, const Process&)> SJF::SJFQueue = [](const Process &a, const Process &b) {
-    return a.getRemainingBurst() > b.getRemainingBurst();
+    return a.getRemainingBurst() < b.getRemainingBurst();
 };
 
 vector<Event> SJF::processArrived(std::vector<Process> p, int time, Metrics &stats) {

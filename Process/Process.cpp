@@ -56,7 +56,7 @@ int Process::getRemainingBurst() const {
 Process *Process::consumeBurst() {
     if (!flag) {
         if (hasRemainingIO()) {
-            remainingBurst = IOburst[currentBurst++];
+            remainingBurst = IOburst[currentBurst];
         }
         currentBurst++;
         flag = !flag;
