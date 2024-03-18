@@ -365,6 +365,12 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore2/TestMultiCore2.h",
+			"MU",
+			"CC5IPD7DZW/moc_TestMultiCore2.cpp",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h",
 			"MU",
 			"3AKZUBQRRA/moc_ImplementedAlgorithms.cpp",
@@ -518,6 +524,11 @@
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.cpp", "MU", null ],
 		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore1/TestMultiCore1.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore2/TestMultiCore2.cpp",
 			"MU",
 			null
 		],

@@ -55,6 +55,8 @@ add_executable(Licenta main.cpp
         Scheduler/DMFQ/DMFQ.h
         Utils/KMEANS/KMEANS.cpp
         Utils/KMEANS/KMEANS.h
+        Scheduler/TestMultiCore2/TestMultiCore2.cpp
+        Scheduler/TestMultiCore2/TestMultiCore2.h
 )
 target_link_libraries(Licenta
         Qt::Core

@@ -438,6 +438,7 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SchedulingAlgorithm.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore1/TestMultiCore1.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore2/TestMultiCore2.h \
   C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Metrics.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Random.h \

@@ -9,7 +9,7 @@
 
 class RR : public SchedulingAlgorithm{
 private:
-    int quant;
+    int quant = 10;
     int ioQueue = 0;
 
     static std::function<bool(const Process&, const Process&)> RRQueue;
@@ -24,7 +24,9 @@ public:
         RR::quant = quant;
     }
 
-    RR(int quant) :quant(quant){
+    RR();
+
+    RR(int quant = 10) :quant(quant){
         readyQueue = new WrapperPriorityQueue<decltype(RRQueue)>(RRQueue);
     }
 

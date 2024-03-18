@@ -206,7 +206,7 @@ void MainWindow::handleMultiCoreButton() {
             connect(button, &QPushButton::clicked, this, [=]() {
                 selectedAlgorithm = algorithm;
 
-                int quantum = 0;
+                int quantum = 10;
                 if (selectedAlgorithm == "Round Robin") {
                     bool ok = false;
                     quantum = QInputDialog::getInt(this, tr("Enter Quantum"), tr("Quantum:"), 1, 1, 100, 1, &ok);

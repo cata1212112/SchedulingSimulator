@@ -54,6 +54,7 @@ public:
     DES(string algorithm) : algorithm(algorithm) {
         algortihms.push_back(algorithm);
         events = new priority_queue<Event>();
+        roundRobinQuant = 10;
     }
 
     string generateInputData(int numProcesses, int maximumTime);

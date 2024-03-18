@@ -18,13 +18,10 @@ string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) 
 
     string inputData;
     for (int i=0; i<numProcesses; i++) {
-//        int arrival = Random::randomInteger(maximumTime);
-        int arrival = 0;
+        int arrival = Random::randomInteger(maximumTime);
         int numBursts = Random::randomInteger(MAXIMUMNUMCPUBURSTS) + 1;
         bool processType = Random::randomBit();
-        processType = true;
         int priority = Random::randomInteger(9);
-        numBursts = 1;
         vector<int> cpuBursts;
         vector<int> ioBursts;
 

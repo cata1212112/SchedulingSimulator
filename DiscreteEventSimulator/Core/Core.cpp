@@ -119,7 +119,7 @@ Core::Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm
            bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant)
         : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID){
     events = new priority_queue<Event>();
-
+    roundRobinQuant = 10;
     runningThread = new std::thread(&Core::runSimulation, this);
 }
 

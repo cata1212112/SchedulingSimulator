@@ -15,11 +15,12 @@
 #include "../Scheduler/SRTF/SRTF.h"
 #include "../Scheduler/EDRR/EDRR.h"
 #include "../Scheduler/TestMultiCore1/TestMultiCore1.h"
+#include "../Scheduler/TestMultiCore2/TestMultiCore2.h"
 
 class ImplementedAlgorithms {
 public:
     static std::vector<std::string> getSingleCoreAlgorithms() {
-        return {"First In First Out", "Shortest Job First", "Shortest Remaining Time First", "Round Robin", "Efficient Dynamic Round Robin"};
+        return {"Efficient Dynamic Round Robin", "First In First Out", "Shortest Job First", "Shortest Remaining Time First", "Round Robin"};
     }
 
     static SchedulingAlgorithm& getAlgorithm(const std::string &name, int quant=-1) {
@@ -41,10 +42,13 @@ public:
         } else if (name == "Combinatie FIFO SRTF(test 2 coruri)") {
             TestMultiCore1 *tmc1 = new TestMultiCore1();
             return *tmc1;
+        } else if (name == "Combinatie RR FIFO SJF SRTF(test 4 coruri)") {
+            TestMultiCore2 *tmc2 = new TestMultiCore2();
+            return *tmc2;
         }
     }
 
     static std::vector<std::string> getMultiCoreAlgortihms() {
-        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)", "Completely Fair Scheduler"};
+        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)"};//, "[TEST] Completely Fair Scheduler"};
     }
 };
