@@ -35,6 +35,12 @@ public:
     QPushButton *realtime;
     QWidget *RunSimulation;
     QVBoxLayout *verticalLayout;
+    QLabel *label_3;
+    QLabel *label_5;
+    QSlider *horizontalSlider;
+    QLabel *label_4;
+    QLabel *label_6;
+    QSlider *horizontalSlider_2;
     QLabel *label;
     QLabel *timpselectat;
     QSlider *maximumTime;
@@ -140,6 +146,40 @@ public:
         verticalLayout = new QVBoxLayout(RunSimulation);
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
+        label_3 = new QLabel(RunSimulation);
+        label_3->setObjectName("label_3");
+
+        verticalLayout->addWidget(label_3, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        label_5 = new QLabel(RunSimulation);
+        label_5->setObjectName("label_5");
+        label_5->setFont(font);
+
+        verticalLayout->addWidget(label_5, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        horizontalSlider = new QSlider(RunSimulation);
+        horizontalSlider->setObjectName("horizontalSlider");
+        horizontalSlider->setOrientation(Qt::Orientation::Horizontal);
+
+        verticalLayout->addWidget(horizontalSlider);
+
+        label_4 = new QLabel(RunSimulation);
+        label_4->setObjectName("label_4");
+
+        verticalLayout->addWidget(label_4, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        label_6 = new QLabel(RunSimulation);
+        label_6->setObjectName("label_6");
+        label_6->setFont(font);
+
+        verticalLayout->addWidget(label_6, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        horizontalSlider_2 = new QSlider(RunSimulation);
+        horizontalSlider_2->setObjectName("horizontalSlider_2");
+        horizontalSlider_2->setOrientation(Qt::Orientation::Horizontal);
+
+        verticalLayout->addWidget(horizontalSlider_2);
+
         label = new QLabel(RunSimulation);
         label->setObjectName("label");
 
@@ -375,6 +415,10 @@ public:
         singlecore->setText(QCoreApplication::translate("MainWindow", "Single Core", nullptr));
         multicore->setText(QCoreApplication::translate("MainWindow", "Multi Core", nullptr));
         realtime->setText(QCoreApplication::translate("MainWindow", "Real Time", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "MEAN", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "STANDARD DEVIATION", nullptr));
+        label_6->setText(QCoreApplication::translate("MainWindow", "1", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "MAXIMUM PROCESS ARRIVAL TIME", nullptr));
         timpselectat->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "NUMBER OF PROCESSES", nullptr));

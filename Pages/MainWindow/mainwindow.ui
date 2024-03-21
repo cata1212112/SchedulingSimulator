@@ -153,6 +153,58 @@ QPushButton:hover {
         <property name="spacing">
          <number>0</number>
         </property>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>MEAN</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="label_5">
+          <property name="font">
+           <font>
+            <pointsize>24</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="horizontalSlider">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>STANDARD DEVIATION</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="label_6">
+          <property name="font">
+           <font>
+            <pointsize>24</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="horizontalSlider_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
         <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
          <widget class="QLabel" name="label">
           <property name="text">

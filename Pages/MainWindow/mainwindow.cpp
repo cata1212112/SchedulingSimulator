@@ -68,11 +68,21 @@ void MainWindow::handleSingleCoreButton() {
                 ui->proceseselectate->setText(QString::fromStdString(to_string(value)));
             });
 
+            connect(ui->horizontalSlider, &QSlider::valueChanged, this, [=](int value) {
+                ui->label_5->setText(QString::fromStdString(to_string(value)));
+            });
+
+            connect(ui->horizontalSlider_2, &QSlider::valueChanged, this, [=](int value) {
+                ui->label_6->setText(QString::fromStdString(to_string(value)));
+            });
+
             DES *des = new DES(selectedAlgorithm);
             des->setRoundRobinQuant(quantum);
 
             connect(ui->generate, &QPushButton::clicked, this, [=]() {
-                string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt());
+                int mean = ui->label_5->text().toInt();
+                int std = ui->label_6->text().toInt();
+                string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt(), mean, std);
                 ui->stackedWidget->setCurrentWidget(ui->InputData);
                 lastWidget = ui->RunSimulation;
 
@@ -227,7 +237,9 @@ void MainWindow::handleMultiCoreButton() {
                 des->setRoundRobinQuant(quantum);
 
                 connect(ui->generate, &QPushButton::clicked, this, [=]() {
-                    string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt());
+                    int mean = ui->label_5->text().toInt();
+                    int std = ui->label_6->text().toInt();
+                    string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt(), mean, std);
                     ui->stackedWidget->setCurrentWidget(ui->InputData);
                     lastWidget = ui->RunSimulation;
 

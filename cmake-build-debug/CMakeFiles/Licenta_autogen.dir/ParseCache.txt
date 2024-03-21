@@ -492,3 +492,5 @@ C:/Users/Cata/Desktop/Licenta/Scheduler/DMFQ/DMFQ.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/MTSJ/MTSJ.cpp
 C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.h
 C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.cpp
+C:/Users/Cata/Desktop/Licenta/Pages/OpenGL/PlotNormal.h
+C:/Users/Cata/Desktop/Licenta/Pages/OpenGL/PlotNormal.cpp

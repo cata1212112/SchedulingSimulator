@@ -37,11 +37,11 @@ private:
     bool osTimeUpdated = false;
     static vector<string> algortihms;
 
-    static int getMultiplier(bool flag) {
+    static double getMultiplier(bool flag) {
         if (flag) {
-            return 10;
+            return 1;
         } else {
-            return 5;
+            return 1;
         }
     }
 
@@ -57,7 +57,7 @@ public:
         roundRobinQuant = 10;
     }
 
-    string generateInputData(int numProcesses, int maximumTime);
+    string generateInputData(int numProcesses, int maximumTime, int mean, int std);
 
     void readInputDataFromFile(const string& filename);
 

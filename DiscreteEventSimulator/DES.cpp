@@ -10,24 +10,26 @@
 
 vector<string> DES::algortihms;
 
-string DES::generateInputData(int numProcesses, int maximumTime=MAXIMUMARRIVAL) {
+string DES::generateInputData(int numProcesses, int maximumTime, int mean, int std) {
 
     events = new priority_queue<Event>();
 
     numberOfProcesses = numProcesses;
-
+    Random::setGaussian(mean, std);
     string inputData;
     for (int i=0; i<numProcesses; i++) {
         int arrival = Random::randomInteger(maximumTime);
         int numBursts = Random::randomInteger(MAXIMUMNUMCPUBURSTS) + 1;
         bool processType = Random::randomBit();
-        int priority = Random::randomInteger(9);
+        int priority = Random::randomInteger(9) + 1;
+
+        numBursts = 1;
         vector<int> cpuBursts;
         vector<int> ioBursts;
 
         for (int j=0; j<numBursts; j++) {
-            int cpuBurst = Random::randomBurst(getMultiplier(processType));
-            int ioBurst = Random::randomBurst(getMultiplier(!processType));
+            int cpuBurst = Random::randomGaussian(getMultiplier(processType));
+            int ioBurst = Random::randomGaussian(getMultiplier(!processType));
 
             cpuBursts.push_back(cpuBurst);
             if (j < numBursts - 1) {

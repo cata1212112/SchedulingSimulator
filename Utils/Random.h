@@ -15,6 +15,7 @@ private:
     static std::bernoulli_distribution bernoulli;
     static std::exponential_distribution<> exponential;
     static std::uniform_int_distribution<> uniform;
+    static std::normal_distribution<> gaussian;
 
 public:
 
@@ -23,6 +24,10 @@ public:
     static int randomBurst(double multiplier);
 
     static bool randomBit();
+
+    static void setGaussian(int mean, int deviation);
+
+    static int randomGaussian(double multiplier);
 };
 
 
