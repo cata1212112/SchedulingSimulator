@@ -71,6 +71,33 @@ Event Event::fromStrings(const string& firstLine, const string &secondLine, cons
     return event;
 }
 
+Event Event::fromString(const string &line) {
+    Event event;
+
+    stringstream ss(line);
+
+    int processID;
+
+    ss >> processID;
+
+    event.process.setId(processID);
+
+    int burst;
+
+    ss >> burst;
+    event.process.setCpUburst({burst});
+
+    int deadline;
+    ss >> deadline;
+    event.process.setAbsoluteDeadline(deadline);
+    event.process.setPeriod(deadline);
+    event.process.setArrivalTime(0);
+    event.type = ARRIVAL;
+    event.process.setRemainingBurst(burst);
+    return event;
+}
+
+
 Event::Event() {}
 
 eventType Event::getType() const {

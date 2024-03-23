@@ -29,6 +29,9 @@ public:
     }
 
     std::string getGanttData() {
+        if (gantt.empty()) {
+            return "[]";
+        }
         std::string data = "[";
         for (auto x : gantt) {
             data += "[" + std::to_string(std::get<0>(x)) + "," + std::to_string(std::get<1>(x)) + "," + std::to_string(std::get<2>(x)) + "],";
