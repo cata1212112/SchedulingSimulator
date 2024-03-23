@@ -16,6 +16,8 @@
 #include "../Scheduler/EDRR/EDRR.h"
 #include "../Scheduler/TestMultiCore1/TestMultiCore1.h"
 #include "../Scheduler/TestMultiCore2/TestMultiCore2.h"
+#include "../Scheduler/RealTime/GEDF/GEDF.h"
+#include "../Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h"
 
 class ImplementedAlgorithms {
 public:
@@ -45,10 +47,20 @@ public:
         } else if (name == "Combinatie RR FIFO SJF SRTF(test 4 coruri)") {
             TestMultiCore2 *tmc2 = new TestMultiCore2();
             return *tmc2;
+        } else if (name == "Global Earliest Deadline First") {
+            GEDF *gedf = new GEDF();
+            return *gedf;
+        } else if (name == "GEDFCore") {
+            GEDFCore *gedfcore = new GEDFCore();
+            return *gedfcore;
         }
     }
 
     static std::vector<std::string> getMultiCoreAlgortihms() {
         return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)"};//, "[TEST] Completely Fair Scheduler"};
+    }
+
+    static std::vector<std::string> getRealTimeAlgortihms() {
+        return {"Global Earliest Deadline First", "Least Slack Time Rate First"};
     }
 };

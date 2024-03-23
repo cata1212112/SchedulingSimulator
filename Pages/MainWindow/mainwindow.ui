@@ -43,7 +43,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -320,7 +320,7 @@ QSlider::handle:horizontal:hover {
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>400</number>
+           <number>50</number>
           </property>
           <property name="orientation">
            <enum>Qt::Orientation::Horizontal</enum>
@@ -396,6 +396,7 @@ QPushButton:hover {
       </widget>
       <widget class="QWidget" name="running"/>
       <widget class="QWidget" name="SelectMultiCoreAlgorithm"/>
+      <widget class="QWidget" name="SelectRealTimeAlgorithm"/>
       <widget class="QWidget" name="MultiCore">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item alignment="Qt::AlignmentFlag::AlignHCenter">
@@ -480,6 +481,98 @@ QPushButton:hover {
           </property>
           <property name="text">
            <string>Back</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="GenerateRealTimeData">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>NUMBER OF TASKS</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="label_8">
+          <property name="font">
+           <font>
+            <pointsize>24</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="horizontalSlider_3">
+          <property name="styleSheet">
+           <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid #4682B4;
+    height: 8px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4682B4, stop:1 #87CEEB);
+    margin: 2px 0;
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #4682B4);
+    border: 1px solid #4682B4;
+    width: 20px;
+    margin: -2px 0;
+    border-radius: 10px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #1E90FF);
+}
+</string>
+          </property>
+          <property name="minimum">
+           <number>2</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background: rgb(0, 170, 255);
+	border-radius: 20px;
+}
+
+QPushButton:hover {
+	background: rgb(0, 145, 217)
+}</string>
+          </property>
+          <property name="text">
+           <string>GENERATE</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background: rgb(0, 170, 255);
+	border-radius: 20px;
+}
+
+QPushButton:hover {
+	background: rgb(0, 145, 217)
+}</string>
+          </property>
+          <property name="text">
+           <string>Use file as input</string>
           </property>
          </widget>
         </item>

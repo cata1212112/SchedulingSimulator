@@ -329,6 +329,12 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/FSS/FSS.h",
+			"MU",
+			"AO5AVD2C72/moc_FSS.cpp",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/MTSJ/MTSJ.h",
 			"MU",
 			"7YMBV5PYRQ/moc_MTSJ.cpp",
@@ -344,6 +350,24 @@
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.h",
 			"MU",
 			"W6C5K2B73X/moc_RRKMEANS.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h",
+			"MU",
+			"TWQU2HCH3N/moc_GEDF.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h",
+			"MU",
+			"PTTSGAG3KD/moc_GEDFCore.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h",
+			"MU",
+			"N4BBQC5ROF/moc_LSTR.cpp",
 			null
 		],
 		[
@@ -398,6 +422,12 @@
 			"C:/Users/Cata/Desktop/Licenta/Utils/Style.h",
 			"MU",
 			"3AKZUBQRRA/moc_Style.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/UUniFastDiscard.h",
+			"MU",
+			"3AKZUBQRRA/moc_UUniFastDiscard.cpp",
 			null
 		],
 		[
@@ -513,10 +543,26 @@
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/ETRR/ETRR.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.cpp", "MU", null ],
+		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/FSS/FSS.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/MTSJ/MTSJ.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.cpp", "MU", null ],
 		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.cpp",
 			"MU",
 			null
 		],

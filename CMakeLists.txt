@@ -57,6 +57,15 @@ add_executable(Licenta main.cpp
         Utils/KMEANS/KMEANS.h
         Scheduler/TestMultiCore2/TestMultiCore2.cpp
         Scheduler/TestMultiCore2/TestMultiCore2.h
+        Scheduler/FSS/FSS.cpp
+        Scheduler/FSS/FSS.h
+        Scheduler/RealTime/LSTR/LSTR.cpp
+        Scheduler/RealTime/LSTR/LSTR.h
+        Scheduler/RealTime/GEDF/GEDF.cpp
+        Scheduler/RealTime/GEDF/GEDF.h
+        Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.cpp
+        Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h
+        Utils/UUniFastDiscard.h
 )
 target_link_libraries(Licenta
         Qt::Core

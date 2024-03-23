@@ -52,6 +52,7 @@ public:
     QPushButton *goback;
     QWidget *running;
     QWidget *SelectMultiCoreAlgorithm;
+    QWidget *SelectRealTimeAlgorithm;
     QWidget *MultiCore;
     QVBoxLayout *verticalLayout_3;
     QLabel *numberofcores;
@@ -59,6 +60,13 @@ public:
     QSlider *coreselector;
     QPushButton *next;
     QPushButton *back;
+    QWidget *GenerateRealTimeData;
+    QVBoxLayout *verticalLayout_4;
+    QLabel *label_7;
+    QLabel *label_8;
+    QSlider *horizontalSlider_3;
+    QPushButton *pushButton;
+    QPushButton *pushButton_2;
     QWidget *InputData;
     QWidget *SingleCore;
 
@@ -262,7 +270,7 @@ public:
 "}\n"
 ""));
         numarprocese->setMinimum(1);
-        numarprocese->setMaximum(400);
+        numarprocese->setMaximum(50);
         numarprocese->setOrientation(Qt::Orientation::Horizontal);
 
         verticalLayout->addWidget(numarprocese);
@@ -321,6 +329,9 @@ public:
         SelectMultiCoreAlgorithm = new QWidget();
         SelectMultiCoreAlgorithm->setObjectName("SelectMultiCoreAlgorithm");
         stackedWidget->addWidget(SelectMultiCoreAlgorithm);
+        SelectRealTimeAlgorithm = new QWidget();
+        SelectRealTimeAlgorithm->setObjectName("SelectRealTimeAlgorithm");
+        stackedWidget->addWidget(SelectRealTimeAlgorithm);
         MultiCore = new QWidget();
         MultiCore->setObjectName("MultiCore");
         verticalLayout_3 = new QVBoxLayout(MultiCore);
@@ -390,6 +401,76 @@ public:
         verticalLayout_3->addWidget(back);
 
         stackedWidget->addWidget(MultiCore);
+        GenerateRealTimeData = new QWidget();
+        GenerateRealTimeData->setObjectName("GenerateRealTimeData");
+        verticalLayout_4 = new QVBoxLayout(GenerateRealTimeData);
+        verticalLayout_4->setObjectName("verticalLayout_4");
+        label_7 = new QLabel(GenerateRealTimeData);
+        label_7->setObjectName("label_7");
+
+        verticalLayout_4->addWidget(label_7, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        label_8 = new QLabel(GenerateRealTimeData);
+        label_8->setObjectName("label_8");
+        label_8->setFont(font);
+
+        verticalLayout_4->addWidget(label_8, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        horizontalSlider_3 = new QSlider(GenerateRealTimeData);
+        horizontalSlider_3->setObjectName("horizontalSlider_3");
+        horizontalSlider_3->setStyleSheet(QString::fromUtf8("QSlider::groove:horizontal {\n"
+"    border: 1px solid #4682B4;\n"
+"    height: 8px;\n"
+"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4682B4, stop:1 #87CEEB);\n"
+"    margin: 2px 0;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"QSlider::handle:horizontal {\n"
+"    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #4682B4);\n"
+"    border: 1px solid #4682B4;\n"
+"    width: 20px;\n"
+"    margin: -2px 0;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QSlider::handle:horizontal:hover {\n"
+"    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #1E90FF);\n"
+"}\n"
+""));
+        horizontalSlider_3->setMinimum(2);
+        horizontalSlider_3->setMaximum(100);
+        horizontalSlider_3->setOrientation(Qt::Orientation::Horizontal);
+
+        verticalLayout_4->addWidget(horizontalSlider_3);
+
+        pushButton = new QPushButton(GenerateRealTimeData);
+        pushButton->setObjectName("pushButton");
+        pushButton->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background: rgb(0, 170, 255);\n"
+"	border-radius: 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: rgb(0, 145, 217)\n"
+"}"));
+
+        verticalLayout_4->addWidget(pushButton);
+
+        pushButton_2 = new QPushButton(GenerateRealTimeData);
+        pushButton_2->setObjectName("pushButton_2");
+        pushButton_2->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background: rgb(0, 170, 255);\n"
+"	border-radius: 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: rgb(0, 145, 217)\n"
+"}"));
+
+        verticalLayout_4->addWidget(pushButton_2);
+
+        stackedWidget->addWidget(GenerateRealTimeData);
         InputData = new QWidget();
         InputData->setObjectName("InputData");
         stackedWidget->addWidget(InputData);
@@ -403,7 +484,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(6);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -430,6 +511,10 @@ public:
         selectednumberofcores->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         next->setText(QCoreApplication::translate("MainWindow", "Next", nullptr));
         back->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
+        label_7->setText(QCoreApplication::translate("MainWindow", "NUMBER OF TASKS", nullptr));
+        label_8->setText(QCoreApplication::translate("MainWindow", "2", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "GENERATE", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Use file as input", nullptr));
     } // retranslateUi
 
 };

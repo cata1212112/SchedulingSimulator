@@ -6,7 +6,6 @@
 #include <map>
 #include <iostream>
 #include "Core.h"
-#include "../../Scheduler/SchedulingAlgorithm.h"
 #include "../../Utils/ImplementedAlgorithms.h"
 
 void Core::addEvent(Event e) {
@@ -20,7 +19,6 @@ void Core::runSimulation() {
 
     Metrics stats(algortihm, roundRobinQuant);
     stats.setCore(coreID);
-    SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant);
 
     while (true) {
         {
@@ -117,7 +115,7 @@ void Core::runSimulation() {
 
 Core::Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
            bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant)
-        : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID){
+        : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID),   schedAlgo(ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant)){
     events = new priority_queue<Event>();
     roundRobinQuant = 10;
     runningThread = new std::thread(&Core::runSimulation, this);
@@ -143,4 +141,12 @@ bool Core::isSentFinish() const {
 
 void Core::setSentFinish(bool sentFinish) {
     Core::sentFinish = sentFinish;
+}
+
+bool Core::running() {
+    return schedAlgo.isRunning();
+}
+
+int Core::getCoreId() const {
+    return coreID;
 }

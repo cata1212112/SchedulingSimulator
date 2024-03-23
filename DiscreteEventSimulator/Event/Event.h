@@ -46,6 +46,8 @@ public:
     string toString();
 
     static Event fromStrings(const string &firstLine, const string &secondLine, const string &thirdLine);
+
+    static Event fromString(const string &line);
 };
 
 

@@ -15,6 +15,7 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/atomic
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward/auto_ptr.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward/binders.h
+ mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/barrier
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bit
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/algorithmfwd.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/align.h
@@ -22,6 +23,7 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/allocated_ptr.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/allocator.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_base.h
+ mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_futex.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_lockfree_defines.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_timed_wait.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_wait.h
@@ -168,10 +170,12 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/format
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/fstream
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/functional
+ mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/future
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/initializer_list
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iomanip
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ios
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iosfwd
+ mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iostream
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/istream
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iterator
  mdp:C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/limits
@@ -438,6 +442,7 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgetsexports.h
  mdp:C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgetsglobal.h
  mdp:C:/Qt/6.7.0/mingw_64/include/QtWidgets/qwidget.h
+ mdp:C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Core/Core.h
  mdp:C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/DES.h
  mdp:C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Event/Event.h
  mdp:C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
@@ -445,6 +450,8 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SchedulingAlgorithm.h
@@ -454,16 +461,20 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/Cata/Desktop/Licenta/Utils/Metrics.h
  mdp:C:/Users/Cata/Desktop/Licenta/Utils/Random.h
  mdp:C:/Users/Cata/Desktop/Licenta/Utils/Style.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Utils/UUniFastDiscard.h
  mdp:C:/Users/Cata/Desktop/Licenta/Utils/WrapperPriorityQueue.h
  mdp:C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/moc_predefs.h
 C:/Users/Cata/Desktop/Licenta/Process/Process.h
 C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h
 C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h
 C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h
 C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.cpp
  uic:ui_MainWindow.h
 C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.h
 C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h
+C:/Users/Cata/Desktop/Licenta/Utils/UUniFastDiscard.h
 C:/Users/Cata/Desktop/Licenta/Utils/Metrics.h
 C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/DES.cpp
 C:/Users/Cata/Desktop/Licenta/Utils/Random.h
@@ -477,6 +488,7 @@ C:/Users/Cata/Desktop/Licenta/Process/Process.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/CFS.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/SingleCoreCFS.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.cpp
@@ -494,3 +506,8 @@ C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.h
 C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.cpp
 C:/Users/Cata/Desktop/Licenta/Pages/OpenGL/PlotNormal.h
 C:/Users/Cata/Desktop/Licenta/Pages/OpenGL/PlotNormal.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/FSS/FSS.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/FSS/FSS.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h

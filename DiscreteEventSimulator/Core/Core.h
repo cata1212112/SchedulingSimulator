@@ -8,12 +8,12 @@
 #include <queue>
 #include "../Event/Event.h"
 #include "../../Utils/Metrics.h"
+#include "../../Scheduler/SchedulingAlgorithm.h"
 #include <thread>
 #include <mutex>
 #include <barrier>
 #include <future>
 #include <condition_variable>
-#include <syncstream>
 
 class Core {
 private:
@@ -31,6 +31,7 @@ private:
     std::barrier<> *barrier;
     int coreID;
     bool sentFinish = false;
+    SchedulingAlgorithm &schedAlgo;
 
 public:
     bool isSentFinish() const;
@@ -43,12 +44,19 @@ public:
     void addEvent(Event e);
     void runSimulation();
 
+    int getCoreId() const;
+
     Metrics join();
 
     int getCoreTime() const;
 
     bool isFinished() const;
-};
 
+    bool running();
+
+    int getAbsoluteDeadline() {
+        return schedAlgo.getAbsoluteDeadline();
+    }
+};
 
 #endif //LICENTA_CORE_H

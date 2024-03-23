@@ -4,6 +4,7 @@
 
 #include "DES.h"
 #include "Core/Core.h"
+#include "../Utils/UUniFastDiscard.h"
 #include <map>
 #include <iostream>
 #include <ranges>
@@ -51,7 +52,7 @@ string DES::generateInputData(int numProcesses, int maximumTime, int mean, int s
     return inputData;
 }
 
-void DES::readInputDataFromFile(const string& filename) {
+void DES::readInputDataFromFile(const string& filename, bool realTime) {
     usedFileAsInput = true;
     events = new priority_queue<Event>();
 
@@ -62,7 +63,7 @@ void DES::readInputDataFromFile(const string& filename) {
 
     input = buffer.str();
 
-    setInputFromString(input);
+    setInputFromString(input, realTime);
 
     in.close();
 }
@@ -81,6 +82,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
     for (int i=0; i<numCPUS; i++) {
         core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier, i, roundRobinQuant);
+        schedAlgo.addCore(core[i]);
     }
 
     vector<Event> currentEvents;
@@ -106,25 +108,34 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
         } else {
             Event e = events->top();
             events->pop();
-            currentTime = e.getTime();
-
-            currentEvents.clear();
-
-            currentEvents.push_back(e);
-
-            while (!events->empty() && events->top().getTime() == currentTime) {
-                e = events->top();
-                currentEvents.push_back(e);
-                events->pop();
-            }
-
-            for (const auto &event : currentEvents) {
-                if (event.getType() == ARRIVAL) {
-                    core[schedAlgo.assignCPU(event.getProcess())]->addEvent(event);
+            if (isRealTime() && e.getTime() >= toStop) {
+                while (!events->empty()) {
+                    events->pop();
                 }
-            }
+            } else {
+                currentTime = e.getTime();
 
-            osTime = currentTime;
+                currentEvents.clear();
+
+                currentEvents.push_back(e);
+
+                while (!events->empty() && events->top().getTime() == currentTime) {
+                    e = events->top();
+                    currentEvents.push_back(e);
+                    events->pop();
+                }
+
+                for (const auto &event : currentEvents) {
+                    if (event.getType() == ARRIVAL) {
+                        core[schedAlgo.assignCPU(event.getProcess()) - 1 * isRealTime()]->addEvent(event);
+                        if (isRealTime()) {
+                            events->push(Event(ARRIVAL, event.getProcess().getPeriod() + currentTime, event.getProcess()));
+                        }
+                    }
+                }
+
+                osTime = currentTime;
+            }
         }
 
         {
@@ -173,25 +184,39 @@ void DES::setAlgorithm(const string &algorithm) {
     DES::algorithm = algorithm;
 }
 
-void DES::setInputFromString(const string &input) {
+void DES::setInputFromString(const string &input, bool realTime) {
     stringstream ss(input);
     events = new priority_queue<Event>();
+    if (realTime) {
+        vector<int> periods;
+        string line;
+        while (getline(ss, line)) {
+            if (!line.empty()) {
+                Event event = Event::fromString(line);
+                events->push(event);
+                periods.push_back(event.getProcess().getPeriod());
+            }
+        }
+        int hyperPeriod = std::lcm(periods[0], periods[1]);
+        for (int i=2; i<periods.size(); i++) {
+            hyperPeriod = std::lcm(hyperPeriod, periods[i]);
+        }
 
-    string firstLine, secondLine, thirdLine;
-    vector<Event> eventVec;
-    while (getline(ss, firstLine) && getline(ss, secondLine) && getline(ss, thirdLine)) {
-        if (!firstLine.empty()) {
-            numberOfProcesses += 1;
-            Event event = Event::fromStrings(firstLine, secondLine, thirdLine);
+        setToStop(hyperPeriod);
+    } else {
+        string firstLine, secondLine, thirdLine;
+        vector<Event> eventVec;
+        while (getline(ss, firstLine) && getline(ss, secondLine) && getline(ss, thirdLine)) {
+            if (!firstLine.empty()) {
+                numberOfProcesses += 1;
+                Event event = Event::fromStrings(firstLine, secondLine, thirdLine);
 //            eventVec.push_back(event);
-            events->push(event);
+                events->push(event);
 
+            }
         }
     }
-//
-//    for (auto & it : std::ranges::reverse_view(eventVec)) {
-//        events->push(it);
-//    }
+
 }
 
 const string &DES::getPartialMetricsInput(int core) const {
@@ -208,4 +233,45 @@ int DES::getRoundRobinQuant() const {
 
 void DES::setRoundRobinQuant(int roundRobinQuant) {
     DES::roundRobinQuant = roundRobinQuant;
+}
+
+string DES::generateInputData(int numberOfTasks, int numberOfCores) {
+    std::vector<std::pair<int,int>> tasks = RealTimeGenerator::generateTasks(numberOfTasks, numberOfCores);
+    string inputData;
+    events = new priority_queue<Event>();
+
+    for (auto task:tasks) {
+        Process p(task.first, task.second);
+        inputData += to_string(p.getId()) + " " + to_string(task.first) + " " + to_string(task.second) + "\n";
+        p.setArrivalTime(0);
+
+        Event event = Event(ARRIVAL, 0, p);
+
+        events->push(event);
+    }
+
+    int hyperPeriod = std::lcm(tasks[0].second, tasks[1].second);
+    for (int i=2; i<tasks.size(); i++) {
+        hyperPeriod = std::lcm(hyperPeriod, tasks[i].second);
+    }
+
+    setToStop(hyperPeriod);
+
+    return inputData;
+}
+
+bool DES::isRealTime() const {
+    return realTime;
+}
+
+void DES::setRealTime(bool realTime) {
+    DES::realTime = realTime;
+}
+
+int DES::isToStop() const {
+    return toStop;
+}
+
+void DES::setToStop(int toStop) {
+    DES::toStop = toStop;
 }

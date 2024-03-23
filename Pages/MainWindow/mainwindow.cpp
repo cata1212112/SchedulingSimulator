@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->multicore, &QPushButton::clicked, this, &MainWindow::handleMultiCoreButton);
 
+    connect(ui->realtime, &QPushButton::clicked, this, &MainWindow::handleRealTimeButton);
+
     ui->stackedWidget->setCurrentWidget(ui->StartPage);
 }
 
@@ -48,7 +50,7 @@ void MainWindow::handleSingleCoreButton() {
         font.setPointSize(12);
         button->setFont(font);
 
-        connect(button, &QPushButton::clicked, this, [=]() {
+        connect(button, &QPushButton::clicked, this, [=, this]() {
             selectedAlgorithm = algorithm;
 
             int quantum = 0;
@@ -60,26 +62,26 @@ void MainWindow::handleSingleCoreButton() {
             ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
             lastWidget = ui->SingleCore;
 
-            connect(ui->maximumTime, &QSlider::valueChanged, this, [=] (int value){
+            connect(ui->maximumTime, &QSlider::valueChanged, this, [=, this] (int value){
                 ui->timpselectat->setText(QString::fromStdString(to_string(value)));
             });
 
-            connect(ui->numarprocese, &QSlider::valueChanged, this, [=](int value) {
+            connect(ui->numarprocese, &QSlider::valueChanged, this, [=, this](int value) {
                 ui->proceseselectate->setText(QString::fromStdString(to_string(value)));
             });
 
-            connect(ui->horizontalSlider, &QSlider::valueChanged, this, [=](int value) {
+            connect(ui->horizontalSlider, &QSlider::valueChanged, this, [=, this](int value) {
                 ui->label_5->setText(QString::fromStdString(to_string(value)));
             });
 
-            connect(ui->horizontalSlider_2, &QSlider::valueChanged, this, [=](int value) {
+            connect(ui->horizontalSlider_2, &QSlider::valueChanged, this, [=, this](int value) {
                 ui->label_6->setText(QString::fromStdString(to_string(value)));
             });
 
             DES *des = new DES(selectedAlgorithm);
             des->setRoundRobinQuant(quantum);
 
-            connect(ui->generate, &QPushButton::clicked, this, [=]() {
+            connect(ui->generate, &QPushButton::clicked, this, [=, this]() {
                 int mean = ui->label_5->text().toInt();
                 int std = ui->label_6->text().toInt();
                 string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt(), mean, std);
@@ -101,7 +103,7 @@ void MainWindow::handleSingleCoreButton() {
                     font.setPointSize(12);
                     button->setFont(font);
 
-                    connect(button, &QPushButton::clicked, this, [=]() {
+                    connect(button, &QPushButton::clicked, this, [=, this]() {
                         QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
                                                                         tr("Text files (*.txt);;All Files (*)"));
 
@@ -125,7 +127,7 @@ void MainWindow::handleSingleCoreButton() {
                     font1.setPointSize(12);
                     button1->setFont(font1);
 
-                    connect(button1, &QPushButton::clicked, this, [=]() {
+                    connect(button1, &QPushButton::clicked, this, [=, this]() {
                         gotoRunning(des, 1);
                     });
 
@@ -139,7 +141,7 @@ void MainWindow::handleSingleCoreButton() {
 
                     button3->setFont(font);
 
-                    connect(button3, &QPushButton::clicked, this, [=]() {
+                    connect(button3, &QPushButton::clicked, this, [=, this]() {
                         ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
                     });
 
@@ -147,7 +149,7 @@ void MainWindow::handleSingleCoreButton() {
                 }
             });
 
-            connect(ui->usefileasinput, &QPushButton::clicked, this, [=]() {
+            connect(ui->usefileasinput, &QPushButton::clicked, this, [=, this]() {
                 QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Text files (*.txt)"));
 
                 if (!fileName.isEmpty())
@@ -157,7 +159,7 @@ void MainWindow::handleSingleCoreButton() {
                 }
             });
 
-            connect(ui->goback, &QPushButton::clicked, this, [=]() {
+            connect(ui->goback, &QPushButton::clicked, this, [=, this]() {
                 deleteContent(ui->SingleCore);
                 handleSingleCoreButton();
             });
@@ -175,7 +177,7 @@ void MainWindow::handleSingleCoreButton() {
     font.setPointSize(12);
     button->setFont(font);
 
-    connect(button, &QPushButton::clicked, this, [=]() {
+    connect(button, &QPushButton::clicked, this, [=, this]() {
         deleteContent(ui->SingleCore);
         ui->stackedWidget->setCurrentWidget(lastWidget);
     });
@@ -187,7 +189,7 @@ void MainWindow::handleMultiCoreButton() {
     ui->stackedWidget->setCurrentWidget(ui->MultiCore);
     int coreValues[] = {2, 4, 8, 16, 32};
     ui->selectednumberofcores->setText(QString::fromStdString(to_string(2)));
-    connect(ui->coreselector, &QSlider::valueChanged, this, [=](int value) {
+    connect(ui->coreselector, &QSlider::valueChanged, this, [=, this](int value) {
         ui->selectednumberofcores->setText(QString::fromStdString(to_string(coreValues[value])));
     });
 
@@ -213,7 +215,7 @@ void MainWindow::handleMultiCoreButton() {
             font.setPointSize(12);
             button->setFont(font);
 
-            connect(button, &QPushButton::clicked, this, [=]() {
+            connect(button, &QPushButton::clicked, this, [=, this]() {
                 selectedAlgorithm = algorithm;
 
                 int quantum = 10;
@@ -225,18 +227,18 @@ void MainWindow::handleMultiCoreButton() {
                 ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
                 lastWidget = ui->SingleCore;
 
-                connect(ui->maximumTime, &QSlider::valueChanged, this, [=] (int value){
+                connect(ui->maximumTime, &QSlider::valueChanged, this, [=, this] (int value){
                     ui->timpselectat->setText(QString::fromStdString(to_string(value)));
                 });
 
-                connect(ui->numarprocese, &QSlider::valueChanged, this, [=](int value) {
+                connect(ui->numarprocese, &QSlider::valueChanged, this, [=, this](int value) {
                     ui->proceseselectate->setText(QString::fromStdString(to_string(value)));
                 });
 
                 DES *des = new DES(selectedAlgorithm);
                 des->setRoundRobinQuant(quantum);
 
-                connect(ui->generate, &QPushButton::clicked, this, [=]() {
+                connect(ui->generate, &QPushButton::clicked, this, [=, this]() {
                     int mean = ui->label_5->text().toInt();
                     int std = ui->label_6->text().toInt();
                     string inputData = des->generateInputData(ui->proceseselectate->text().toInt(), ui->timpselectat->text().toInt(), mean, std);
@@ -258,7 +260,7 @@ void MainWindow::handleMultiCoreButton() {
                         font.setPointSize(12);
                         button->setFont(font);
 
-                        connect(button, &QPushButton::clicked, this, [=]() {
+                        connect(button, &QPushButton::clicked, this, [=, this]() {
                             QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
                                                                             tr("Text files (*.txt);;All Files (*)"));
 
@@ -282,7 +284,7 @@ void MainWindow::handleMultiCoreButton() {
                         font1.setPointSize(12);
                         button1->setFont(font1);
 
-                        connect(button1, &QPushButton::clicked, this, [=]() {
+                        connect(button1, &QPushButton::clicked, this, [=, this]() {
                             gotoRunning(des, selectedNumberOfCores);
                         });
 
@@ -296,7 +298,7 @@ void MainWindow::handleMultiCoreButton() {
 
                         button3->setFont(font);
 
-                        connect(button3, &QPushButton::clicked, this, [=]() {
+                        connect(button3, &QPushButton::clicked, this, [=, this]() {
                             ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
                         });
 
@@ -304,7 +306,7 @@ void MainWindow::handleMultiCoreButton() {
                     }
                 });
 
-                connect(ui->usefileasinput, &QPushButton::clicked, this, [=]() {
+                connect(ui->usefileasinput, &QPushButton::clicked, this, [=, this]() {
                     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Text files (*.txt)"));
 
                     if (!fileName.isEmpty())
@@ -314,7 +316,7 @@ void MainWindow::handleMultiCoreButton() {
                     }
                 });
 
-                connect(ui->goback, &QPushButton::clicked, this, [=]() {
+                connect(ui->goback, &QPushButton::clicked, this, [=, this]() {
                     deleteContent(ui->SingleCore);
                     handleSingleCoreButton();
                 });
@@ -374,7 +376,7 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
 
     auto *menuButton = new QPushButton(QString::fromStdString("Run and compare results with other algorithm"));
 
-    connect(menuButton, &QPushButton::clicked, this, [=]() {
+    connect(menuButton, &QPushButton::clicked, this, [=, this]() {
         QMenu menu(this);
 
         vector<string> alreadyTried = DES::getAlgorithms();
@@ -382,7 +384,7 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
             if (algorithm == "Round Robin" || std::find(alreadyTried.begin(), alreadyTried.end(), algorithm) == alreadyTried.end()) {
                 QAction *action = menu.addAction(QString::fromStdString(algorithm));
 
-                connect(action, &QAction::triggered, this, [=](){
+                connect(action, &QAction::triggered, this, [=, this](){
                     int quantum = 0;
                     if (algorithm == "Round Robin") {
                         bool ok;
@@ -428,4 +430,130 @@ void MainWindow::deleteContent(QWidget *widget) {
         delete item->widget();
         delete item;
     }
+}
+
+void MainWindow::handleRealTimeButton() {
+    ui->stackedWidget->setCurrentWidget(ui->MultiCore);
+    int coreValues[] = {2, 4, 8, 16, 32};
+    ui->selectednumberofcores->setText(QString::fromStdString(to_string(2)));
+    connect(ui->coreselector, &QSlider::valueChanged, this, [=, this](int value) {
+        ui->selectednumberofcores->setText(QString::fromStdString(to_string(coreValues[value])));
+    });
+
+    connect(ui->back, &QPushButton::clicked, this, [&]() {
+        ui->stackedWidget->setCurrentWidget(ui->StartPage);
+    });
+
+    connect(ui->next, &QPushButton::clicked, this, [&]() {
+        int selectedNumberOfCores = ui->selectednumberofcores->text().toInt();
+        ui->stackedWidget->setCurrentWidget(ui->SelectRealTimeAlgorithm);
+        auto layout = new QVBoxLayout();
+        layout->setSpacing(0);
+
+        ui->SelectRealTimeAlgorithm->setLayout(layout);
+        for (const auto& algorithm : ImplementedAlgorithms::getRealTimeAlgortihms()) {
+            auto *button = new QPushButton(QString::fromStdString(algorithm));
+            button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+            QFont font;
+            font.setPointSize(12);
+            button->setFont(font);
+
+            connect(button, &QPushButton::clicked, this, [=, this]() {
+                selectedAlgorithm = algorithm;
+
+                ui->stackedWidget->setCurrentWidget(ui->GenerateRealTimeData);
+                ui->label_8->setText(QString::fromStdString(to_string(selectedNumberOfCores * 2)));
+
+                ui->horizontalSlider_3->setMinimum(selectedNumberOfCores);
+                ui->horizontalSlider_3->setMaximum(selectedNumberOfCores * 10);
+                connect(ui->horizontalSlider_3, &QSlider::valueChanged, this, [=, this](int value) {
+                    ui->label_8->setText(QString::fromStdString(to_string(value)));
+                });
+
+                DES *des = new DES(selectedAlgorithm);
+                des->setRealTime(true);
+
+                connect(ui->pushButton, &QPushButton::clicked, this, [=, this]() {
+                    int numberOfTasks = ui->label_8->text().toInt();
+                    string inputData = des->generateInputData(numberOfTasks, selectedNumberOfCores);
+
+                    ui->stackedWidget->setCurrentWidget(ui->InputData);
+
+                    if (ui->InputData->layout() == nullptr) {
+
+                        auto layout = new QVBoxLayout();
+                        layout->setSpacing(0);
+                        ui->InputData->setLayout(layout);
+
+                        auto *button = new QPushButton(QString::fromStdString("Download Input Data"));
+                        button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                        button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+                        QFont font;
+                        font.setPointSize(12);
+                        button->setFont(font);
+
+                        connect(button, &QPushButton::clicked, this, [=, this]() {
+                            QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "",
+                                                                            tr("Text files (*.txt);;All Files (*)"));
+
+                            if (!fileName.isEmpty()) {
+                                QFile file(fileName);
+                                if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                                    QTextStream out(&file);
+                                    out << QString::fromStdString(inputData);
+                                    file.close();
+                                    gotoRunning(des, selectedNumberOfCores);
+                                } else {
+                                }
+                            }
+                        });
+
+                        auto *button1 = new QPushButton(QString::fromStdString("Run Simulation"));
+                        button1->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                        button1->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+                        QFont font1;
+                        font1.setPointSize(12);
+                        button1->setFont(font1);
+
+                        connect(button1, &QPushButton::clicked, this, [=, this]() {
+                            gotoRunning(des, selectedNumberOfCores);
+                        });
+
+
+                        ui->InputData->layout()->addWidget(button);
+                        ui->InputData->layout()->addWidget(button1);
+
+                        auto *button3 = new QPushButton(QString::fromStdString("Go back"));
+                        button3->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                        button3->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+                        button3->setFont(font);
+
+                        connect(button3, &QPushButton::clicked, this, [=, this]() {
+                            ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
+                        });
+
+                        ui->InputData->layout()->addWidget(button3);
+                    }
+
+                });
+
+                connect(ui->pushButton_2, &QPushButton::clicked, this, [=, this]() {
+                    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Text files (*.txt)"));
+
+                    if (!fileName.isEmpty())
+                    {
+                        des->readInputDataFromFile(fileName.toStdString(), true);
+                        gotoRunning(des, selectedNumberOfCores);
+                    }
+                });
+            });
+            ui->SelectRealTimeAlgorithm->layout()->addWidget(button);
+            lastWidget = ui->RunSimulation;
+        }
+    });
 }

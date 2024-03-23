@@ -27,14 +27,24 @@ private:
     int waitingTime = 0;
     int lastStarted;
     double vtime = 0;
+    int absoluteDeadline;
+    int period;
 
 public:
 
     void setCpUburst(const vector<int> &cpUburst);
 
+    int getPeriod() const;
+
+    void setPeriod(int period);
+
     void setIOburst(const vector<int> &iOburst);
 
     void setPriority(int priority);
+
+    int getAbsoluteDeadline() const;
+
+    void setAbsoluteDeadline(int absoluteDeadline);
 
     void setId(int id);
 
@@ -43,6 +53,8 @@ public:
     Process();
 
     Process(const vector<int> &cpUburst, const vector<int> &iOburst, int priority);
+
+    Process(int burst, int deadline);
 
     Process(const Process& other) :
             CPUburst(other.CPUburst),
@@ -57,7 +69,9 @@ public:
             assigned(other.assigned),
             lastStarted(other.lastStarted),
             vtime(other.vtime),
-            waitingTime(other.waitingTime)
+            waitingTime(other.waitingTime),
+            absoluteDeadline(other.absoluteDeadline),
+            period(other.period)
             {}
 
     const vector<int> &getCpUburst() const;

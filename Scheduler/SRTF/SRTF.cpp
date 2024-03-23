@@ -35,12 +35,8 @@ vector<Event> SRTF::processCPUComplete(Process p, int time, Metrics &stats) {
 vector<Event> SRTF::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
     vector<Process> addToReadyQueue;
     for (auto &process:p) {
-        if (process.finished()) {
-            stats.addToTT(time - process.getArrivalTime());
-        } else {
-            process.setEnteredReadyQueue(time);
-            addToReadyQueue.push_back(process);
-        }
+        process.setEnteredReadyQueue(time);
+        addToReadyQueue.push_back(process);
     }
     for (auto p:addToReadyQueue) {
         readyQueue->push(p);

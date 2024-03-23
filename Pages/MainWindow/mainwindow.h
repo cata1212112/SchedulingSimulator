@@ -9,6 +9,7 @@
 #include "../../Utils/Style.h"
 #include "../../Utils/Metrics.h"
 #include "../../DiscreteEventSimulator/DES.h"
+#include "../../Utils/UUniFastDiscard.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -31,6 +32,8 @@ private:
     void handleSingleCoreButton();
 
     void handleMultiCoreButton();
+
+    void handleRealTimeButton();
 
     void gotoRunning(DES *des, int numCores);
 

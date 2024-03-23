@@ -13,6 +13,14 @@ Process::Process(const vector<int> &cpUburst, const vector<int> &iOburst, int pr
     remainingBurst = cpUburst[0];
 }
 
+Process::Process(int burst, int deadline) : absoluteDeadline(deadline), period(deadline){
+    CPUburst.push_back(burst);
+    id = ID++;
+    currentBurst = 0;
+    remainingBurst = CPUburst[0];
+}
+
+
 const vector<int> &Process::getCpUburst() const {
     return CPUburst;
 }
@@ -111,4 +119,20 @@ int Process::getWaitingTime() const {
 
 void Process::setWaitingTime(int waitingTime) {
     Process::waitingTime = waitingTime;
+}
+
+int Process::getAbsoluteDeadline() const {
+    return absoluteDeadline;
+}
+
+void Process::setAbsoluteDeadline(int absoluteDeadline) {
+    Process::absoluteDeadline = absoluteDeadline;
+}
+
+int Process::getPeriod() const {
+    return period;
+}
+
+void Process::setPeriod(int period) {
+    Process::period = period;
 }

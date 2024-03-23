@@ -22,7 +22,17 @@ public:
     virtual std::vector<Event> schedule(int time, Metrics &stats, bool timerExpired) =0;
     virtual int assignCPU(Process p) {return 0;}
     virtual string getCoreAlgortihm(int coreID)=0;
+    virtual void addCore(void* core) {
+        return;
+    };
 
+    bool isRunning() {
+        return currentProcess != nullptr;
+    }
+
+    int getAbsoluteDeadline() {
+        return currentProcess->getAbsoluteDeadline();
+    }
 };
 
 #endif //CPUSCHED_SCHEDULINGALGORITHM_H

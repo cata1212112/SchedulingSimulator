@@ -36,6 +36,19 @@ private:
     std::mutex cvMutex;
     bool osTimeUpdated = false;
     static vector<string> algortihms;
+    bool realTime = false;
+    int toStop = 0;
+public:
+    int isToStop() const;
+
+    void setToStop(int toStop);
+
+public:
+    bool isRealTime() const;
+
+    void setRealTime(bool realTime);
+
+private:
 
     static double getMultiplier(bool flag) {
         if (flag) {
@@ -59,9 +72,11 @@ public:
 
     string generateInputData(int numProcesses, int maximumTime, int mean, int std);
 
-    void readInputDataFromFile(const string& filename);
+    string generateInputData(int numberOfTasks, int numberOfCores);
 
-    void setInputFromString(const string& input);
+    void readInputDataFromFile(const string& filename, bool realTime = false);
+
+    void setInputFromString(const string& input, bool realTime = false);
 
     vector<Metrics> startSimulation(int numCPUS);
 

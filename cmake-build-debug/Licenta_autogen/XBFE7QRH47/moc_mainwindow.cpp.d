@@ -5,6 +5,7 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/atomic \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward/auto_ptr.h \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward/binders.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/barrier \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bit \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/algorithmfwd.h \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/align.h \
@@ -12,6 +13,7 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/allocated_ptr.h \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/allocator.h \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_base.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_futex.h \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_lockfree_defines.h \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_timed_wait.h \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/atomic_wait.h \
@@ -158,10 +160,12 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/format \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/fstream \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/functional \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/future \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/initializer_list \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iomanip \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ios \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iosfwd \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iostream \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/istream \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iterator \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.3/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/limits \
@@ -428,12 +432,15 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgetsexports.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qwidget.h \
+  C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Core/Core.h \
   C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/DES.h \
   C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Event/Event.h \
   C:/Users/Cata/Desktop/Licenta/Process/Process.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SchedulingAlgorithm.h \
@@ -443,4 +450,5 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Users/Cata/Desktop/Licenta/Utils/Metrics.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Random.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Style.h \
+  C:/Users/Cata/Desktop/Licenta/Utils/UUniFastDiscard.h \
   C:/Users/Cata/Desktop/Licenta/Utils/WrapperPriorityQueue.h
