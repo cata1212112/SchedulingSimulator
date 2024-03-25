@@ -6,10 +6,12 @@
 #define LICENTA_GEDF_H
 
 #include "../../../DiscreteEventSimulator/Core/Core.h"
+#include <algorithm>
 
 class GEDF : public SchedulingAlgorithm {
     vector<Process> *readyQueue;
     vector<Core*> cores;
+    priority_queue<Event> *mainEventQueue;
 public:
     GEDF();
 
@@ -28,6 +30,8 @@ public:
     int assignCPU(Process p) override;
 
     void addCore(void *core) override;
+
+    void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) override;
 };
 
 

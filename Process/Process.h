@@ -29,6 +29,7 @@ private:
     double vtime = 0;
     int absoluteDeadline;
     int period;
+    int nextDeadline;
 
 public:
 
@@ -71,10 +72,15 @@ public:
             vtime(other.vtime),
             waitingTime(other.waitingTime),
             absoluteDeadline(other.absoluteDeadline),
-            period(other.period)
+            period(other.period),
+            nextDeadline(other.nextDeadline)
             {}
 
     const vector<int> &getCpUburst() const;
+
+    int getNextDeadline() const;
+
+    void setNextDeadline(int nextDeadline);
 
     const vector<int> &getIOburst() const;
 

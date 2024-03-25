@@ -452,6 +452,8 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SchedulingAlgorithm.h
@@ -511,3 +513,5 @@ C:/Users/Cata/Desktop/Licenta/Scheduler/FSS/FSS.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h
 C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.cpp

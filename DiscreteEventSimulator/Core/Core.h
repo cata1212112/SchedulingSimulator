@@ -32,6 +32,7 @@ private:
     int coreID;
     bool sentFinish = false;
     SchedulingAlgorithm &schedAlgo;
+    int lastArrived = -1;
 
 public:
     bool isSentFinish() const;

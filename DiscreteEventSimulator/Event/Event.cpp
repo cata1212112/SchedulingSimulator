@@ -94,6 +94,7 @@ Event Event::fromString(const string &line) {
     event.process.setArrivalTime(0);
     event.type = ARRIVAL;
     event.process.setRemainingBurst(burst);
+    event.time = 0;
     return event;
 }
 

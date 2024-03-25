@@ -26,7 +26,11 @@ public:
 
     int assignCPU(Process p) override;
 
+    int getAbsoluteDeadline() override;
+
     string getCoreAlgortihm(int coreID) override;
+
+    bool isRunning() override;
 };
 
 

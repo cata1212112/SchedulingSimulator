@@ -136,3 +136,11 @@ int Process::getPeriod() const {
 void Process::setPeriod(int period) {
     Process::period = period;
 }
+
+int Process::getNextDeadline() const {
+    return nextDeadline;
+}
+
+void Process::setNextDeadline(int nextDeadline) {
+    Process::nextDeadline = nextDeadline;
+}

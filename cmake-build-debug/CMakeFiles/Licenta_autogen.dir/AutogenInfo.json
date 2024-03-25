@@ -371,6 +371,12 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h",
+			"MU",
+			"436SN5EA3W/moc_LSTRCore.cpp",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h",
 			"MU",
 			"JHVI3VNXSL/moc_SJF.cpp",
@@ -563,6 +569,11 @@
 		],
 		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.cpp",
 			"MU",
 			null
 		],

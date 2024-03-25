@@ -17,7 +17,9 @@ enum eventType {
     IOBURSTCOMPLETE,
     TIMEREXPIRED,
     PREEMT,
-    FINISHEXECUTION
+    FINISHEXECUTION,
+    REALTIME,
+    TICK
 };
 
 class Event {

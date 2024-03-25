@@ -45,3 +45,18 @@ string GEDFCore::getCoreAlgortihm(int coreID) {
 GEDFCore::GEDFCore() {
     readyQueue = new queue<Process>();
 }
+
+bool GEDFCore::isRunning() {
+    if (currentProcess != nullptr) {
+        return false;
+    }
+    return !readyQueue->empty();
+}
+
+int GEDFCore::getAbsoluteDeadline() {
+    if (currentProcess != nullptr) {
+        return currentProcess->getAbsoluteDeadline();
+    }
+
+    return readyQueue->front().getAbsoluteDeadline();
+}

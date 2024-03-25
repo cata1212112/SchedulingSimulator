@@ -66,6 +66,8 @@ add_executable(Licenta main.cpp
         Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.cpp
         Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h
         Utils/UUniFastDiscard.h
+        Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.cpp
+        Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h
 )
 target_link_libraries(Licenta
         Qt::Core

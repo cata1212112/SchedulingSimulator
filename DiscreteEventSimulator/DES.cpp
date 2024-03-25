@@ -83,6 +83,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     for (int i=0; i<numCPUS; i++) {
         core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier, i, roundRobinQuant);
         schedAlgo.addCore(core[i]);
+        schedAlgo.addMainEventQueue(events, nullptr);
     }
 
     vector<Event> currentEvents;
@@ -91,6 +92,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
     while (true) {
         if (events->empty()) {
+
             allFinished = true;
             for (int i=0; i<numCPUS; i++) {
                 if (!core[i]->isSentFinish()) {
@@ -106,6 +108,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
             osTime = 1000000;
         } else {
+
             Event e = events->top();
             events->pop();
             if (isRealTime() && e.getTime() >= toStop) {
@@ -125,16 +128,33 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                     events->pop();
                 }
 
-                for (const auto &event : currentEvents) {
-                    if (event.getType() == ARRIVAL) {
-                        core[schedAlgo.assignCPU(event.getProcess()) - 1 * isRealTime()]->addEvent(event);
-                        if (isRealTime()) {
-                            events->push(Event(ARRIVAL, event.getProcess().getPeriod() + currentTime, event.getProcess()));
+                if (isRealTime()) {
+                    vector<Process> arrivals;
+                    for (const auto &event : currentEvents) {
+                        if (event.getType() == ARRIVAL) {
+                            Process p(event.getProcess());
+                            p.setNextDeadline(currentTime + p.getPeriod());
+                            arrivals.push_back(p);
+
+                            events->push(Event(ARRIVAL, p.getPeriod() + currentTime, p));
+                        } else if (event.getType() == REALTIME){
+                            arrivals.push_back(event.getProcess());
                         }
                     }
-                }
+                    Metrics aux("none");
+                    schedAlgo.processArrived(arrivals, osTime, aux);
+                    schedAlgo.schedule(currentTime, aux, false);
+                    osTime = currentTime+1;
 
-                osTime = currentTime;
+                } else {
+                    for (const auto &event : currentEvents) {
+                        if (event.getType() == ARRIVAL) {
+                            core[schedAlgo.assignCPU(event.getProcess())]->addEvent(event);
+                        }
+                    }
+                    osTime = currentTime;
+
+                }
             }
         }
 
@@ -210,7 +230,6 @@ void DES::setInputFromString(const string &input, bool realTime) {
             if (!firstLine.empty()) {
                 numberOfProcesses += 1;
                 Event event = Event::fromStrings(firstLine, secondLine, thirdLine);
-//            eventVec.push_back(event);
                 events->push(event);
 
             }

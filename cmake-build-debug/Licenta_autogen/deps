@@ -672,6 +672,8 @@ Licenta_autogen/timestamp: \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.cpp \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h \
+	C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.cpp \
+	C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.cpp \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h \
 	C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.cpp \

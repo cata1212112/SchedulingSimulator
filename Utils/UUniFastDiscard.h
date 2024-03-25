@@ -29,10 +29,6 @@ public:
         return UUniFastDiscard(n, u);
     }
 
-    static std::vector<double> RandFixedSum(int n, int u) {
-
-    }
-
     static std::vector<double> generatePeriodsLogUniform(int n, double min, double max) {
         static std::uniform_real_distribution<> uniform(log(min), log(max));
         static std::mt19937 gen;

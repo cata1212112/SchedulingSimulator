@@ -17,7 +17,9 @@
 #include "../Scheduler/TestMultiCore1/TestMultiCore1.h"
 #include "../Scheduler/TestMultiCore2/TestMultiCore2.h"
 #include "../Scheduler/RealTime/GEDF/GEDF.h"
+#include "../Scheduler/RealTime/LSTR/LSTR.h"
 #include "../Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h"
+#include "../Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h"
 
 class ImplementedAlgorithms {
 public:
@@ -53,6 +55,12 @@ public:
         } else if (name == "GEDFCore") {
             GEDFCore *gedfcore = new GEDFCore();
             return *gedfcore;
+        } else if (name == "Least Slack Time Rate First") {
+            LSTR *lstr = new LSTR();
+            return *lstr;
+        } else if (name == "LSTRCore") {
+            LSTRCore *lstrCore = new LSTRCore();
+            return *lstrCore;
         }
     }
 

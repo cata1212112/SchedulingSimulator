@@ -22,15 +22,23 @@ public:
     virtual std::vector<Event> schedule(int time, Metrics &stats, bool timerExpired) =0;
     virtual int assignCPU(Process p) {return 0;}
     virtual string getCoreAlgortihm(int coreID)=0;
+
     virtual void addCore(void* core) {
         return;
     };
 
-    bool isRunning() {
+    virtual void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
+
+    }
+
+    virtual bool isRunning() {
         return currentProcess != nullptr;
     }
 
-    int getAbsoluteDeadline() {
+    virtual int getAbsoluteDeadline() {
+        if (currentProcess == nullptr) {
+            return 0;
+        }
         return currentProcess->getAbsoluteDeadline();
     }
 };

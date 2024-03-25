@@ -9,6 +9,9 @@
 #include "../../Utils/ImplementedAlgorithms.h"
 
 void Core::addEvent(Event e) {
+    if (e.getType() == ARRIVAL) {
+        lastArrived = coreTime;
+    }
     events->push(e);
 }
 
@@ -19,7 +22,6 @@ void Core::runSimulation() {
 
     Metrics stats(algortihm, roundRobinQuant);
     stats.setCore(coreID);
-
     while (true) {
         {
             std::unique_lock lk(*cvMutex);
@@ -40,7 +42,6 @@ void Core::runSimulation() {
             coreTime = e.getTime();
             if (coreTime != e.getTime()) {
             }
-
             currentEvents.clear();
 
             currentEvents[e.getType()].push_back(e);
