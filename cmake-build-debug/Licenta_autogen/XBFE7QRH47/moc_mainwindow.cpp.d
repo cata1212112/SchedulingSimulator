@@ -425,6 +425,11 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Qt/6.7.0/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.7.0/mingw_64/include/QtGui/qwindowdefs_win.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/QMainWindow \
+  C:/Qt/6.7.0/mingw_64/include/QtWidgets/QVBoxLayout \
+  C:/Qt/6.7.0/mingw_64/include/QtWidgets/qboxlayout.h \
+  C:/Qt/6.7.0/mingw_64/include/QtWidgets/qgridlayout.h \
+  C:/Qt/6.7.0/mingw_64/include/QtWidgets/qlayout.h \
+  C:/Qt/6.7.0/mingw_64/include/QtWidgets/qlayoutitem.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qmainwindow.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qtabwidget.h \
@@ -441,6 +446,8 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SchedulingAlgorithm.h \

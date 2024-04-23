@@ -68,6 +68,8 @@ add_executable(Licenta main.cpp
         Utils/UUniFastDiscard.h
         Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.cpp
         Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h
+        Utils/KMEANS/DataPoint.cpp
+        Utils/KMEANS/DataPoint.h
 )
 target_link_libraries(Licenta
         Qt::Core

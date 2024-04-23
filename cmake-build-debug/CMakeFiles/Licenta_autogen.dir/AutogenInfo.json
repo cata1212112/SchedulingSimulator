@@ -407,6 +407,12 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/DataPoint.h",
+			"MU",
+			"OXL34ETBH7/moc_DataPoint.cpp",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.h",
 			"MU",
 			"OXL34ETBH7/moc_KMEANS.cpp",
@@ -586,6 +592,11 @@
 		],
 		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore2/TestMultiCore2.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/DataPoint.cpp",
 			"MU",
 			null
 		],
