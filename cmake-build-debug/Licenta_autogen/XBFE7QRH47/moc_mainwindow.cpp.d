@@ -441,9 +441,12 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/DES.h \
   C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Event/Event.h \
   C:/Users/Cata/Desktop/Licenta/Process/Process.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/DMFQ/DMFQ.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/MTSJ/MTSJ.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h \
@@ -454,6 +457,8 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore1/TestMultiCore1.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/TestMultiCore2/TestMultiCore2.h \
   C:/Users/Cata/Desktop/Licenta/Utils/ImplementedAlgorithms.h \
+  C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/DataPoint.h \
+  C:/Users/Cata/Desktop/Licenta/Utils/KMEANS/KMEANS.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Metrics.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Random.h \
   C:/Users/Cata/Desktop/Licenta/Utils/Style.h \

@@ -104,7 +104,6 @@ def main():
     args = core_values_args.parse_args()
 
     cores_data = args.core
-    print(cores_data)
     for core_data in cores_data:
         core_id = int(core_data[0])
         core_data = core_data[1:]

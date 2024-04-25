@@ -12,6 +12,7 @@
 #include "../Scheduler/FIFO/FIFO.h"
 #include "../Scheduler/SJF/SJF.h"
 #include "../Scheduler/RR/RR.h"
+#include "../Scheduler/DMFQ/DMFQ.h"
 #include "../Scheduler/SRTF/SRTF.h"
 #include "../Scheduler/EDRR/EDRR.h"
 #include "../Scheduler/TestMultiCore1/TestMultiCore1.h"
@@ -20,11 +21,13 @@
 #include "../Scheduler/RealTime/LSTR/LSTR.h"
 #include "../Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h"
 #include "../Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h"
+#include "../Scheduler/MTSJ/MTSJ.h"
+#include "../Scheduler/RRKMEANS/RRKMEANS.h"
 
 class ImplementedAlgorithms {
 public:
     static std::vector<std::string> getSingleCoreAlgorithms() {
-        return {"Efficient Dynamic Round Robin", "First In First Out", "Shortest Job First", "Shortest Remaining Time First", "Round Robin"};
+        return {"Efficient Dynamic Round Robin", "First In First Out", "Shortest Job First", "Shortest Remaining Time First", "Round Robin", "Developed Multilevel Feedback Queue Scheduling", "Mean Threshold Shortest Job Round Robin", "Round Robin K-Means"};
     }
 
     static SchedulingAlgorithm& getAlgorithm(const std::string &name, int quant=-1) {
@@ -61,6 +64,15 @@ public:
         } else if (name == "LSTRCore") {
             LSTRCore *lstrCore = new LSTRCore();
             return *lstrCore;
+        } else if (name == "Developed Multilevel Feedback Queue Scheduling") {
+            DMFQ *dmfq = new DMFQ();
+            return *dmfq;
+        } else if (name == "Mean Threshold Shortest Job Round Robin") {
+            MTSJ *mtsj = new MTSJ(quant);
+            return *mtsj;
+        } else if (name == "Round Robin K-Means") {
+            RRKMEANS *rrkmeans = new RRKMEANS();
+            return *rrkmeans;
         }
     }
 

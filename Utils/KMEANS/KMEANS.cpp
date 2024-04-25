@@ -2,6 +2,7 @@
 // Created by Cata on 3/17/2024.
 //
 
+#include <iostream>
 #include "KMEANS.h"
 
 KMEANS::KMEANS(const vector<DataPoint> &points, int numbefOfClusters, int epochs) : points(points),
@@ -11,7 +12,12 @@ KMEANS::KMEANS(const vector<DataPoint> &points, int numbefOfClusters, int epochs
     for (int i=0; i<numbefOfClusters; i++) {
         centroids.push_back(points[rand() % points.size()]);
     }
+//    kmeansplusplusInitialization();
     numberOfPoints.reserve(numbefOfClusters);
+    for (int i=0; i<numbefOfClusters; i++) {
+        numberOfPoints[i] = 0;
+        means[0] = means[1] = means[2] = 0.0;
+    }
 }
 
 void KMEANS::cluster() {
@@ -41,9 +47,11 @@ void KMEANS::cluster() {
         }
 
         for (int i=0; i<centroids.size(); i++) {
-            centroids[i].setBt(means[0] / numberOfPoints[i]);
-            centroids[i].setPw(means[1] / numberOfPoints[i]);
-            centroids[i].setNcs(means[2] / numberOfPoints[i]);
+            if (numberOfPoints[i]) {
+                centroids[i].setBt(means[0] / numberOfPoints[i]);
+                centroids[i].setPw(means[1] / numberOfPoints[i]);
+                centroids[i].setNcs(means[2] / numberOfPoints[i]);
+            }
         }
     }
 }
@@ -74,7 +82,7 @@ double KMEANS::silhouetteScore() {
         }
         a /= sameCluster;
         b /= differentCluster;
-        scores[i] = (a * b) / max(a , b);
+        scores[i] = (b - a) / max(a , b);
     }
     double avg = 0;
     for (int i=0; i<points.size(); i++) {
@@ -109,3 +117,58 @@ double KMEANS::weight(int clusterId) {
 int KMEANS::timeSlice(int clusterId, int STS) {
     return (1 - weight(clusterId)) * STS;
 }
+
+void KMEANS::printClusters() {
+    for (const auto x:points) {
+        std::cout << x.getCluster() << " ";
+    }
+    std::cout << "\n";
+}
+
+void KMEANS::kmeansplusplusInitialization() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, points.size() - 1);
+
+    centroids.push_back(points[dis(gen)]);
+
+    std::vector<double> minDistances(points.size(), std::numeric_limits<double>::max());
+
+    for (int i = 1; i < numbefOfClusters; ++i) {
+        for (int j = 0; j < points.size(); ++j) {
+            double dist = points[j].distance(centroids.back());
+            if (dist < minDistances[j]) {
+                minDistances[j] = dist;
+            }
+        }
+
+        double sum = std::accumulate(minDistances.begin(), minDistances.end(), 0.0);
+        std::uniform_real_distribution<> distr(0, sum);
+        double threshold = distr(gen);
+        double cumulative = 0;
+
+        for (int j = 0; j < points.size(); ++j) {
+            cumulative += minDistances[j];
+            if (cumulative >= threshold) {
+                centroids.push_back(points[j]);
+                break;
+            }
+        }
+    }
+}
+
+int KMEANS::getCluster(int i) {
+    return points[i].getCluster();
+}
+
+KMEANS::KMEANS() {}
+
+KMEANS::KMEANS(const vector<DataPoint> &points, const vector<DataPoint> &centroids, const vector<int> &numberOfPoints,
+               double *means, int numbefOfClusters, int epochs) : points(points), centroids(centroids),
+                                                                  numberOfPoints(numberOfPoints),
+                                                                  numbefOfClusters(numbefOfClusters), epochs(epochs) {
+    this->means[0] = means[0];
+    this->means[1] = means[1];
+    this->means[2] = means[2];
+}
+

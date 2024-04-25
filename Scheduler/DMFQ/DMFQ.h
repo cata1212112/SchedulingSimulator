@@ -6,11 +6,19 @@
 #define LICENTA_DMFQ_H
 
 #include "../SchedulingAlgorithm.h"
+#include <algorithm>
+#include <array>
 
 
 class DMFQ : public SchedulingAlgorithm{
 private:
     std::vector<Process>* Q[5];
+    int quants[5];
+    bool queuesUpdated[5];
+    std::vector<Process> readyQueue;
+
+    int queueNumber = -1;
+    int processNumber = 0;
 public:
     DMFQ();
 
@@ -27,6 +35,14 @@ public:
     string getCoreAlgortihm(int coreID) override;
 
     bool existsProcess();
+
+    bool updateQueuesCheck();
+
+    int medianBurst(int queueId);
+
+    void manageQueuesAndQuants(int time);
+
+    pair<int,pair<int,int>> getNextProcess(int time);
 };
 
 

@@ -32,6 +32,17 @@ public:
     double weight(int clusterId);
 
     int timeSlice(int clusterId, int STS);
+
+    void printClusters();
+
+    void kmeansplusplusInitialization();
+
+    int getCluster(int i);
+
+    KMEANS(const vector<DataPoint> &points, const vector<DataPoint> &centroids, const vector<int> &numberOfPoints,
+           double *means, int numbefOfClusters, int epochs);
+
+    KMEANS();
 };
 
 

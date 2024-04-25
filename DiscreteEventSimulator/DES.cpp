@@ -22,7 +22,7 @@ string DES::generateInputData(int numProcesses, int maximumTime, int mean, int s
         int arrival = Random::randomInteger(maximumTime);
         int numBursts = Random::randomInteger(MAXIMUMNUMCPUBURSTS) + 1;
         bool processType = Random::randomBit();
-        int priority = Random::randomInteger(9) + 1;
+        int priority = Random::randomInteger(8) + 1;
 
         numBursts = 1;
         vector<int> cpuBursts;
