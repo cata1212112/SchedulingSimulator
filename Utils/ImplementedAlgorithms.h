@@ -23,6 +23,7 @@
 #include "../Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h"
 #include "../Scheduler/MTSJ/MTSJ.h"
 #include "../Scheduler/RRKMEANS/RRKMEANS.h"
+#include "../Scheduler/CompletlyFairScheduler/CFS.h"
 
 class ImplementedAlgorithms {
 public:
@@ -73,11 +74,14 @@ public:
         } else if (name == "Round Robin K-Means") {
             RRKMEANS *rrkmeans = new RRKMEANS();
             return *rrkmeans;
+        } else if (name == "Completely Fair Scheduler") {
+            CFS *cfs = new CFS();
+            return *cfs;
         }
     }
 
     static std::vector<std::string> getMultiCoreAlgortihms() {
-        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)"};//, "[TEST] Completely Fair Scheduler"};
+        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)", "Completely Fair Scheduler"};//, "[TEST] Completely Fair Scheduler"};
     }
 
     static std::vector<std::string> getRealTimeAlgortihms() {

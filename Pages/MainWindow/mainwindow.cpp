@@ -32,6 +32,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::handleSingleCoreButton() {
+    selectedNumberOfCores = 1;
     ui->stackedWidget->setCurrentWidget(ui->SingleCore);
 
     auto* layout = qobject_cast<QVBoxLayout*>(ui->SingleCore->layout());
@@ -58,7 +59,7 @@ void MainWindow::handleMultiCoreButton() {
         ui->MultiCore->setLayout(layout);
     }
 
-    clearWidgets(layout);
+//    clearWidgets(layout);
     selectNumberOfCores();
 }
 
@@ -66,9 +67,15 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
     ui->stackedWidget->setCurrentWidget(ui->running);
     lastWidget = ui->InputData;
 
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(0);
-    ui->running->setLayout(layout);
+    auto* layout = qobject_cast<QVBoxLayout*>(ui->running->layout());
+
+    if (!layout) {
+        layout = new QVBoxLayout(ui->running);
+        layout->setSpacing(0);
+        ui->running->setLayout(layout);
+    }
+
+    clearWidgets(layout);
 
     auto *scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
@@ -302,6 +309,7 @@ void MainWindow::handleRealTimeButton() {
 }
 
 void MainWindow::selectNumberOfCores() {
+    selectedNumberOfCores = 2;
     int coreValues[] = {2, 4, 8, 16, 32};
     ui->selectednumberofcores->setText(QString::fromStdString(to_string(2)));
     connect(ui->coreselector, &QSlider::valueChanged, this, [=, this](int value) {
@@ -437,7 +445,7 @@ void MainWindow::setupInputData(QWidget *parent) {
             DES *des = new DES(selectedAlgorithm);
             des->setRoundRobinQuant(quantum);
             des->readInputDataFromFile(fileName.toStdString(), false);
-            gotoRunning(des, 1);
+            gotoRunning(des, selectedNumberOfCores);
         }
     });
 }
@@ -471,7 +479,7 @@ void MainWindow::generateDataButton(QLayout *layout, QWidget *parent) {
                 QTextStream out(&file);
                 out << QString::fromStdString(inputData);
                 file.close();
-                gotoRunning(des, 1);
+                gotoRunning(des, selectedNumberOfCores);
             } else {
             }
         }
@@ -486,7 +494,7 @@ void MainWindow::generateDataButton(QLayout *layout, QWidget *parent) {
     button1->setFont(font1);
 
     connect(button1, &QPushButton::clicked, this, [=, this]() {
-        gotoRunning(des, 1);
+        gotoRunning(des, selectedNumberOfCores);
     });
 
 

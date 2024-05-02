@@ -19,7 +19,8 @@ enum eventType {
     PREEMT,
     FINISHEXECUTION,
     REALTIME,
-    TICK
+    TICK,
+    LOADBALANCE
 };
 
 class Event {

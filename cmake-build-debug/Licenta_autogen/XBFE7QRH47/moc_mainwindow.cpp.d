@@ -441,6 +441,7 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/DES.h \
   C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Event/Event.h \
   C:/Users/Cata/Desktop/Licenta/Process/Process.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/CFS.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/DMFQ/DMFQ.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h \

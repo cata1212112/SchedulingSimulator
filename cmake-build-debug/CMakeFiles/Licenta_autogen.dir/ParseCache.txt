@@ -452,6 +452,7 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/Cata/Desktop/Licenta/DiscreteEventSimulator/Event/Event.h
  mdp:C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/Cata/Desktop/Licenta/Process/Process.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/CompletlyFairScheduler/CFS.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/DMFQ/DMFQ.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.h
