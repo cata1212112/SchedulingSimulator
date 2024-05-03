@@ -34,7 +34,7 @@ string CFS::getCoreAlgortihm(int coreID) {
 int CFS::assignCPU(Process p) {
     Core* freeCore = cores[0];
     for (int i=1; i<cores.size(); i++) {
-        if (freeCore->getLoad() < cores[i]->getLoad()) {
+        if (freeCore->getLoad(0) < cores[i]->getLoad(0)) {
             freeCore = cores[i];
         }
     }
@@ -77,31 +77,38 @@ void CFS::setSchedMinGranularity(int schedMinGranularity) {
     sched_min_granularity = schedMinGranularity;
 }
 
-void CFS::loadBalance() {
+void CFS::loadBalance(int time) {
     double totalLoad = 0;
     for (const auto &c:cores) {
-        totalLoad += c->getLoad();
+        totalLoad += c->getLoad(time, true);
     }
     totalLoad /= cores.size();
 
     for (auto &c:cores) {
-        if (c->getLoad() >= totalLoad) {
-            int excessLoad = c->getLoad() - totalLoad;
+        if (c->getLoad(0) >= totalLoad) {
+            int excessLoad = c->getLoad(0) - totalLoad;
             while (excessLoad > 0 && !c->getReadyQueue()->empty()) {
                 Process task = *c->getReadyQueue()->begin();
+                task.setEnteredReadyQueue(time);
                 c->getReadyQueue()->erase(c->getReadyQueue()->begin());
                 int targetCPU = leastLoadedCPU();
 
                 excessLoad -= prio_to_weight[task.getPriority()];
                 cores[targetCPU]->getReadyQueue()->push_back(task);
+                cores[targetCPU]->addProcessIfNoTSeen(task.getId());
+                cores[targetCPU]->addEvent(Event(TICK, time, Process()));
             }
         } else {
-            int deficitLoad = totalLoad - c->getLoad();
+            int deficitLoad = totalLoad - c->getLoad(0);
             while (deficitLoad > 0) {
                 int mostLoadedCPU_ = mostLoadedCPU();
                 Process task = *cores[mostLoadedCPU_]->getReadyQueue()->begin();
+                task.setEnteredReadyQueue(time);
+
                 cores[mostLoadedCPU_]->getReadyQueue()->erase(cores[mostLoadedCPU_]->getReadyQueue()->begin());
                 c->getReadyQueue()->push_back(task);
+                c->addProcessIfNoTSeen(task.getId());
+                c->addEvent(Event(TICK, time, Process()));
                 deficitLoad -= prio_to_weight[task.getPriority()];
             }
         }
@@ -109,9 +116,9 @@ void CFS::loadBalance() {
 }
 
 int CFS::leastLoadedCPU() {
-    int index = 0;
-    for (int i=0; i<cores.size(); i++) {
-        if (cores[i]->getLoad() < cores[index]->getLoad()) {
+    int index = cores.size() - 1;
+    for (int i=cores.size() - 1; i>=0; i--) {
+        if (cores[i]->getLoad(0) < cores[index]->getLoad(0)) {
             index = i;
         }
     }
@@ -121,7 +128,7 @@ int CFS::leastLoadedCPU() {
 int CFS::mostLoadedCPU() {
     int index = 0;
     for (int i=0; i<cores.size(); i++) {
-        if (cores[i]->getLoad() > cores[index]->getLoad()) {
+        if (cores[i]->getLoad(0) > cores[index]->getLoad(0)) {
             index = i;
         }
     }

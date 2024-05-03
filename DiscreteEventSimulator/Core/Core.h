@@ -33,6 +33,8 @@ private:
     bool sentFinish = false;
     SchedulingAlgorithm &schedAlgo;
     int lastArrived = -1;
+    int numberOfProcesses = 0;
+    map<int, bool> seenIds;
 
 public:
     bool isSentFinish() const;
@@ -59,12 +61,19 @@ public:
         return schedAlgo.getAbsoluteDeadline();
     }
 
-    int getLoad() {
-        return schedAlgo.getLoad();
+    int getLoad(int time, bool preemt = false) {
+        return schedAlgo.getLoad(time, preemt);
     }
 
     vector<Process> *getReadyQueue() {
         return schedAlgo.getReadyQueue();
+    }
+
+    void addProcessIfNoTSeen(int id) {
+        if (!seenIds[id]) {
+            numberOfProcesses += 1;
+            seenIds[id] = true;
+        }
     }
 };
 

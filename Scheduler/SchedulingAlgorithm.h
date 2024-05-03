@@ -42,7 +42,7 @@ public:
         return currentProcess->getAbsoluteDeadline();
     }
 
-    virtual int getLoad() {
+    virtual long long int getLoad(int time, bool preemt) {
         return 0;
     }
 
@@ -50,7 +50,7 @@ public:
         return nullptr;
     }
 
-    virtual void loadBalance() {
+    virtual void loadBalance(int time) {
 
     };
 };

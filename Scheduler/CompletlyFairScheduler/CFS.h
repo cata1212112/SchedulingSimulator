@@ -15,7 +15,7 @@ class CFS : public SchedulingAlgorithm {
     int sched_latency;
     int sched_nr_latency;
     int sched_min_granularity;
-    int load_balanicng_period = 50;
+    int load_balanicng_period = 5;
     priority_queue<Event> *mainEventQueue;
 
     vector<Core*> cores;
@@ -64,7 +64,7 @@ public:
 
     string getCoreAlgortihm(int coreID) override;
 
-    void loadBalance() override;
+    void loadBalance(int time) override;
 
     int leastLoadedCPU();
 

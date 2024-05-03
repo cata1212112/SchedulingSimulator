@@ -121,20 +121,25 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                 currentEvents.clear();
 
                 currentEvents.push_back(e);
-
+                bool timerExpired = false;
                 while (!events->empty() && events->top().getTime() == currentTime) {
                     e = events->top();
-                    if (e.getType() == LOADBALANCE) {
-                        schedAlgo.loadBalance();
-                    } else {
-                        currentEvents.push_back(e);
-                        events->pop();
-                    }
+                    currentEvents.push_back(e);
+                    events->pop();
                 }
 
                 if (isMultiCore) {
                     Metrics aux("none");
-                    schedAlgo.schedule(currentTime, aux, false);
+                    for (const auto &e:currentEvents) {
+                        if (e.getType() == LOADBALANCE) {
+                            schedAlgo.loadBalance(currentTime);
+                            timerExpired = true;
+                        }
+                    }
+                    if (osTime >= 1000000) {
+                        timerExpired = false;
+                    }
+                    schedAlgo.schedule(currentTime, aux, timerExpired);
 
                     for (const auto &event : currentEvents) {
                         if (event.getType() == ARRIVAL) {
@@ -148,10 +153,10 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                         }
                     }
                     if (haveIdleCores) {
-                        schedAlgo.loadBalance();
+                        schedAlgo.loadBalance(currentTime);
                     }
 
-                    osTime = currentTime;
+                    osTime = currentTime + 1;
                 }
                 else if (isRealTime()) {
                     vector<Process> arrivals;

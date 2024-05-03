@@ -33,16 +33,20 @@ private:
             /*  15 */ 119304647, 148102320, 186737708, 238609294, 286331153,
     };
 
-    int sched_latency = 10;
-    int sched_nr_latency = 5;
-    int sched_min_granularity = 2;
+    int sched_latency = 100;
+    int sched_nr_latency = 10;
+    int sched_min_granularity = 10;
     vector<Process> readyQueue;
     int numProcs = 0;
     int isIdle = false;
+    std::priority_queue<Event> *eventQueue = nullptr;
+    Metrics *workaroundStats = nullptr;
 public:
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;
 
     int getIsIdle() const;
+
+    void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) override;
 
     int getSchedLatency() const;
 
@@ -66,11 +70,13 @@ public:
 
     int getTimeSlice();
 
-    int getLoad() override;
+    long long int getLoad(int time, bool preemt = false) override;
 
     string getCoreAlgortihm(int coreID) override;
 
     vector<Process> *getReadyQueue() override;
+
+    bool isRunning() override;
 };
 
 

@@ -18,8 +18,6 @@ void Core::addEvent(Event e) {
 void Core::runSimulation() {
     unordered_map<eventType, vector<Event>> currentEvents;
 
-    int numberOfProcesses = 0;
-
     Metrics stats(algortihm, roundRobinQuant);
     stats.setCore(coreID);
     while (true) {
@@ -78,6 +76,7 @@ void Core::runSimulation() {
 
             for (const auto& event : currentEvents[ARRIVAL]) {
                 numberOfProcesses += 1;
+                seenIds[event.getProcess().getId()] = 1;
                 arrivedProcesses.push_back(event.getProcess());
             }
 
@@ -118,6 +117,7 @@ Core::Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm
            bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant)
         : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID),   schedAlgo(ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant)){
     events = new priority_queue<Event>();
+    schedAlgo.addMainEventQueue(events, nullptr);
     roundRobinQuant = 10;
     runningThread = new std::thread(&Core::runSimulation, this);
 }

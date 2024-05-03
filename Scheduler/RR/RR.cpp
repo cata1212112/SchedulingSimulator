@@ -108,10 +108,10 @@ std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
         int remainingBurst = currentProcess->getRemainingBurst();
         if (remainingBurst > quant) {
 
-            return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}};
+            return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}, e};
         }
 
-        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
+        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst())), e};
 
     }
     return {};
