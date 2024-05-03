@@ -124,11 +124,36 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
                 while (!events->empty() && events->top().getTime() == currentTime) {
                     e = events->top();
-                    currentEvents.push_back(e);
-                    events->pop();
+                    if (e.getType() == LOADBALANCE) {
+                        schedAlgo.loadBalance();
+                    } else {
+                        currentEvents.push_back(e);
+                        events->pop();
+                    }
                 }
 
-                if (isRealTime()) {
+                if (isMultiCore) {
+                    Metrics aux("none");
+                    schedAlgo.schedule(currentTime, aux, false);
+
+                    for (const auto &event : currentEvents) {
+                        if (event.getType() == ARRIVAL) {
+                            core[schedAlgo.assignCPU(event.getProcess())]->addEvent(event);
+                        }
+                    }
+                    bool haveIdleCores = false;
+                    for (const auto &c:core) {
+                        if (!c->running()) {
+                            haveIdleCores = true;
+                        }
+                    }
+                    if (haveIdleCores) {
+                        schedAlgo.loadBalance();
+                    }
+
+                    osTime = currentTime;
+                }
+                else if (isRealTime()) {
                     vector<Process> arrivals;
                     for (const auto &event : currentEvents) {
                         if (event.getType() == ARRIVAL) {
@@ -145,7 +170,6 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                     schedAlgo.processArrived(arrivals, osTime, aux);
                     schedAlgo.schedule(currentTime, aux, false);
                     osTime = currentTime+1;
-
                 } else {
                     for (const auto &event : currentEvents) {
                         if (event.getType() == ARRIVAL) {
@@ -153,7 +177,6 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                         }
                     }
                     osTime = currentTime;
-
                 }
             }
         }
@@ -293,4 +316,8 @@ int DES::isToStop() const {
 
 void DES::setToStop(int toStop) {
     DES::toStop = toStop;
+}
+
+void DES::setIsMultiCore(bool isMultiCore) {
+    DES::isMultiCore = isMultiCore;
 }

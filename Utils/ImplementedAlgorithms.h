@@ -77,6 +77,9 @@ public:
         } else if (name == "Completely Fair Scheduler") {
             CFS *cfs = new CFS();
             return *cfs;
+        } else if (name == "SingleCoreCFS") {
+            SingleCoreCFS *sccfs = new SingleCoreCFS();
+            return *sccfs;
         }
     }
 

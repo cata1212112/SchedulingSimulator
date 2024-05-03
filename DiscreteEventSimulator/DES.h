@@ -37,6 +37,7 @@ private:
     bool osTimeUpdated = false;
     static vector<string> algortihms;
     bool realTime = false;
+    bool isMultiCore = false;
     int toStop = 0;
 public:
     int isToStop() const;
@@ -105,6 +106,9 @@ public:
     static vector<string> getAlgorithms() {
         return algortihms;
     }
+
+    void setIsMultiCore(bool isMultiCore);
+
 };
 
 

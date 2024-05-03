@@ -118,6 +118,10 @@ public:
 
     bool getAssigned() const;
 
+    double getVtime() const;
+
+    void setVtime(double vtime);
+
     void setAssigned(bool assigned);
 
 };

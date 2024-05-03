@@ -6,6 +6,7 @@
 #define LICENTA_SINGLECORECFS_H
 
 #include "../SchedulingAlgorithm.h"
+#include <iostream>
 
 
 class SingleCoreCFS : public SchedulingAlgorithm{
@@ -32,10 +33,28 @@ private:
             /*  15 */ 119304647, 148102320, 186737708, 238609294, 286331153,
     };
 
+    int sched_latency = 10;
+    int sched_nr_latency = 5;
+    int sched_min_granularity = 2;
     vector<Process> readyQueue;
-
+    int numProcs = 0;
+    int isIdle = false;
 public:
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;
+
+    int getIsIdle() const;
+
+    int getSchedLatency() const;
+
+    void setSchedLatency(int schedLatency);
+
+    int getSchedNrLatency() const;
+
+    void setSchedNrLatency(int schedNrLatency);
+
+    int getSchedMinGranularity() const;
+
+    void setSchedMinGranularity(int schedMinGranularity);
 
     vector<Event> processCPUComplete(Process p, int time, Metrics &stats) override;
 
@@ -44,6 +63,14 @@ public:
     vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) override;
 
     vector<Event> schedule(int time, Metrics &stats, bool timerExpired) override;
+
+    int getTimeSlice();
+
+    int getLoad() override;
+
+    string getCoreAlgortihm(int coreID) override;
+
+    vector<Process> *getReadyQueue() override;
 };
 
 

@@ -339,12 +339,12 @@ void MainWindow::selectNumberOfCores() {
 
 void MainWindow::selectAlgortihmPage(QWidget *parent, const vector<std::string> &algorithms, QLayout *layout, bool isMultiCore, bool isRealTime) {
     for (const auto &algo : algorithms) {
-        selectedAlgorithmButton(algo, layout);
+        selectedAlgorithmButton(algo, layout, isMultiCore);
     }
     goBackButton(layout, parent);
 }
 
-void MainWindow::selectedAlgorithmButton(const string &algorithmName, QLayout *layout) {
+void MainWindow::selectedAlgorithmButton(const string &algorithmName, QLayout *layout, bool isMultiCore) {
     auto *button = new QPushButton(QString::fromStdString(algorithmName));
     button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
@@ -353,8 +353,8 @@ void MainWindow::selectedAlgorithmButton(const string &algorithmName, QLayout *l
     font.setPointSize(12);
     button->setFont(font);
 
-    connect(button, &QPushButton::clicked, this, [this, algorithmName]() {
-        selectAlgortihm(algorithmName);
+    connect(button, &QPushButton::clicked, this, [this, algorithmName, isMultiCore]() {
+        selectAlgortihm(algorithmName, isMultiCore);
     });
 
     layout->addWidget(button);
@@ -376,18 +376,18 @@ void MainWindow::goBackButton(QLayout *layout, QWidget *parent) {
     layout->addWidget(goBackButton);
 }
 
-void MainWindow::selectAlgortihm(const string &algortihm) {
+void MainWindow::selectAlgortihm(const string &algortihm, bool isMultiCore) {
     selectedAlgorithm = algortihm;
     bool ok = false;
     if (selectedAlgorithm == "Round Robin" || selectedAlgorithm == "Mean Threshold Shortest Job Round Robin") {
 
         quantum = QInputDialog::getInt(this, tr("Enter Quantum"), tr("Quantum:"), 1, 1, 100, 1, &ok);
         if (ok) {
-            setupInputData(ui->SingleCore);
+            setupInputData(ui->SingleCore, isMultiCore);
             ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
         }
     } else {
-        setupInputData(ui->SingleCore);
+        setupInputData(ui->SingleCore, isMultiCore);
         ui->stackedWidget->setCurrentWidget(ui->RunSimulation);
     }
 }
@@ -402,7 +402,7 @@ void MainWindow::clearWidgets(QLayout *layout) {
     }
 }
 
-void MainWindow::setupInputData(QWidget *parent) {
+void MainWindow::setupInputData(QWidget *parent, bool isMultiCore) {
     connect(ui->maximumTime, &QSlider::valueChanged, this, [=, this] (int value){
         ui->timpselectat->setText(QString::fromStdString(to_string(value)));
     });
@@ -434,7 +434,7 @@ void MainWindow::setupInputData(QWidget *parent) {
 
         clearWidgets(layout);
 
-        generateDataButton(ui->InputData->layout(), ui->RunSimulation);
+        generateDataButton(ui->InputData->layout(), ui->RunSimulation, isMultiCore);
     });
 
     connect(ui->usefileasinput, &QPushButton::clicked, this, [=, this]() {
@@ -444,16 +444,18 @@ void MainWindow::setupInputData(QWidget *parent) {
         {
             DES *des = new DES(selectedAlgorithm);
             des->setRoundRobinQuant(quantum);
+            des->setIsMultiCore(isMultiCore);
             des->readInputDataFromFile(fileName.toStdString(), false);
             gotoRunning(des, selectedNumberOfCores);
         }
     });
 }
 
-void MainWindow::generateDataButton(QLayout *layout, QWidget *parent) {
+void MainWindow::generateDataButton(QLayout *layout, QWidget *parent, bool isMultiCore) {
 
     DES *des = new DES(selectedAlgorithm);
     des->setRoundRobinQuant(quantum);
+    des->setIsMultiCore(isMultiCore);
 
     ui->stackedWidget->setCurrentWidget(ui->InputData);
 

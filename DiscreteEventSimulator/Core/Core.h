@@ -58,6 +58,14 @@ public:
     int getAbsoluteDeadline() {
         return schedAlgo.getAbsoluteDeadline();
     }
+
+    int getLoad() {
+        return schedAlgo.getLoad();
+    }
+
+    vector<Process> *getReadyQueue() {
+        return schedAlgo.getReadyQueue();
+    }
 };
 
 #endif //LICENTA_CORE_H

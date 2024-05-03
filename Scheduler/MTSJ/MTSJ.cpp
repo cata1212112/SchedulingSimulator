@@ -129,8 +129,6 @@ vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
             rrQueue.erase(rrQueue.begin());
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
         }
-    } else if (timerExpired) {
-
     }
     return {};
 }

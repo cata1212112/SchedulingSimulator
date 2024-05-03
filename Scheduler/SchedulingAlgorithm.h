@@ -41,6 +41,18 @@ public:
         }
         return currentProcess->getAbsoluteDeadline();
     }
+
+    virtual int getLoad() {
+        return 0;
+    }
+
+    virtual vector<Process> *getReadyQueue() {
+        return nullptr;
+    }
+
+    virtual void loadBalance() {
+
+    };
 };
 
 #endif //CPUSCHED_SCHEDULINGALGORITHM_H

@@ -48,17 +48,17 @@ private:
 
     void selectAlgortihmPage(QWidget *parent, const std::vector<std::string>& algorithms, QLayout *layout, bool isMultiCore, bool isRealTime);
 
-    void selectedAlgorithmButton(const std::string& algorithmName, QLayout* layout);
+    void selectedAlgorithmButton(const std::string& algorithmName, QLayout* layout, bool isMultiCore= false);
 
     void goBackButton(QLayout* layout, QWidget* parent);
 
-    void selectAlgortihm(const std::string &algortihm);
+    void selectAlgortihm(const std::string &algortihm, bool isMultiCore = false);
 
     void clearWidgets(QLayout *layout);
 
-    void setupInputData(QWidget *parent);
+    void setupInputData(QWidget *parent, bool isMultiCore = false);
 
-    void generateDataButton(QLayout *layout, QWidget *parent);
+    void generateDataButton(QLayout *layout, QWidget *parent, bool isMultiCore = false);
 //    void se
 };
 

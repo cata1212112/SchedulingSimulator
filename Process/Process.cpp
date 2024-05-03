@@ -144,3 +144,11 @@ int Process::getNextDeadline() const {
 void Process::setNextDeadline(int nextDeadline) {
     Process::nextDeadline = nextDeadline;
 }
+
+double Process::getVtime() const {
+    return vtime;
+}
+
+void Process::setVtime(double vtime) {
+    Process::vtime = vtime;
+}
