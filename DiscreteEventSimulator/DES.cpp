@@ -74,7 +74,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
     int osTime = 0;
     int currentTime = 0;
-
+    bool loadBalance = false;
 
     Core *core[numCPUS];
 
@@ -83,12 +83,10 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     for (int i=0; i<numCPUS; i++) {
         core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier, i, roundRobinQuant);
         schedAlgo.addCore(core[i]);
-        schedAlgo.addMainEventQueue(events, nullptr);
     }
-
+    schedAlgo.addMainEventQueue(events, nullptr);
     vector<Event> currentEvents;
-
-    bool allFinished = true;
+    bool allFinished = false;
 
     while (true) {
         if (events->empty()) {
@@ -108,9 +106,15 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
             osTime = 1000000;
         } else {
-
             Event e = events->top();
             events->pop();
+            if (events->empty() && e.getType() == LOADBALANCE) {
+                allFinished = true;
+                for (int i=0; i<numCPUS; i++) {
+
+                    allFinished = (allFinished && !core[i]->getIsRunning());
+                }
+            }
             if (isRealTime() && e.getTime() >= toStop) {
                 while (!events->empty()) {
                     events->pop();
@@ -129,34 +133,43 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                 }
 
                 if (isMultiCore) {
+                    if (loadBalance) {
+//                        cout << "Enter load balancing\n";
+                        cout << core[0]->getCoreTime() << " " << core[1]->getCoreTime() << "\n";
+                        int maximumDif = schedAlgo.loadBalance(osTime);
+                        cout << maximumDif << "\n";
+                        loadBalance = false;
+                    }
+
                     Metrics aux("none");
                     for (const auto &e:currentEvents) {
                         if (e.getType() == LOADBALANCE) {
-                            schedAlgo.loadBalance(currentTime);
+                            loadBalance = true;
+//                            cout << "Send load balance\n";
+                            for (int i=0; i<numCPUS; i++) {
+                                core[i]->addEvent(Event(LOADBALANCE, currentTime, Process()));
+                            }
                             timerExpired = true;
                         }
                     }
                     if (osTime >= 1000000) {
                         timerExpired = false;
                     }
-                    schedAlgo.schedule(currentTime, aux, timerExpired);
+                    if (!allFinished) {
+                        cout << "Load balance event\n";
+                        schedAlgo.schedule(currentTime, aux, timerExpired);
+                    }
 
                     for (const auto &event : currentEvents) {
                         if (event.getType() == ARRIVAL) {
                             core[schedAlgo.assignCPU(event.getProcess())]->addEvent(event);
                         }
                     }
-                    bool haveIdleCores = false;
-                    for (const auto &c:core) {
-                        if (!c->running()) {
-                            haveIdleCores = true;
-                        }
-                    }
-                    if (haveIdleCores) {
-                        schedAlgo.loadBalance(currentTime);
-                    }
 
-                    osTime = currentTime + 1;
+                    osTime = currentTime;
+//                    for (auto &c:core) {
+//                        c->addEvent(Event(TICK, currentTime, Process()));
+//                    }
                 }
                 else if (isRealTime()) {
                     vector<Process> arrivals;

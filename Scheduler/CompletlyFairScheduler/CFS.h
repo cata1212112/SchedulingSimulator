@@ -64,11 +64,7 @@ public:
 
     string getCoreAlgortihm(int coreID) override;
 
-    void loadBalance(int time) override;
-
-    int leastLoadedCPU();
-
-    int mostLoadedCPU();
+    int loadBalance(int time) override;
 
     void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) override;
 

@@ -16,36 +16,62 @@ void Core::addEvent(Event e) {
 }
 
 void Core::runSimulation() {
+    schedAlgo.addMainEventQueue(events, nullptr);
     unordered_map<eventType, vector<Event>> currentEvents;
 
     Metrics stats(algortihm, roundRobinQuant);
     stats.setCore(coreID);
+    schedAlgo.coreID = getCoreId();
+
     while (true) {
         {
             std::unique_lock lk(*cvMutex);
             cv->wait(lk, [this] { return *osTimeUpdated; });
         }
 
+
         while (!events->empty() && !finished) {
             Event e = events->top();
+
             if (e.getTime() > *osTime) {
                 if (e.getType() == FINISHEXECUTION) {
                     finished = true;
                 }
                 break;
             }
+//            if (e.getType() == LOADBALANCE) {
+////                cout << "Receive load balance\n";
+//                loadBalanceState = true;
+//                events->pop();
+//                if (events->empty()) {
+//                    coreTime = e.getTime();
+//                    break;
+//                }
+//                e = events->top();
+//            }
 
             events->pop();
-
-            coreTime = e.getTime();
-            if (coreTime != e.getTime()) {
+            if (e.getTime() > 0) {
+                coreTime = e.getTime();
             }
-            currentEvents.clear();
+
+            currentEvents[ARRIVAL] = {};
+            currentEvents[CPUBURSTCOMPLETE] = {};
+            currentEvents[IOBURSTCOMPLETE] = {};
+            currentEvents[TIMEREXPIRED] = {};
+            currentEvents[PREEMT] = {};
+            currentEvents[FINISHEXECUTION] = {};
+            currentEvents[REALTIME] = {};
+            currentEvents[TICK] = {};
+            currentEvents[LOADBALANCE] = {};
 
             currentEvents[e.getType()].push_back(e);
 
             while (!events->empty() && events->top().getTime() == coreTime) {
                 e = events->top();
+                if (e.getType() == LOADBALANCE) {
+                    loadBalanceState = true;
+                }
                 currentEvents[e.getType()].push_back(e);
                 events->pop();
             }
@@ -109,6 +135,7 @@ void Core::runSimulation() {
 
     }
     stats.divide(coreTime, numberOfProcesses);
+    cout << "Finish time: " << coreTime << "\n";
     p.set_value(stats);
     finished = true;
 }
@@ -116,9 +143,8 @@ void Core::runSimulation() {
 Core::Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
            bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant)
         : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID),   schedAlgo(ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant)){
-    events = new priority_queue<Event>();
-    schedAlgo.addMainEventQueue(events, nullptr);
     roundRobinQuant = 10;
+    events = new priority_queue<Event>();
     runningThread = new std::thread(&Core::runSimulation, this);
 }
 

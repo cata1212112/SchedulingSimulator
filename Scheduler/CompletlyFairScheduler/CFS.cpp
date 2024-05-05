@@ -21,7 +21,7 @@ vector<Event> CFS::processPreempt(std::vector<Process> p, int time, Metrics &sta
 }
 
 vector<Event> CFS::schedule(int time, Metrics &stats, bool timerExpired) {
-    if (time == 0 || timerExpired) {
+    if (timerExpired) {
         mainEventQueue->push(Event(LOADBALANCE, time + load_balanicng_period, Process()));
     }
     return {};
@@ -77,64 +77,85 @@ void CFS::setSchedMinGranularity(int schedMinGranularity) {
     sched_min_granularity = schedMinGranularity;
 }
 
-void CFS::loadBalance(int time) {
+int CFS::loadBalance(int time) {
+    cout << "Load Balance " << time << "\n";
     double totalLoad = 0;
+    map<int, int> coreLoads;
+
     for (const auto &c:cores) {
-        totalLoad += c->getLoad(time, true);
+        int coreLoad = c->getLoad(time, true);
+        coreLoads[c->getCoreId()] = coreLoad;
+        totalLoad += coreLoad;
     }
     totalLoad /= cores.size();
+    int maximumDif = 0;
+    for (int i=0; i<cores.size(); i++) {
+        for (int j=0; j<cores.size(); j++) {
+            maximumDif = max(maximumDif, abs(coreLoads[cores[i]->getCoreId()] - coreLoads[cores[j]->getCoreId()]));
+        }
+    }
+
+    auto leastLoadedCPU = [&](){
+        int indexMin = 0;
+        for (int i=1; i<cores.size(); i++) {
+            if (coreLoads[cores[i]->getCoreId()] < coreLoads[cores[indexMin]->getCoreId()]) {
+                indexMin = i;
+            }
+        }
+        return indexMin;
+    };
+
+    auto mostLoadedCPU = [&](){
+        int indexMin = 0;
+        for (int i=1; i<cores.size(); i++) {
+            if (coreLoads[cores[i]->getCoreId()] > coreLoads[cores[indexMin]->getCoreId()]) {
+                indexMin = i;
+            }
+        }
+        return indexMin;
+    };
 
     for (auto &c:cores) {
-        if (c->getLoad(0) >= totalLoad) {
-            int excessLoad = c->getLoad(0) - totalLoad;
+        int coreLoad = coreLoads[c->getCoreId()];
+        if (coreLoad > totalLoad) {
+            int excessLoad = coreLoad - totalLoad;
             while (excessLoad > 0 && !c->getReadyQueue()->empty()) {
-                Process task = *c->getReadyQueue()->begin();
-                task.setEnteredReadyQueue(time);
+                Process task = Process(*c->getReadyQueue()->begin());
                 c->getReadyQueue()->erase(c->getReadyQueue()->begin());
+
+
                 int targetCPU = leastLoadedCPU();
 
                 excessLoad -= prio_to_weight[task.getPriority()];
-                cores[targetCPU]->getReadyQueue()->push_back(task);
-                cores[targetCPU]->addProcessIfNoTSeen(task.getId());
-                cores[targetCPU]->addEvent(Event(TICK, time, Process()));
+                coreLoads[cores[targetCPU]->getCoreId()] += prio_to_weight[task.getPriority()];
+                cores[targetCPU]->addEvent(Event(ARRIVAL, time, task));
+//                cores[targetCPU]->getReadyQueue()->push_back(task);
+//                cores[targetCPU]->addProcessIfNoTSeen(task.getId());
             }
-        } else {
-            int deficitLoad = totalLoad - c->getLoad(0);
+        } else if (coreLoad < totalLoad){
+            int deficitLoad = totalLoad - coreLoad;
             while (deficitLoad > 0) {
                 int mostLoadedCPU_ = mostLoadedCPU();
-                Process task = *cores[mostLoadedCPU_]->getReadyQueue()->begin();
-                task.setEnteredReadyQueue(time);
+                if (cores[mostLoadedCPU_]->getReadyQueue()->empty()) {
+                    deficitLoad = 0;
+                    break;
+                }
+                Process task = Process(*cores[mostLoadedCPU_]->getReadyQueue()->begin());
 
                 cores[mostLoadedCPU_]->getReadyQueue()->erase(cores[mostLoadedCPU_]->getReadyQueue()->begin());
-                c->getReadyQueue()->push_back(task);
-                c->addProcessIfNoTSeen(task.getId());
-                c->addEvent(Event(TICK, time, Process()));
+//                c->getReadyQueue()->push_back(task);
+//                c->addProcessIfNoTSeen(task.getId());
+                c->addEvent(Event(ARRIVAL, time, task));
                 deficitLoad -= prio_to_weight[task.getPriority()];
+                coreLoads[c->getCoreId()] += prio_to_weight[task.getPriority()];
             }
         }
     }
-}
 
-int CFS::leastLoadedCPU() {
-    int index = cores.size() - 1;
-    for (int i=cores.size() - 1; i>=0; i--) {
-        if (cores[i]->getLoad(0) < cores[index]->getLoad(0)) {
-            index = i;
-        }
-    }
-    return index;
-}
-
-int CFS::mostLoadedCPU() {
-    int index = 0;
-    for (int i=0; i<cores.size(); i++) {
-        if (cores[i]->getLoad(0) > cores[index]->getLoad(0)) {
-            index = i;
-        }
-    }
-    return index;
+    return maximumDif;
 }
 
 void CFS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
     mainEventQueue = eventQueue;
+    mainEventQueue->push(Event(LOADBALANCE, load_balanicng_period, Process()));
 }

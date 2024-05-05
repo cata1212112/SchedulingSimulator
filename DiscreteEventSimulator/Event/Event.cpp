@@ -112,3 +112,7 @@ int Event::getTime() const {
 const Process &Event::getProcess() const {
     return process;
 }
+
+Event::~Event() {
+
+}

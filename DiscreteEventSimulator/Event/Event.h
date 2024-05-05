@@ -20,7 +20,8 @@ enum eventType {
     FINISHEXECUTION,
     REALTIME,
     TICK,
-    LOADBALANCE
+    LOADBALANCE,
+    NUM_EVENTS
 };
 
 class Event {
@@ -51,6 +52,8 @@ public:
     static Event fromStrings(const string &firstLine, const string &secondLine, const string &thirdLine);
 
     static Event fromString(const string &line);
+
+    virtual ~Event();
 };
 
 

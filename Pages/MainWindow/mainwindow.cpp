@@ -446,6 +446,11 @@ void MainWindow::setupInputData(QWidget *parent, bool isMultiCore) {
             des->setRoundRobinQuant(quantum);
             des->setIsMultiCore(isMultiCore);
             des->readInputDataFromFile(fileName.toStdString(), false);
+
+
+//            selectedNumberOfCores = 1;
+
+
             gotoRunning(des, selectedNumberOfCores);
         }
     });

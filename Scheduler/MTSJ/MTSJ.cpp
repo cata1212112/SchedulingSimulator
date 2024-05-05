@@ -79,6 +79,7 @@ vector<Event> MTSJ::processPreempt(std::vector<Process> p, int time, Metrics &st
 }
 
 vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
+    cout << timerExpired << "\n";
     if (currentProcess == nullptr || timerExpired) {
         if (!sjfQueue.empty()) {
             currentProcess = new Process(sjfQueue[0]);
@@ -89,16 +90,17 @@ vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
                 currentProcess->setAssigned(true);
             }
 
-            stats.addToGanttChart(currentProcess->getId(), time, time + currentProcess->getRemainingBurst());
-            std::cout << currentProcess->getId() << " " << time << " " << time + currentProcess->getRemainingBurst() << "\n";
 
             int remainingBurst = currentProcess->getRemainingBurst();
 
-            stats.addToCPUUtilization(remainingBurst);
+
             stats.addToWT(time - currentProcess->getEnteredReadyQueue());
 
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
         } else if (!rrQueue.empty()){
+            if (currentProcess != nullptr) {
+                // NU SCOT CURRENT PROCESS CUM TREBUIE
+            }
             currentProcess = new Process(rrQueue[0]);
             currentProcess->setLastStarted(time);
 
@@ -113,10 +115,8 @@ vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
             stats.addToWT(time - currentProcess->getEnteredReadyQueue());
 
             if (remainingBurst > quant) {
-                std::cout << currentProcess->getId() << " " << time << " " << time + quant << "\n";
 
                 rrQueue[0].setRemainingBurst(rrQueue[0].getRemainingBurst() - quant);
-                stats.addToGanttChart(currentProcess->getId(), time, time+quant);
                 rrQueue[0].setEnteredReadyQueue(time+quant);
 
                 rrQueue.push_back(rrQueue[0]);
@@ -124,7 +124,6 @@ vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
 
                 return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}};
             }
-            std::cout << currentProcess->getId() << " " << time << " " << time + currentProcess->getRemainingBurst() << "\n";
 
             rrQueue.erase(rrQueue.begin());
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};

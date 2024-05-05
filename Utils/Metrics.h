@@ -16,6 +16,7 @@ private:
     double averageResponseTime = 0;
     std::string algorithm;
     std::vector<std::tuple<int, int, int>> gantt;
+    std::vector<double> maximumLoadDifference;
 public:
     explicit Metrics(const std::string &algorithm, int roundRobinQuant=0) : algorithm(algorithm) {
         if (algorithm == "Round Robin") {
@@ -75,6 +76,10 @@ public:
 
     void setCore(int core) {
         Metrics::core = core;
+    }
+
+    void addDifference(int value) {
+        maximumLoadDifference.push_back(value);
     }
 };
 

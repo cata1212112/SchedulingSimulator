@@ -33,9 +33,9 @@ private:
             /*  15 */ 119304647, 148102320, 186737708, 238609294, 286331153,
     };
 
-    int sched_latency = 100;
+    int sched_latency = 30;
     int sched_nr_latency = 10;
-    int sched_min_granularity = 10;
+    int sched_min_granularity = 3;
     vector<Process> readyQueue;
     int numProcs = 0;
     int isIdle = false;

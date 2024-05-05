@@ -124,6 +124,7 @@ public:
 
     void setAssigned(bool assigned);
 
+    virtual ~Process();
 };
 
 

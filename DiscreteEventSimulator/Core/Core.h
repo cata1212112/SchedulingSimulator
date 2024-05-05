@@ -18,6 +18,7 @@
 class Core {
 private:
     std::priority_queue<Event> *events = nullptr;
+//    shared_ptr<priority_queue<Event>> events = nullptr;
     int coreTime = 0;
     int *osTime;
     std::condition_variable *cv;
@@ -37,6 +38,8 @@ private:
     map<int, bool> seenIds;
 
 public:
+    int loadBalanceState;
+
     bool isSentFinish() const;
 
     void setSentFinish(bool sentFinish);
@@ -74,6 +77,10 @@ public:
             numberOfProcesses += 1;
             seenIds[id] = true;
         }
+    }
+
+    int getIsRunning() {
+        return schedAlgo.isRunning();
     }
 };
 

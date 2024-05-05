@@ -15,6 +15,7 @@ class SchedulingAlgorithm {
 protected:
     Process* currentProcess = nullptr;
 public:
+    int coreID;
     virtual std::vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats)=0;
     virtual std::vector<Event> processCPUComplete(Process p, int time, Metrics &stats)=0;
     virtual std::vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats)=0;
@@ -50,7 +51,7 @@ public:
         return nullptr;
     }
 
-    virtual void loadBalance(int time) {
+    virtual int loadBalance(int time) {
 
     };
 };

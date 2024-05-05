@@ -152,3 +152,7 @@ double Process::getVtime() const {
 void Process::setVtime(double vtime) {
     Process::vtime = vtime;
 }
+
+Process::~Process() {
+
+}
