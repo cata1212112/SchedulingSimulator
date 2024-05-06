@@ -2,15 +2,19 @@
 // Created by cata_ on 5/6/2024.
 //
 
+#include <iostream>
 #include "FSSCore.h"
 
 vector<Event> FSSCore::processArrived(std::vector<Process> p, int time, Metrics &stats) {
     for (auto &process : p) {
         isIdle = false;
-
-        process.setEnteredReadyQueue(time);
-        readyQueue.push_back(process);
-        numProcs += 1;
+        if (process.getId() != -1) {
+            process.setEnteredReadyQueue(time);
+            readyQueue.push_back(process);
+            numProcs += 1;
+        } else {
+            throttleMaixmum = time + process.getPriority();
+        }
     }
     return {};
 }
@@ -56,7 +60,6 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
                                      ((time - currentProcess->getLastStarted()) / prio_to_weight[currentProcess->getPriority()]));
             currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
             currentProcess->setEnteredReadyQueue(time);
-//            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
             stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
             stats.addToCPUUtilization(time - currentProcess->getLastStarted());
             if (currentProcess->getRemainingBurst() > 0) {
@@ -82,6 +85,15 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         }
         readyQueue.erase(readyQueue.begin() + minIndex);
         int remainingBurst = currentProcess->getRemainingBurst();
+
+        cout << time << " " << processTimeSlice << " " << throttleMaixmum << "\n";
+        if (time + min(processTimeSlice, currentProcess->getRemainingBurst()) > throttleMaixmum) {
+            processTimeSlice = throttleMaixmum - time;
+        }
+        if (processTimeSlice <= 0) {
+            return {};
+        }
+
         if (processTimeSlice >= currentProcess->getRemainingBurst()) {
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess))};
         }
@@ -183,4 +195,12 @@ bool FSSCore::isRunning() {
 
 void FSSCore::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
     this->eventQueue = eventQueue;
+}
+
+void FSSCore::setIsThrottled(bool isThrottled) {
+    FSSCore::isThrottled = isThrottled;
+}
+
+void FSSCore::setThrottleMaixmum(int throttleMaixmum) {
+    FSSCore::throttleMaixmum = throttleMaixmum;
 }

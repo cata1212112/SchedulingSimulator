@@ -39,16 +39,6 @@ void Core::runSimulation() {
                 }
                 break;
             }
-//            if (e.getType() == LOADBALANCE) {
-////                cout << "Receive load balance\n";
-//                loadBalanceState = true;
-//                events->pop();
-//                if (events->empty()) {
-//                    coreTime = e.getTime();
-//                    break;
-//                }
-//                e = events->top();
-//            }
 
             events->pop();
             if (e.getTime() > 0) {
@@ -135,7 +125,6 @@ void Core::runSimulation() {
 
     }
     stats.divide(coreTime, numberOfProcesses);
-    cout << "Finish time: " << coreTime << "\n";
     p.set_value(stats);
     finished = true;
 }
@@ -176,4 +165,8 @@ bool Core::running() {
 
 int Core::getCoreId() const {
     return coreID;
+}
+
+priority_queue<Event> *Core::getEventQueue() {
+    return events;
 }

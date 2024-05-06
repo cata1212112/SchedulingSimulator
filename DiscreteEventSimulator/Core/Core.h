@@ -82,6 +82,8 @@ public:
     int getIsRunning() {
         return schedAlgo.isRunning();
     }
+
+    priority_queue<Event> *getEventQueue();
 };
 
 #endif //LICENTA_CORE_H

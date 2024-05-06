@@ -21,6 +21,7 @@ enum eventType {
     REALTIME,
     TICK,
     LOADBALANCE,
+    THROTTLE,
     NUM_EVENTS
 };
 

@@ -40,7 +40,14 @@ private:
     int isIdle = false;
     std::priority_queue<Event> *eventQueue = nullptr;
     Metrics *workaroundStats = nullptr;
+
+    bool isThrottled = false;
+    int throttleMaixmum = 1e9;
 public:
+    void setThrottleMaixmum(int throttleMaixmum);
+
+    void setIsThrottled(bool isThrottled);
+
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;
 
     int getIsIdle() const;
