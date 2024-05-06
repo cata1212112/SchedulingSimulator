@@ -24,6 +24,8 @@
 #include "../Scheduler/MTSJ/MTSJ.h"
 #include "../Scheduler/RRKMEANS/RRKMEANS.h"
 #include "../Scheduler/CompletlyFairScheduler/CFS.h"
+#include "../Scheduler/FairShareScheduling/FSS.h"
+#include "../Scheduler/FairShareScheduling/FSSCore.h"
 
 class ImplementedAlgorithms {
 public:
@@ -80,11 +82,17 @@ public:
         } else if (name == "SingleCoreCFS") {
             SingleCoreCFS *sccfs = new SingleCoreCFS();
             return *sccfs;
+        } else if (name == "Fair-Share Scheduling") {
+            FSS *fss = new FSS();
+            return *fss;
+        } else if (name == "FSSCore") {
+            FSSCore *fsscore = new FSSCore();
+            return *fsscore;
         }
     }
 
     static std::vector<std::string> getMultiCoreAlgortihms() {
-        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)", "Completely Fair Scheduler"};//, "[TEST] Completely Fair Scheduler"};
+        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)", "Completely Fair Scheduler", "Fair-Share Scheduling"};//, "[TEST] Completely Fair Scheduler"};
     }
 
     static std::vector<std::string> getRealTimeAlgortihms() {

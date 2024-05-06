@@ -70,6 +70,10 @@ add_executable(Licenta main.cpp
         Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h
         Utils/KMEANS/DataPoint.cpp
         Utils/KMEANS/DataPoint.h
+        Scheduler/FairShareScheduling/FSS.cpp
+        Scheduler/FairShareScheduling/FSS.h
+        Scheduler/FairShareScheduling/FSSCore.cpp
+        Scheduler/FairShareScheduling/FSSCore.h
 )
 target_link_libraries(Licenta
         Qt::Core
