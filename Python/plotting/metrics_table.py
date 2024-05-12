@@ -21,10 +21,10 @@ def plot_data(cores_data):
         core_data = cores_data[index]
         for alg in core_data.keys():
             table_data[alg].append([index, core_data[alg]['cpu_utilization'], core_data[alg]['avg_turnaround_time'],
-                                    core_data[alg]['avg_waiting_time'], core_data[alg]['avg_response_time']])
+                                    core_data[alg]['avg_waiting_time'], core_data[alg]['avg_response_time'], core_data[alg]['context_switches']])
 
     labels = ["Core number", "CPU utilization", "Average turnaround time", "Average waiting time",
-              "Average response time"]
+              "Average response time", "Context Switches"]
 
     fig, ax = plt.subplots(number_of_algorithms, 1, figsize=(10, 10))
 
@@ -61,12 +61,13 @@ def main():
         core_id = int(core_data[0])
         core_data = core_data[1:]
         algortihms = {}
-        for i in range(0, len(core_data), 5):
+        for i in range(0, len(core_data), 6):
             algortihms_data = {}
             algortihms_data['cpu_utilization'] = float(core_data[i+1])
             algortihms_data['avg_waiting_time'] = float(core_data[i+2])
             algortihms_data['avg_turnaround_time'] = float(core_data[i+3])
             algortihms_data['avg_response_time'] = float(core_data[i+4])
+            algortihms_data['context_switches'] = float(core_data[i+5])
 
             algortihms[core_data[i]] = algortihms_data
 

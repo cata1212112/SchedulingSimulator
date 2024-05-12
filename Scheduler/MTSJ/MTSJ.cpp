@@ -11,13 +11,17 @@ vector<Event> MTSJ::processArrived(std::vector<Process> p, int time, Metrics &st
         readyQueue.push_back(process);
     }
 
+    vector<Event> toPreemt;
+
     if (!p.empty()) {
         for (auto &process:sjfQueue) {
             readyQueue.push_back(process);
+            toPreemt.push_back(Event(PREEMT,-1000, Process(process)));
         }
 
         for (auto &process:rrQueue) {
             readyQueue.push_back(process);
+            toPreemt.push_back(Event(PREEMT,-1000, Process(process)));
         }
 
         sjfQueue.clear();
@@ -43,7 +47,7 @@ vector<Event> MTSJ::processArrived(std::vector<Process> p, int time, Metrics &st
     }
 
 
-    return {};
+    return toPreemt;
 }
 
 vector<Event> MTSJ::processCPUComplete(Process p, int time, Metrics &stats) {
@@ -79,7 +83,6 @@ vector<Event> MTSJ::processPreempt(std::vector<Process> p, int time, Metrics &st
 }
 
 vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
-    cout << timerExpired << "\n";
     if (currentProcess == nullptr || timerExpired) {
         if (!sjfQueue.empty()) {
             currentProcess = new Process(sjfQueue[0]);
@@ -92,17 +95,31 @@ vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
 
 
             int remainingBurst = currentProcess->getRemainingBurst();
-
+            currentProcess->setLastStarted(time);
 
             stats.addToWT(time - currentProcess->getEnteredReadyQueue());
 
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
         } else if (!rrQueue.empty()){
+            vector<Event> toReturn;
+            int lastId = -1;
+
             if (currentProcess != nullptr) {
-                // NU SCOT CURRENT PROCESS CUM TREBUIE
+                currentProcess->setEnteredReadyQueue(time);
+                rrQueue.push_back(Process(*currentProcess));
+                lastId = currentProcess->getId();
+//                Event e(PREEMT, -1000, Process(*currentProcess));
+//                toReturn.push_back(e);
+
             }
             currentProcess = new Process(rrQueue[0]);
+            if (currentProcess->getId() != lastId && lastId != -1) {
+                stats.incrementCS();
+            }
             currentProcess->setLastStarted(time);
+
+            rrQueue.erase(rrQueue.begin());
+
 
 
             if (!currentProcess->getAssigned()) {
@@ -115,18 +132,15 @@ vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
             stats.addToWT(time - currentProcess->getEnteredReadyQueue());
 
             if (remainingBurst > quant) {
-
-                rrQueue[0].setRemainingBurst(rrQueue[0].getRemainingBurst() - quant);
-                rrQueue[0].setEnteredReadyQueue(time+quant);
-
-                rrQueue.push_back(rrQueue[0]);
-                rrQueue.erase(rrQueue.begin());
-
-                return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}};
+                stats.addToGanttChart(currentProcess->getId(), time, time + quant);
+                stats.addToCPUUtilization(quant);
+                currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - quant);
+                toReturn.push_back(Event{TIMEREXPIRED, time + quant, Process(*currentProcess)});
+                return toReturn;
             }
+            toReturn.push_back(Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst())));
 
-            rrQueue.erase(rrQueue.begin());
-            return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
+            return toReturn;
         }
     }
     return {};

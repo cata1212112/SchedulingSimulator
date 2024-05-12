@@ -48,6 +48,8 @@ std::vector<Event> FIFO::processPreempt(std::vector<Process> p, int time, Metric
 
 std::vector<Event> FIFO::schedule(int time, Metrics &stats, bool timerExpired) {
     if (currentProcess == nullptr && !readyQueue->empty()) {
+        stats.incrementCS();
+
         currentProcess = new Process(readyQueue->top());
         readyQueue->pop();
 

@@ -88,6 +88,7 @@ std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
         }
         currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
         currentProcess->setEnteredReadyQueue(time);
+        int lastId = currentProcess->getId();
 
         Process currentCopy(*currentProcess);
         stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
@@ -95,6 +96,9 @@ std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
         stats.addToCPUUtilization(time - currentProcess->getLastStarted());
         Event e(PREEMT, -1000, currentCopy);
         currentProcess = new Process(readyQueue->top());
+        if (currentProcess->getId() != lastId) {
+            stats.incrementCS();
+        }
         currentProcess->setLastStarted(time);
         readyQueue->pop();
         readyQueue->push(currentCopy);

@@ -49,6 +49,7 @@ vector<Event> SJF::processPreempt(std::vector<Process> p, int time, Metrics &sta
 
 std::vector<Event> SJF::schedule(int time, Metrics &stats, bool timerExpired) {
     if (currentProcess == nullptr && !readyQueue->empty()) {
+        stats.incrementCS();
         currentProcess = new Process(readyQueue->top());
         readyQueue->pop();
 

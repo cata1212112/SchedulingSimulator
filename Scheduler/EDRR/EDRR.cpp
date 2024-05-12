@@ -88,8 +88,10 @@ vector<Event> EDRR::schedule(int time, Metrics &stats, bool timerExpired) {
                 if (p.getRemainingBurst() <= quant) {
                     currentProcess = new Process(p);
                     currentProcess->setLastStarted(time);
+                    stats.incrementCS();
 
                     if (!currentProcess->getAssigned()) {
+//                        cout << time << "\n";
                         stats.addToRT(time - currentProcess->getArrivalTime());
                         currentProcess->setAssigned(true);
                     }
@@ -101,15 +103,22 @@ vector<Event> EDRR::schedule(int time, Metrics &stats, bool timerExpired) {
             }
             i++;
         }
+        int lastId = -1;
         if (currentProcess != nullptr) {
             int remainingBurst = currentProcess->getRemainingBurst();
+            lastId = currentProcess->getId();
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
         }
         quant = maximumBurstTime;
         currentProcess = new Process(readyQueue->front());
+        if (currentProcess->getId() != lastId && lastId != -1) {
+            stats.incrementCS();
+        }
         readyQueue->pop();
         currentProcess->setLastStarted(time);
         if (!currentProcess->getAssigned()) {
+//            cout << time << "\n";
+
             stats.addToRT(time - currentProcess->getArrivalTime());
             currentProcess->setAssigned(true);
         }

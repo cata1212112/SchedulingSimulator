@@ -14,6 +14,7 @@ private:
     double averageWaitingTime = 0;
     double averageTurnaroundTime = 0;
     double averageResponseTime = 0;
+    int contextSwitches = 0;
     std::string algorithm;
     std::vector<std::tuple<int, int, int>> gantt;
     std::vector<double> maximumLoadDifference;
@@ -24,6 +25,9 @@ public:
         }
     }
 
+    void incrementCS() {
+        contextSwitches += 1;
+    }
 
     void addToGanttChart(int pid, int left, int right) {
         gantt.push_back({pid, left, right});
@@ -60,7 +64,7 @@ public:
 
     std::string getMetrics() {
         return "\"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
-                std::to_string(averageResponseTime);
+                std::to_string(averageResponseTime) + " " + std::to_string(contextSwitches);
     }
 
     void divide(double timespan, double numOfProcs) {

@@ -68,6 +68,7 @@ std::vector<Event> SRTF::schedule(int time, Metrics &stats, bool timerExpired) {
         currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
         currentProcess->setEnteredReadyQueue(time);
         readyQueue->push(*currentProcess);
+        int lastId = currentProcess->getId();
         stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
 
 
@@ -79,6 +80,9 @@ std::vector<Event> SRTF::schedule(int time, Metrics &stats, bool timerExpired) {
         stats.addToCPUUtilization(time - currentProcess->getLastStarted());
         Event e(PREEMT, -1000, *currentProcess);
         currentProcess = new Process(readyQueue->top());
+        if (currentProcess->getId() != lastId) {
+            stats.incrementCS();
+        }
         currentProcess->setLastStarted(time);
         readyQueue->pop();
 

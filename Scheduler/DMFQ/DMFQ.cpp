@@ -57,6 +57,7 @@ vector<Event> DMFQ::schedule(int time, Metrics &stats, bool timerExpired) {
             int quant = aux.second.second;
 
             currentProcess = new Process(Q[queueNum]->at(proc));
+            stats.incrementCS();
             currentProcess->setLastStarted(time);
 
 

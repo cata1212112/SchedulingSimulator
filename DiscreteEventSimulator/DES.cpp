@@ -156,7 +156,6 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                         timerExpired = false;
                     }
                     if (!allFinished) {
-                        cout << "Load balance event\n";
                         schedAlgo.schedule(currentTime, aux, timerExpired);
                     }
 

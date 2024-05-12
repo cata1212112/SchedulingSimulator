@@ -101,7 +101,8 @@ void Core::runSimulation() {
             }
             vector<Event> eventsGenerated;
 
-            schedAlgo.processArrived(arrivedProcesses, coreTime, stats);
+            auto newEvents = schedAlgo.processArrived(arrivedProcesses, coreTime, stats);
+
             schedAlgo.processIOComplete(ioCompleteProcesses, coreTime, stats);
             if (!currentEvents[CPUBURSTCOMPLETE].empty()) {
                 eventsGenerated = schedAlgo.processCPUComplete(currentEvents[CPUBURSTCOMPLETE][0].getProcess(), coreTime, stats);
@@ -109,6 +110,7 @@ void Core::runSimulation() {
 
             vector<Event> aux = schedAlgo.schedule(coreTime, stats, !currentEvents[TIMEREXPIRED].empty());
             eventsGenerated.insert(eventsGenerated.end(), aux.begin(), aux.end());
+            eventsGenerated.insert(eventsGenerated.end(), newEvents.begin(), newEvents.end());
 
             for (const auto& eventGenerated : eventsGenerated) {
                 events->push(eventGenerated);

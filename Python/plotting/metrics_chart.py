@@ -25,11 +25,13 @@ def plot_data(cores_data):
             metrics['avg_turnaround_time'] = []
             metrics['avg_waiting_time'] = []
             metrics['avg_response_time'] = []
+            metrics['context_switches'] = []
 
             for alg in algortihms:
                 metrics['avg_turnaround_time'].append(core_data[alg]['avg_turnaround_time'])
                 metrics['avg_waiting_time'].append(core_data[alg]['avg_waiting_time'])
                 metrics['avg_response_time'].append(core_data[alg]['avg_response_time'])
+                metrics['context_switches'].append(core_data[alg]['context_switches'])
 
             x = np.arange(len(algortihms))
             width = 0.25
@@ -58,11 +60,15 @@ def plot_data(cores_data):
         metrics['avg_turnaround_time'] = []
         metrics['avg_waiting_time'] = []
         metrics['avg_response_time'] = []
+        metrics['context_switches'] = []
+
 
         for alg in algortihms:
             metrics['avg_turnaround_time'].append(core_data[alg]['avg_turnaround_time'])
             metrics['avg_waiting_time'].append(core_data[alg]['avg_waiting_time'])
             metrics['avg_response_time'].append(core_data[alg]['avg_response_time'])
+            metrics['context_switches'].append(core_data[alg]['context_switches'])
+
 
         x = np.arange(len(algortihms))
         width = 0.25
@@ -98,12 +104,13 @@ def main():
         core_id = int(core_data[0])
         core_data = core_data[1:]
         algortihms = {}
-        for i in range(0, len(core_data), 5):
+        for i in range(0, len(core_data), 6):
             algortihms_data = {}
             algortihms_data['cpu_utilization'] = float(core_data[i+1])
             algortihms_data['avg_waiting_time'] = float(core_data[i+2])
             algortihms_data['avg_turnaround_time'] = float(core_data[i+3])
             algortihms_data['avg_response_time'] = float(core_data[i+4])
+            algortihms_data['context_switches'] = float(core_data[i+5])
 
             algortihms[core_data[i]] = algortihms_data
 
