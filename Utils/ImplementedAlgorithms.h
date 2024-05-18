@@ -49,12 +49,6 @@ public:
         } else if (name == "Efficient Dynamic Round Robin") {
             EDRR *edrr = new EDRR();
             return *edrr;
-        } else if (name == "Combinatie FIFO SRTF(test 2 coruri)") {
-            TestMultiCore1 *tmc1 = new TestMultiCore1();
-            return *tmc1;
-        } else if (name == "Combinatie RR FIFO SJF SRTF(test 4 coruri)") {
-            TestMultiCore2 *tmc2 = new TestMultiCore2();
-            return *tmc2;
         } else if (name == "Global Earliest Deadline First") {
             GEDF *gedf = new GEDF();
             return *gedf;
@@ -92,7 +86,7 @@ public:
     }
 
     static std::vector<std::string> getMultiCoreAlgortihms() {
-        return {"Combinatie FIFO SRTF(test 2 coruri)", "Combinatie RR FIFO SJF SRTF(test 4 coruri)", "Completely Fair Scheduler", "Fair-Share Scheduling"};//, "[TEST] Completely Fair Scheduler"};
+        return {"Completely Fair Scheduler", "Fair-Share Scheduling"};
     }
 
     static std::vector<std::string> getRealTimeAlgortihms() {

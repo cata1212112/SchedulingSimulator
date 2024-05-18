@@ -29,7 +29,7 @@ void Core::runSimulation() {
             cv->wait(lk, [this] { return *osTimeUpdated; });
         }
 
-
+        cout << coreID << "\n";
         while (!events->empty() && !finished) {
             Event e = events->top();
 
@@ -44,7 +44,6 @@ void Core::runSimulation() {
             if (e.getTime() > 0) {
                 coreTime = e.getTime();
             }
-
             currentEvents[ARRIVAL] = {};
             currentEvents[CPUBURSTCOMPLETE] = {};
             currentEvents[IOBURSTCOMPLETE] = {};
@@ -117,14 +116,18 @@ void Core::runSimulation() {
             }
         }
 
-
         if (finished) {
             barrier->arrive_and_drop();
             break;
         } else {
             barrier->arrive_and_wait();
         }
+//        std::this_thread::sleep_for (std::chrono::seconds(1));
 
+        {
+            std::unique_lock lk(*cvMutex);
+            cv->wait(lk, [this] { return !*osTurn; });
+        }
     }
     stats.divide(coreTime, numberOfProcesses);
     p.set_value(stats);
@@ -132,8 +135,8 @@ void Core::runSimulation() {
 }
 
 Core::Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
-           bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant)
-        : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID),   schedAlgo(ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant)){
+           bool *osTimeUpdated, std::barrier<> *barrier, bool *osTurn,int coreID, int roundRobinQuant)
+        : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), osTurn(osTurn),algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID),   schedAlgo(ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant)){
     roundRobinQuant = 10;
     events = new priority_queue<Event>();
     runningThread = new std::thread(&Core::runSimulation, this);

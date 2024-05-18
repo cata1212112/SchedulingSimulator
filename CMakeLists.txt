@@ -57,8 +57,6 @@ add_executable(Licenta main.cpp
         Utils/KMEANS/KMEANS.h
         Scheduler/TestMultiCore2/TestMultiCore2.cpp
         Scheduler/TestMultiCore2/TestMultiCore2.h
-        Scheduler/FSS/FSS.cpp
-        Scheduler/FSS/FSS.h
         Scheduler/RealTime/LSTR/LSTR.cpp
         Scheduler/RealTime/LSTR/LSTR.h
         Scheduler/RealTime/GEDF/GEDF.cpp
@@ -74,6 +72,10 @@ add_executable(Licenta main.cpp
         Scheduler/FairShareScheduling/FSS.h
         Scheduler/FairShareScheduling/FSSCore.cpp
         Scheduler/FairShareScheduling/FSSCore.h
+        Scheduler/DWRR/DWRR.cpp
+        Scheduler/DWRR/DWRR.h
+        Scheduler/DWRR/SingleCoreDWRR.cpp
+        Scheduler/DWRR/SingleCoreDWRR.h
 )
 target_link_libraries(Licenta
         Qt::Core

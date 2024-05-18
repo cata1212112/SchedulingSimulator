@@ -69,19 +69,20 @@ void DES::readInputDataFromFile(const string& filename, bool realTime) {
 }
 
 vector<Metrics> DES::startSimulation(int numCPUS) {
-
+    cout << numCPUS << "\n";
     SchedulingAlgorithm &schedAlgo = ImplementedAlgorithms::getAlgorithm(algorithm, roundRobinQuant);
 
     int osTime = 0;
     int currentTime = 0;
     bool loadBalance = false;
 
+
     Core *core[numCPUS];
 
     std::barrier barrier(numCPUS + 1);
 
     for (int i=0; i<numCPUS; i++) {
-        core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier, i, roundRobinQuant);
+        core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier,&osTurn, i, roundRobinQuant);
         schedAlgo.addCore(core[i]);
     }
     schedAlgo.addMainEventQueue(events, nullptr);
@@ -89,6 +90,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     bool allFinished = false;
 
     while (true) {
+
         if (events->empty()) {
 
             allFinished = true;
@@ -111,7 +113,6 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
             if (events->empty() && e.getType() == LOADBALANCE) {
                 allFinished = true;
                 for (int i=0; i<numCPUS; i++) {
-
                     allFinished = (allFinished && !core[i]->getIsRunning());
                 }
             }
@@ -133,11 +134,14 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                 }
 
                 if (isMultiCore) {
+                        cout << osTime << " " << core[0]->getCoreTime() << " " << core[1]->getCoreTime() << " " << loadBalance << "\n";
+
                     if (loadBalance) {
 //                        cout << "Enter load balancing\n";
-                        cout << core[0]->getCoreTime() << " " << core[1]->getCoreTime() << "\n";
+//                        cout << osTime << " " << currentTime << "\n";
+//                        cout << core[0]->getCoreTime() << " " << core[1]->getCoreTime() << "\n";
                         int maximumDif = schedAlgo.loadBalance(osTime);
-                        cout << maximumDif << "\n";
+//                        cout << maximumDif << "\n";
                         loadBalance = false;
                     }
 
@@ -145,10 +149,12 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                     for (const auto &e:currentEvents) {
                         if (e.getType() == LOADBALANCE) {
                             loadBalance = true;
-//                            cout << "Send load balance\n";
+//                            cout << "Send load balance " << currentTime << "\n";
                             for (int i=0; i<numCPUS; i++) {
+//                                cout << "Verificare timpi: "<< currentTime << " " << core[i]->getCoreTime() << "\n";
                                 core[i]->addEvent(Event(LOADBALANCE, currentTime, Process()));
                             }
+//                            events->push(Event(TICK, currentTime, Process()));
                             timerExpired = true;
                         }
                     }
@@ -166,9 +172,6 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                     }
 
                     osTime = currentTime;
-//                    for (auto &c:core) {
-//                        c->addEvent(Event(TICK, currentTime, Process()));
-//                    }
                 }
                 else if (isRealTime()) {
                     vector<Process> arrivals;
@@ -197,18 +200,21 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                 }
             }
         }
-
+        cout << "Done OS\n";
         {
             std::lock_guard lk(cvMutex);
             osTimeUpdated = true;
+            osTurn = true;
         }
         cv.notify_all();
-
         barrier.arrive_and_wait();
         {
             std::lock_guard lk(cvMutex);
             osTimeUpdated = false;
+            osTurn = false;
         }
+        cv.notify_all();
+        cout << "Start OS\n";
 
     }
     vector<Metrics> vec;

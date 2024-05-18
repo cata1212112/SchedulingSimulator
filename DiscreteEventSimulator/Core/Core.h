@@ -28,6 +28,7 @@ private:
     std::thread *runningThread;
     std::promise<Metrics> p;
     bool *osTimeUpdated;
+    bool *osTurn;
     bool finished = false;
     std::barrier<> *barrier;
     int coreID;
@@ -45,7 +46,7 @@ public:
     void setSentFinish(bool sentFinish);
 
     Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
-         bool *osTimeUpdated, std::barrier<> *barrier, int coreID, int roundRobinQuant = 10);
+         bool *osTimeUpdated, std::barrier<> *barrier, bool *osTurn,int coreID, int roundRobinQuant = 10);
 
     void addEvent(Event e);
     void runSimulation();

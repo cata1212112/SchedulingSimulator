@@ -21,9 +21,6 @@ vector<Event> SingleCoreCFS::processCPUComplete(Process p, int time, Metrics &st
     stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
     stats.addToCPUUtilization(time - p.getLastStarted());
     stats.addToTT(time - p.getArrivalTime());
-//    cout << p.getId() << " " << currentProcess->getId() << "\n";
-//    cout << "CPU Finish: " << coreID << ":: " << p.getId() << " " << p.getLastStarted() << " " << time << "\n";
-//    cout << "Finish: " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << " ";
     numProcs -= 1;
     currentProcess = nullptr;
     return {};

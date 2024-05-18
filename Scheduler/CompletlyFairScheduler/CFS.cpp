@@ -78,7 +78,7 @@ void CFS::setSchedMinGranularity(int schedMinGranularity) {
 }
 
 int CFS::loadBalance(int time) {
-    cout << "Load Balance " << time << "\n";
+//    cout << "Load Balance " << time << "\n";
     double totalLoad = 0;
     map<int, int> coreLoads;
 

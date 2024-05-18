@@ -35,6 +35,7 @@ private:
     std::condition_variable cv;
     std::mutex cvMutex;
     bool osTimeUpdated = false;
+    bool osTurn = true;
     static vector<string> algortihms;
     bool realTime = false;
     bool isMultiCore = false;
