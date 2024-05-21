@@ -54,6 +54,18 @@ public:
     virtual int loadBalance(int time) {
 
     };
+
+    virtual void getMaximumVtimeDiff(Metrics &stats) {
+
+    }
+
+    virtual vector<double> getVtimes() {
+        return {};
+    }
+
+    Process *getCurrentProcess() const {
+        return currentProcess;
+    }
 };
 
 #endif //CPUSCHED_SCHEDULINGALGORITHM_H

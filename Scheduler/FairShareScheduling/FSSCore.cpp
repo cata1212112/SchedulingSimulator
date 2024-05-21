@@ -57,7 +57,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         isIdle = false;
         if (currentProcess != nullptr) {
             currentProcess->setVtime(currentProcess->getVtime() +
-                                     ((time - currentProcess->getLastStarted()) / prio_to_weight[currentProcess->getPriority()]));
+                                     ((time - currentProcess->getLastStarted() + 0.0) / prio_to_weight[currentProcess->getPriority()]));
             currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
             currentProcess->setEnteredReadyQueue(time);
             stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
@@ -75,7 +75,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
             }
         }
 
-        int processTimeSlice = ((getTimeSlice() * (prio_to_weight[readyQueue[minIndex].getPriority()] + 0.0) / (getLoad(time) + 0.0)));
+        int processTimeSlice = ((0.0 + getTimeSlice() * (prio_to_weight[readyQueue[minIndex].getPriority()] + 0.0) / (getLoad(time) + 0.0)));
         processTimeSlice = max(processTimeSlice, sched_min_granularity);
         currentProcess = new Process(readyQueue[minIndex]);
         currentProcess->setLastStarted(time);
@@ -86,7 +86,6 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         readyQueue.erase(readyQueue.begin() + minIndex);
         int remainingBurst = currentProcess->getRemainingBurst();
 
-        cout << time << " " << processTimeSlice << " " << throttleMaixmum << "\n";
         if (time + min(processTimeSlice, currentProcess->getRemainingBurst()) > throttleMaixmum) {
             processTimeSlice = throttleMaixmum - time;
         }
@@ -144,7 +143,7 @@ long long int FSSCore::getLoad(int time, bool preemt) {
 
         currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
         currentProcess->setEnteredReadyQueue(time);
-        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted()) / prio_to_weight[currentProcess->getPriority()]);
+        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted() + 0.0) / prio_to_weight[currentProcess->getPriority()]);
 
         if (workaroundStats != nullptr) {
             workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
@@ -203,4 +202,16 @@ void FSSCore::setIsThrottled(bool isThrottled) {
 
 void FSSCore::setThrottleMaixmum(int throttleMaixmum) {
     FSSCore::throttleMaixmum = throttleMaixmum;
+}
+
+vector<double> FSSCore::getVtimes() {
+    vector<double> vtimes;
+    if (currentProcess != nullptr) {
+        vtimes.push_back(currentProcess->getVtime());
+    }
+
+    for (const auto &p:readyQueue) {
+        vtimes.push_back(p.getVtime());
+    }
+    return vtimes;
 }

@@ -131,7 +131,7 @@ long long int SingleCoreCFS::getLoad(int time, bool preemt) {
 
         currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
         currentProcess->setEnteredReadyQueue(time);
-        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted()) / prio_to_weight[currentProcess->getPriority()]);
+        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted() + 0.0) / prio_to_weight[currentProcess->getPriority()]);
 
         if (workaroundStats != nullptr) {
             workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
@@ -182,4 +182,16 @@ bool SingleCoreCFS::isRunning() {
 
 void SingleCoreCFS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
     this->eventQueue = eventQueue;
+}
+
+vector<double> SingleCoreCFS::getVtimes() {
+    vector<double> vtimes;
+    if (currentProcess != nullptr) {
+        vtimes.push_back(currentProcess->getVtime());
+    }
+
+    for (const auto &p:readyQueue) {
+        vtimes.push_back(p.getVtime());
+    }
+    return vtimes;
 }

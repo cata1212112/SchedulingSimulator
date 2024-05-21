@@ -19,6 +19,7 @@ private:
     std::vector<std::tuple<int, int, int>> gantt;
     std::vector<double> maximumLoadDifference;
 public:
+
     explicit Metrics(const std::string &algorithm, int roundRobinQuant=0) : algorithm(algorithm) {
         if (algorithm == "Round Robin") {
             Metrics::algorithm = algorithm + " TQ = " + std::to_string(roundRobinQuant);
@@ -82,8 +83,12 @@ public:
         Metrics::core = core;
     }
 
-    void addDifference(int value) {
+    void addDifference(double value) {
         maximumLoadDifference.push_back(value);
+    }
+
+    const std::vector<double> &getMaximumLoadDifference() const {
+        return maximumLoadDifference;
     }
 };
 

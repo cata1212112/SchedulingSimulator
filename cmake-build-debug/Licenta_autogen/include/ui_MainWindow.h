@@ -270,7 +270,7 @@ public:
 "}\n"
 ""));
         numarprocese->setMinimum(1);
-        numarprocese->setMaximum(50);
+        numarprocese->setMaximum(500);
         numarprocese->setOrientation(Qt::Orientation::Horizontal);
 
         verticalLayout->addWidget(numarprocese);

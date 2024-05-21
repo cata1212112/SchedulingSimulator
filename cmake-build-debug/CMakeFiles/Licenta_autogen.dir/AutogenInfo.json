@@ -371,6 +371,18 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTS.h",
+			"MU",
+			"JEFHMSEXFQ/moc_DARTS.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.h",
+			"MU",
+			"FARVTUSD65/moc_DARTSCore.cpp",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h",
 			"MU",
 			"TWQU2HCH3N/moc_GEDF.cpp",
@@ -392,6 +404,18 @@
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h",
 			"MU",
 			"436SN5EA3W/moc_LSTRCore.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTS.h",
+			"MU",
+			"J5ZFHMBGFJ/moc_LTS.cpp",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTSCore/LTSCore.h",
+			"MU",
+			"7WL572IBLR/moc_LTSCore.cpp",
 			null
 		],
 		[
@@ -598,6 +622,16 @@
 			null
 		],
 		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTS.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.cpp",
+			"MU",
+			null
+		],
+		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.cpp",
 			"MU",
 			null
@@ -614,6 +648,16 @@
 		],
 		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTS.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTSCore/LTSCore.cpp",
 			"MU",
 			null
 		],

@@ -13,7 +13,8 @@ class LSTR : public SchedulingAlgorithm {
     vector<Process> *readyQueue;
     vector<Core*> cores;
     priority_queue<Event> *mainEventQueue;
-
+    std::mutex *queueMutex;
+    int MOT = -1;
 
 public:
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;
@@ -39,6 +40,8 @@ public:
     int getAbsoluteDeadline() override;
 
     void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) override;
+
+    void removeMissedDeadlines(int time);
 };
 
 

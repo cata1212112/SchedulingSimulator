@@ -2,6 +2,7 @@
 // Created by Cata on 3/22/2024.
 //
 
+#include <iostream>
 #include "LSTR.h"
 
 vector<Event> LSTR::processArrived(std::vector<Process> p, int time, Metrics &stats) {
@@ -24,6 +25,7 @@ vector<Event> LSTR::processPreempt(std::vector<Process> p, int time, Metrics &st
 }
 
 vector<Event> LSTR::schedule(int time, Metrics &stats, bool timerExpired) {
+    removeMissedDeadlines(time);
     sort(readyQueue->begin(), readyQueue->end(), [time](const Process &a, const Process &b) {
         int aDiff = a.getNextDeadline() - time;
         int bDiff = b.getNextDeadline() - time;
@@ -51,6 +53,7 @@ vector<Event> LSTR::schedule(int time, Metrics &stats, bool timerExpired) {
         Process p2(p);
         p2.setRemainingBurst(1);
         cores[i]->addEvent(Event(ARRIVAL, time, p2));
+        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";
 
         Process p3(p);
         p3.setRemainingBurst(p3.getRemainingBurst() - 1);
@@ -101,4 +104,17 @@ LSTR::LSTR() {
 
 void LSTR::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
     mainEventQueue = eventQueue;
+}
+
+void LSTR::removeMissedDeadlines(int time) {
+    vector<int> toDelete;
+    for (int i=0; i<readyQueue->size(); i++) {
+        if ((*readyQueue)[i].getNextDeadline() < time) {
+            toDelete.push_back(i);
+        }
+    }
+
+    for (auto it=toDelete.rbegin(); it != toDelete.rend(); it ++) {
+        readyQueue->erase(readyQueue->begin() + *it);
+    }
 }

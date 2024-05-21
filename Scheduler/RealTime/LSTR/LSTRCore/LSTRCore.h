@@ -12,7 +12,7 @@
 
 class LSTRCore : public SchedulingAlgorithm{
     queue<Process> *readyQueue;
-    priority_queue<Event> *mainQueue;
+    priority_queue<Event> *mainQueue = nullptr;
     mutex *queueMutex;
 public:
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;

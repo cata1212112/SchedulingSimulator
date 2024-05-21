@@ -23,6 +23,7 @@ vector<Event> CFS::processPreempt(std::vector<Process> p, int time, Metrics &sta
 vector<Event> CFS::schedule(int time, Metrics &stats, bool timerExpired) {
     if (timerExpired) {
         mainEventQueue->push(Event(LOADBALANCE, time + load_balanicng_period, Process()));
+//        mainEventQueue->push(Event(TICK, time + load_balanicng_period + 1, Process()));
     }
     return {};
 }
@@ -158,4 +159,33 @@ int CFS::loadBalance(int time) {
 void CFS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
     mainEventQueue = eventQueue;
     mainEventQueue->push(Event(LOADBALANCE, load_balanicng_period, Process()));
+}
+
+void CFS::getMaximumVtimeDiff(Metrics &stats) {
+    double dMax = 0;
+
+
+    vector<double> vtimes[cores.size()];
+    for (int i=0; i<cores.size(); i++) {
+        vtimes[i] = getVtimesCore(i);
+    }
+
+    vector<double> allVtimes;
+    for (int i=0; i<cores.size(); i++) {
+        for (auto v:vtimes[i]) {
+            allVtimes.push_back(v);
+        }
+    }
+
+    for (auto v1:allVtimes) {
+        for (auto v2:allVtimes) {
+            dMax = max(dMax, abs(v1 - v2));
+        }
+    }
+
+    stats.addDifference(dMax);
+}
+
+vector<double> CFS::getVtimesCore(int coreID) {
+    return cores[coreID]->getVtimes();
 }

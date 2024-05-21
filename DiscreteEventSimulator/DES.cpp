@@ -75,7 +75,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     int currentTime = 0;
     bool loadBalance = false;
 
-
+    Metrics multicoreFairness(algorithm);
     Core *core[numCPUS];
 
     std::barrier barrier(numCPUS + 1);
@@ -83,12 +83,15 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
     for (int i=0; i<numCPUS; i++) {
         core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier,&secondBarrier, i, roundRobinQuant);
+        if (isRealTime()) {
+            core[i]->setIsRealTime(true);
+        }
         schedAlgo.addCore(core[i]);
     }
     schedAlgo.addMainEventQueue(events, nullptr);
     vector<Event> currentEvents;
     bool allFinished = false;
-
+    cout << toStop << "\n";
     while (true) {
 
         if (events->empty()) {
@@ -135,7 +138,9 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 
                 if (isMultiCore) {
                     if (loadBalance) {
-                        int maximumDif = schedAlgo.loadBalance(osTime);
+                        schedAlgo.getMaximumVtimeDiff(multicoreFairness);
+
+                        schedAlgo.loadBalance(osTime);
                         loadBalance = false;
                     }
 
@@ -171,16 +176,15 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                             Process p(event.getProcess());
                             p.setNextDeadline(currentTime + p.getPeriod());
                             arrivals.push_back(p);
-
                             events->push(Event(ARRIVAL, p.getPeriod() + currentTime, p));
                         } else if (event.getType() == REALTIME){
                             arrivals.push_back(event.getProcess());
                         }
                     }
                     Metrics aux("none");
-                    schedAlgo.processArrived(arrivals, osTime, aux);
+                    schedAlgo.processArrived(arrivals, currentTime, aux);
                     schedAlgo.schedule(currentTime, aux, false);
-                    osTime = currentTime+1;
+                    osTime = currentTime;
                 } else {
                     for (const auto &event : currentEvents) {
                         if (event.getType() == ARRIVAL) {
@@ -209,6 +213,12 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     for (int i=0; i<numCPUS; i++) {
         vec.push_back(core[i]->join());
     }
+
+    ofstream out("output.txt");
+    for (auto v:multicoreFairness.getMaximumLoadDifference()) {
+        out << v * 100 << " ";
+    }
+
     return vec;
 
 }

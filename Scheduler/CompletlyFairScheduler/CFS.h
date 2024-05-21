@@ -64,9 +64,13 @@ public:
 
     string getCoreAlgortihm(int coreID) override;
 
+    void getMaximumVtimeDiff(Metrics &stats) override;
+
     int loadBalance(int time) override;
 
     void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) override;
+
+    vector<double> getVtimesCore(int coreID);
 
 };
 

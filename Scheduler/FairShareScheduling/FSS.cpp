@@ -24,6 +24,7 @@ vector<Event> FSS::processPreempt(std::vector<Process> p, int time, Metrics &sta
 vector<Event> FSS::schedule(int time, Metrics &stats, bool timerExpired) {
     if (timerExpired) {
         mainEventQueue->push(Event(LOADBALANCE, time + load_balanicng_period, Process()));
+//        mainEventQueue->push(Event(TICK, time + load_balanicng_period + 1, Process()));
     }
     return {};
 }
@@ -125,12 +126,12 @@ int FSS::loadBalance(int time) {
         for (int i=0; i<pb.size(); i++) {
             for (auto &p:pb[i].first) {
                 cores[i]->addEvent(Event(ARRIVAL, time, Process(p)));
-
-                Process auxProc = Process();
-                auxProc.setId(-1);
-                auxProc.setPriority(load_balanicng_period * pb[i].second);
-                cores[i]->addEvent(Event(ARRIVAL, time, auxProc));
             }
+            Process auxProc = Process();
+            auxProc.setId(-1);
+            auxProc.setPriority(load_balanicng_period * pb[i].second);
+//            cout << pb[i].second << "\n";
+            cores[i]->addEvent(Event(ARRIVAL, time, auxProc));
         }
     }
 
@@ -194,7 +195,7 @@ pair<vector<Process>, vector<Process>> FSS::binaryPartition(vector<Process> S) {
         w += prio_to_weight[p.getPriority()];
     }
 
-    while (u <= w / 2) {
+    while (u <= w / 2 && S.size() > 1) {
         Process task = Process(*S.begin());
         S.erase(S.begin());
         u += prio_to_weight[task.getPriority()];
@@ -221,11 +222,40 @@ vector<double> FSS::throttle(vector<vector<Process>> taskGroups) {
         loads.push_back(load);
     }
 
-    for (int j=taskGroups.size() - 1; j >= 2; j--) {
+    for (int j=taskGroups.size() - 1; j >= 1; j--) {
         if ((loads[j-1] + 0.0) >= (loads[j] + 0.0) / throttleFactors[j]) {
             continue;
         }
         throttleFactors[j-1] = throttleFactors[j] * (loads[j-1] + 0.0) / (loads[j] + 0.0);
     }
     return throttleFactors;
+}
+
+void FSS::getMaximumVtimeDiff(Metrics &stats) {
+    double dMax = 0;
+
+
+    vector<double> vtimes[cores.size()];
+    for (int i=0; i<cores.size(); i++) {
+        vtimes[i] = getVtimesCore(i);
+    }
+
+    vector<double> allVtimes;
+    for (int i=0; i<cores.size(); i++) {
+        for (auto v:vtimes[i]) {
+            allVtimes.push_back(v);
+        }
+    }
+
+    for (auto v1:allVtimes) {
+        for (auto v2:allVtimes) {
+            dMax = max(dMax, abs(v1 - v2));
+        }
+    }
+
+    stats.addDifference(dMax);
+}
+
+vector<double> FSS::getVtimesCore(int coreID) {
+    return cores[coreID]->getVtimes();
 }

@@ -19,8 +19,12 @@
 #include "../Scheduler/TestMultiCore2/TestMultiCore2.h"
 #include "../Scheduler/RealTime/GEDF/GEDF.h"
 #include "../Scheduler/RealTime/LSTR/LSTR.h"
+#include "../Scheduler/RealTime/DARTS/DARTS.h"
+#include "../Scheduler/RealTime/LTS/LTS.h"
+#include "../Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.h"
 #include "../Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h"
 #include "../Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h"
+#include "../Scheduler/RealTime/LTS/LTSCore/LTSCore.h"
 #include "../Scheduler/MTSJ/MTSJ.h"
 #include "../Scheduler/RRKMEANS/RRKMEANS.h"
 #include "../Scheduler/CompletlyFairScheduler/CFS.h"
@@ -82,6 +86,18 @@ public:
         } else if (name == "FSSCore") {
             FSSCore *fsscore = new FSSCore();
             return *fsscore;
+        } else if (name == "DynAmic Real-time Task Scheduling") {
+            DARTS *darts = new DARTS();
+            return *darts;
+        } else if (name == "DARTSCore") {
+            DARTSCore *dartsCore = new DARTSCore();
+            return *dartsCore;
+        } else if (name == "LTSCore") {
+            LTSCore *lstcore = new LTSCore();
+            return *lstcore;
+        } else if (name == "Linear Task Scheduling") {
+            LTS *lts = new LTS();
+            return *lts;
         }
     }
 
@@ -90,6 +106,6 @@ public:
     }
 
     static std::vector<std::string> getRealTimeAlgortihms() {
-        return {"Global Earliest Deadline First", "Least Slack Time Rate First"};
+        return {"DynAmic Real-time Task Scheduling", "Least Slack Time Rate First", "Linear Task Scheduling"};
     }
 };

@@ -463,10 +463,14 @@ C:/Users/Cata/Desktop/Licenta/Pages/MainWindow/mainwindow.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/MTSJ/MTSJ.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTS.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTS.h
+ mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTSCore/LTSCore.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h
  mdp:C:/Users/Cata/Desktop/Licenta/Scheduler/SchedulingAlgorithm.h
@@ -538,3 +542,11 @@ C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/DWRR.h
 C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/SingleCoreDWRR.h
 C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/DWRR.cpp
 C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/SingleCoreDWRR.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTS.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTSCore/LTSCore.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTS.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTSCore/LTSCore.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTS.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.h
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTS.cpp
+C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.cpp

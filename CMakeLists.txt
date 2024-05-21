@@ -76,6 +76,14 @@ add_executable(Licenta main.cpp
         Scheduler/DWRR/DWRR.h
         Scheduler/DWRR/SingleCoreDWRR.cpp
         Scheduler/DWRR/SingleCoreDWRR.h
+        Scheduler/RealTime/LTS/LTS.cpp
+        Scheduler/RealTime/LTS/LTS.h
+        Scheduler/RealTime/LTS/LTSCore/LTSCore.cpp
+        Scheduler/RealTime/LTS/LTSCore/LTSCore.h
+        Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.cpp
+        Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.h
+        Scheduler/RealTime/DARTS/DARTS.cpp
+        Scheduler/RealTime/DARTS/DARTS.h
 )
 target_link_libraries(Licenta
         Qt::Core

@@ -37,6 +37,7 @@ private:
     int lastArrived = -1;
     int numberOfProcesses = 0;
     map<int, bool> seenIds;
+    bool isRealTime = false;
 
 public:
     int loadBalanceState;
@@ -47,6 +48,8 @@ public:
 
     Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
          bool *osTimeUpdated, std::barrier<> *barrier, std::barrier<> *secondBarrier,int coreID, int roundRobinQuant = 10);
+
+    void setIsRealTime(bool isRealTime);
 
     void addEvent(Event e);
     void runSimulation();
@@ -85,6 +88,12 @@ public:
     }
 
     priority_queue<Event> *getEventQueue();
+
+    vector<double> getVtimes() {
+        return schedAlgo.getVtimes();
+    }
+
+    SchedulingAlgorithm &getSchedAlgo() const;
 };
 
 #endif //LICENTA_CORE_H

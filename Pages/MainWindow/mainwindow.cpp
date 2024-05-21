@@ -227,6 +227,7 @@ void MainWindow::handleRealTimeButton() {
 
                 connect(ui->pushButton, &QPushButton::clicked, this, [=, this]() {
                     int numberOfTasks = ui->label_8->text().toInt();
+//                    selectedNumberOfCores = 3;
                     string inputData = des->generateInputData(numberOfTasks, selectedNumberOfCores);
 
                     ui->stackedWidget->setCurrentWidget(ui->InputData);
@@ -255,6 +256,7 @@ void MainWindow::handleRealTimeButton() {
                                     QTextStream out(&file);
                                     out << QString::fromStdString(inputData);
                                     file.close();
+//                                    gotoRunning(des, selectedNumberOfCores);
                                     gotoRunning(des, selectedNumberOfCores);
                                 } else {
                                 }

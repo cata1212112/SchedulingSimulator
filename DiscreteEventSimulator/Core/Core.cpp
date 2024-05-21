@@ -170,3 +170,11 @@ int Core::getCoreId() const {
 priority_queue<Event> *Core::getEventQueue() {
     return events;
 }
+
+SchedulingAlgorithm &Core::getSchedAlgo() const {
+    return schedAlgo;
+}
+
+void Core::setIsRealTime(bool isRealTime) {
+    Core::isRealTime = isRealTime;
+}
