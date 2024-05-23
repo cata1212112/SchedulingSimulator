@@ -45,7 +45,7 @@ public:
 
     void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) override;
 
-    void removeMissedDeadlines(int time);
+    int removeMissedDeadlines(int time);
 };
 
 

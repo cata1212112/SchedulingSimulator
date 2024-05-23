@@ -11,13 +11,19 @@
 class FSSCore : public SchedulingAlgorithm{
 private:
     constexpr static const int prio_to_weight[40] = {
-            110, 87, 70, 56, 45,
-            36, 29, 23, 18, 15,
+/* -20 */ 88761, 71755, 56483, 46273, 36291,
+/* -15 */ 29154, 23254, 18705, 14949, 11916,
+/* -10 */ 9548, 7620, 6100, 4904, 3906,
+/* -5 */ 3121, 2501, 1991, 1586, 1277,
+/* 0 */ 1024, 820, 655, 526, 423,
+/* 5 */ 335, 272, 215, 172, 137,
+/* 10 */ 110, 87, 70, 56, 45,
+/* 15 */ 36, 29, 23, 18, 15,
     };
 
-    int sched_latency = 30;
+    int sched_latency = 10;
     int sched_nr_latency = 10;
-    int sched_min_granularity = 3;
+    int sched_min_granularity = 1;
     vector<Process> readyQueue;
     int numProcs = 0;
     int isIdle = false;

@@ -15,7 +15,7 @@ class CFS : public SchedulingAlgorithm {
     int sched_latency;
     int sched_nr_latency;
     int sched_min_granularity;
-    int load_balanicng_period = 5;
+    int load_balanicng_period = 100;
     priority_queue<Event> *mainEventQueue;
 
     vector<Core*> cores;

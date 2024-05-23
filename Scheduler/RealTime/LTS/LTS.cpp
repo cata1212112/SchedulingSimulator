@@ -30,7 +30,10 @@ vector<Event> LTS::processPreempt(std::vector<Process> p, int time, Metrics &sta
 }
 
 vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
-    removeMissedDeadlines(time);
+    int missed = removeMissedDeadlines(time);
+    if (missed > 0) {
+        stats.incrementCS();
+    }
     P.clear();
     for (const auto &proc:*readyQueue) {
         if (proc.getNextDeadline() - time - proc.getRemainingBurst() == 0) {
@@ -48,7 +51,7 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
         Process p2(p);
         p2.setRemainingBurst(1);
         cores[i]->addEvent(Event(ARRIVAL, time, p2));
-        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";
+//        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";
 
         Process p3(p);
         p3.setRemainingBurst(p3.getRemainingBurst() - 1);
@@ -101,7 +104,7 @@ void LTS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
     mainEventQueue = eventQueue;
 }
 
-void LTS::removeMissedDeadlines(int time) {
+int LTS::removeMissedDeadlines(int time) {
     vector<int> toDelete;
     for (int i=0; i<readyQueue->size(); i++) {
         if ((*readyQueue)[i].getNextDeadline() < time) {
@@ -112,4 +115,6 @@ void LTS::removeMissedDeadlines(int time) {
     for (auto it=toDelete.rbegin(); it != toDelete.rend(); it ++) {
         readyQueue->erase(readyQueue->begin() + *it);
     }
+    return toDelete.size();
+
 }

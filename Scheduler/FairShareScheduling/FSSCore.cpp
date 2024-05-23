@@ -13,7 +13,7 @@ vector<Event> FSSCore::processArrived(std::vector<Process> p, int time, Metrics 
             readyQueue.push_back(process);
             numProcs += 1;
         } else {
-            throttleMaixmum = time + process.getPriority();
+            throttleMaixmum = process.getPriority();
         }
     }
     return {};
@@ -57,7 +57,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         isIdle = false;
         if (currentProcess != nullptr) {
             currentProcess->setVtime(currentProcess->getVtime() +
-                                     ((time - currentProcess->getLastStarted() + 0.0) / prio_to_weight[currentProcess->getPriority()]));
+                                     ((time - currentProcess->getLastStarted() + 0.0) * prio_to_weight[0] / prio_to_weight[currentProcess->getPriority()]));
             currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
             currentProcess->setEnteredReadyQueue(time);
             stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
@@ -76,7 +76,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         }
 
         int processTimeSlice = ((0.0 + getTimeSlice() * (prio_to_weight[readyQueue[minIndex].getPriority()] + 0.0) / (getLoad(time) + 0.0)));
-        processTimeSlice = max(processTimeSlice, sched_min_granularity);
+        processTimeSlice = max(throttleMaixmum * processTimeSlice, sched_min_granularity);
         currentProcess = new Process(readyQueue[minIndex]);
         currentProcess->setLastStarted(time);
         if (!currentProcess->getAssigned()) {
@@ -85,13 +85,13 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         }
         readyQueue.erase(readyQueue.begin() + minIndex);
         int remainingBurst = currentProcess->getRemainingBurst();
-
-        if (time + min(processTimeSlice, currentProcess->getRemainingBurst()) > throttleMaixmum) {
-            processTimeSlice = throttleMaixmum - time;
-        }
-        if (processTimeSlice <= 0) {
-            return {};
-        }
+//
+//        if (time + min(processTimeSlice, currentProcess->getRemainingBurst()) > throttleMaixmum) {
+//            processTimeSlice = throttleMaixmum - time;
+//        }
+//        if (processTimeSlice <= 0) {
+//            return {};
+//        }
 
         if (processTimeSlice >= currentProcess->getRemainingBurst()) {
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess))};
@@ -149,30 +149,36 @@ long long int FSSCore::getLoad(int time, bool preemt) {
             workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
             workaroundStats->addToCPUUtilization(time - currentProcess->getLastStarted());
         }
+//
+//        priority_queue<Event> tmp;
+//
+//        while (!eventQueue->empty()) {
+//            if (eventQueue->top().getType() == TICK || eventQueue->top().getProcess().getId() != currentProcess->getId()) {
+//                tmp.push(eventQueue->top());
+//            }
+//            eventQueue->pop();
+//        }
+//
+//        while (!tmp.empty()) {
+//            eventQueue->push(tmp.top());
+//            tmp.pop();
+//        }
+//
+//        if (currentProcess->getRemainingBurst() > 0) {
+//            load += prio_to_weight[currentProcess->getPriority()];
+//            eventQueue->push(Event(ARRIVAL, time, Process(*currentProcess)));
+////            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
 
-        priority_queue<Event> tmp;
-
+//        } else {
+//            cout << "Finish " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
+//        }
+        readyQueue.push_back(Process(*currentProcess));
+        currentProcess = nullptr;
+    }
+    if (preemt) {
         while (!eventQueue->empty()) {
-            if (eventQueue->top().getType() == TICK || eventQueue->top().getProcess().getId() != currentProcess->getId()) {
-                tmp.push(eventQueue->top());
-            }
             eventQueue->pop();
         }
-
-        while (!tmp.empty()) {
-            eventQueue->push(tmp.top());
-            tmp.pop();
-        }
-
-        if (currentProcess->getRemainingBurst() > 0) {
-            load += prio_to_weight[currentProcess->getPriority()];
-            eventQueue->push(Event(ARRIVAL, time, Process(*currentProcess)));
-//            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
-
-        } else {
-//            cout << "Finish " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
-        }
-        currentProcess = nullptr;
     }
     for (const auto &p:readyQueue) {
         load += prio_to_weight[p.getPriority()];

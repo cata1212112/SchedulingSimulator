@@ -129,9 +129,9 @@ int FSS::loadBalance(int time) {
             }
             Process auxProc = Process();
             auxProc.setId(-1);
-            auxProc.setPriority(load_balanicng_period * pb[i].second);
+            auxProc.setPriority(pb[i].second);
 //            cout << pb[i].second << "\n";
-            cores[i]->addEvent(Event(ARRIVAL, time, auxProc));
+//            cores[i]->addEvent(Event(ARRIVAL, time, auxProc));
         }
     }
 
@@ -147,11 +147,32 @@ void FSS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
 
 vector<pair<vector<Process>, double>> FSS::progressBalancing(int numCores, vector<vector<Process>> taskGroups) {
     vector<Process> S;
+    double totalWeigth = 0;
+    int wmin = 1e9;
+    int wmax = 0;
+
     for (auto &t:taskGroups) {
         for (auto &p:t) {
             S.push_back(p);
+            totalWeigth += prio_to_weight[p.getPriority()];
+            wmin = min(wmin, prio_to_weight[p.getPriority()]);
+            wmax = max(wmax, prio_to_weight[p.getPriority()]);
         }
     }
+    cout << (load_balanicng_period + 0.0) / wmin * 100 << "\n";
+//    cout << wmin << "\n";
+//    cout << wmax << "\n";
+    vector<int> toDelete;
+    for (int i=0; i<S.size(); i++) {
+        if (prio_to_weight[S[i].getPriority()] > totalWeigth / numCores) {
+            toDelete.push_back(i);
+            totalWeigth -= prio_to_weight[S[i].getPriority()];
+        }
+    }
+    for (auto it = toDelete.rbegin(); it != toDelete.rend(); it++) {
+        S.erase(S.begin() + *it);
+    }
+
     sort(S.begin(), S.end(), [](Process a, Process b) {
         return a.getVtime() > b.getVtime();
     });
@@ -195,7 +216,8 @@ pair<vector<Process>, vector<Process>> FSS::binaryPartition(vector<Process> S) {
         w += prio_to_weight[p.getPriority()];
     }
 
-    while (u <= w / 2 && S.size() > 1) {
+//    while (u <= w / 2 && S.size() > 1) {
+    while (u < w / 2) {
         Process task = Process(*S.begin());
         S.erase(S.begin());
         u += prio_to_weight[task.getPriority()];
@@ -205,6 +227,23 @@ pair<vector<Process>, vector<Process>> FSS::binaryPartition(vector<Process> S) {
         right.push_back(Process(t));
     }
 
+    int loadLeft = 0;
+    int loadRight = 0;
+
+    double leftMin = 1e9;
+    double rightMax = 0;
+
+    for (auto p:left) {
+        loadLeft += prio_to_weight[p.getPriority()];
+        leftMin = min(leftMin, p.getVtime());
+    }
+    for (auto p:right) {
+        loadRight += prio_to_weight[p.getPriority()];
+        rightMax = max(rightMax, p.getVtime());
+
+    }
+//    cout << "Left min: " << leftMin << " Right max " << rightMax << "\n";
+//    cout << "Load left: " << loadLeft << " Load right: " << loadRight << " Diff: " << loadLeft - loadRight << "\n";
     return {left, right};
 }
 
@@ -228,6 +267,11 @@ vector<double> FSS::throttle(vector<vector<Process>> taskGroups) {
         }
         throttleFactors[j-1] = throttleFactors[j] * (loads[j-1] + 0.0) / (loads[j] + 0.0);
     }
+//    cout << "Throttle Factors: \n";
+//    for (auto x:throttleFactors) {
+//        cout << x << " ";
+//    }
+//    cout << "\n";
     return throttleFactors;
 }
 

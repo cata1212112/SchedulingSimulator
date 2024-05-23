@@ -52,10 +52,9 @@ vector<Event> SingleCoreCFS::schedule(int time, Metrics &stats, bool timerExpire
         isIdle = false;
         if (currentProcess != nullptr) {
             currentProcess->setVtime(currentProcess->getVtime() +
-                    ((time - currentProcess->getLastStarted()) / prio_to_weight[currentProcess->getPriority()]));
+                                     ((time - currentProcess->getLastStarted() + 0.0) * prio_to_weight[0] / prio_to_weight[currentProcess->getPriority()]));
             currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
             currentProcess->setEnteredReadyQueue(time);
-//            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
             stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
             stats.addToCPUUtilization(time - currentProcess->getLastStarted());
             if (currentProcess->getRemainingBurst() > 0) {
@@ -71,7 +70,7 @@ vector<Event> SingleCoreCFS::schedule(int time, Metrics &stats, bool timerExpire
             }
         }
 
-        int processTimeSlice = ((getTimeSlice() * (prio_to_weight[readyQueue[minIndex].getPriority()] + 0.0) / (getLoad(time) + 0.0)));
+        int processTimeSlice = ((0.0 + getTimeSlice() * (prio_to_weight[readyQueue[minIndex].getPriority()] + 0.0) / (getLoad(time) + 0.0)));
         processTimeSlice = max(processTimeSlice, sched_min_granularity);
         currentProcess = new Process(readyQueue[minIndex]);
         currentProcess->setLastStarted(time);
@@ -81,6 +80,14 @@ vector<Event> SingleCoreCFS::schedule(int time, Metrics &stats, bool timerExpire
         }
         readyQueue.erase(readyQueue.begin() + minIndex);
         int remainingBurst = currentProcess->getRemainingBurst();
+//
+//        if (time + min(processTimeSlice, currentProcess->getRemainingBurst()) > throttleMaixmum) {
+//            processTimeSlice = throttleMaixmum - time;
+//        }
+//        if (processTimeSlice <= 0) {
+//            return {};
+//        }
+
         if (processTimeSlice >= currentProcess->getRemainingBurst()) {
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess))};
         }

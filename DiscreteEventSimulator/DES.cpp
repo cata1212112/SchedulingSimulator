@@ -91,7 +91,8 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     schedAlgo.addMainEventQueue(events, nullptr);
     vector<Event> currentEvents;
     bool allFinished = false;
-    cout << toStop << "\n";
+    Metrics realTimeMetrics("");
+//    cout << toStop << "\n";
     while (true) {
 
         if (events->empty()) {
@@ -141,12 +142,14 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                         schedAlgo.getMaximumVtimeDiff(multicoreFairness);
 
                         schedAlgo.loadBalance(osTime);
+
                         loadBalance = false;
                     }
 
                     Metrics aux("none");
                     for (const auto &e:currentEvents) {
                         if (e.getType() == LOADBALANCE) {
+
                             loadBalance = true;
                             for (int i=0; i<numCPUS; i++) {
                                 core[i]->addEvent(Event(LOADBALANCE, currentTime, Process()));
@@ -181,9 +184,8 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                             arrivals.push_back(event.getProcess());
                         }
                     }
-                    Metrics aux("none");
-                    schedAlgo.processArrived(arrivals, currentTime, aux);
-                    schedAlgo.schedule(currentTime, aux, false);
+                    schedAlgo.processArrived(arrivals, currentTime, realTimeMetrics);
+                    schedAlgo.schedule(currentTime, realTimeMetrics, false);
                     osTime = currentTime;
                 } else {
                     for (const auto &event : currentEvents) {
@@ -214,9 +216,13 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
         vec.push_back(core[i]->join());
     }
 
+    if (realTime) {
+        vec.push_back(realTimeMetrics);
+    }
+
     ofstream out("output.txt");
     for (auto v:multicoreFairness.getMaximumLoadDifference()) {
-        out << v * 100 << " ";
+        out << v << " ";
     }
 
     return vec;
@@ -340,4 +346,16 @@ void DES::setToStop(int toStop) {
 
 void DES::setIsMultiCore(bool isMultiCore) {
     DES::isMultiCore = isMultiCore;
+}
+
+Metrics DES::evaluatePerformance() {
+//    return Metrics(__cxx11::basic_string());
+}
+
+vector<vector<pair<int, int>>> DES::generateTaskSet(int utilization, int perTaskNum) {
+    return RealTimeGenerator::generateTaskSet(utilization, perTaskNum);
+}
+
+void DES::setEvents(priority_queue<Event> *events) {
+    DES::events = events;
 }

@@ -102,12 +102,14 @@ def StaffordRandFixedSum(n, u, nsets, a, b):
 
 def main():
     n = int(sys.argv[1])
-    u = float(sys.argv[2])
-    a = float(sys.argv[3])
-    b = float(sys.argv[4])
+    nsets = int(sys.argv[2])
+    u = float(sys.argv[3])
+    a = float(sys.argv[4])
+    b = float(sys.argv[5])
 
-    result = StaffordRandFixedSum(n, u, 1, a, b)
-    result = ' '.join(map(str, result))
+    result = StaffordRandFixedSum(n, u, nsets, a, b)
+    #
+    result = ' '.join(map(str, [x for line in result for x in line]))
     print(result)
 
 if __name__ == "__main__":

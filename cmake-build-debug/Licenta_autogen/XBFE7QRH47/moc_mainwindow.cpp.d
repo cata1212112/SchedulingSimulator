@@ -452,10 +452,14 @@ C:/Users/Cata/Desktop/Licenta/cmake-build-debug/Licenta_autogen/XBFE7QRH47/moc_m
   C:/Users/Cata/Desktop/Licenta/Scheduler/MTSJ/MTSJ.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTS.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/DARTS/DARTSCore/DARTSCore.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/GEDF/GEDFCore/GEDFCore.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTR.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTS.h \
+  C:/Users/Cata/Desktop/Licenta/Scheduler/RealTime/LTS/LTSCore/LTSCore.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SJF/SJF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SRTF/SRTF.h \
   C:/Users/Cata/Desktop/Licenta/Scheduler/SchedulingAlgorithm.h \

@@ -94,6 +94,8 @@ public:
 
     const string &getPartialMetricsInput(int core) const;
 
+    void setEvents(priority_queue<Event> *events);
+
     void setPartialMetricsInput(const string &partialMetricsInput, int core);
 
     void addToGantt(const pair<string, string> &gantt, int core) {
@@ -110,6 +112,9 @@ public:
 
     void setIsMultiCore(bool isMultiCore);
 
+    Metrics evaluatePerformance();
+
+    static vector<vector<pair<int,int>>> generateTaskSet(int utilization, int perTaskNum);
 };
 
 

@@ -25,7 +25,10 @@ vector<Event> DARTS::processPreempt(std::vector<Process> p, int time, Metrics &s
 }
 
 vector<Event> DARTS::schedule(int time, Metrics &stats, bool timerExpired) {
-    removeMissedDeadlines(time);
+    int missed = removeMissedDeadlines(time);
+    if (missed > 0) {
+        stats.incrementCS();
+    }
     sort(readyQueue->begin(), readyQueue->end(), [time](const Process &a, const Process &b) {
 
         double aDynamicScore = (a.getRemainingBurst() + 0.0) / ((a.getNextDeadline() - time + 0.0) * ((a.getNextDeadline() - a.getRemainingBurst() - time + 0.0)));
@@ -39,7 +42,7 @@ vector<Event> DARTS::schedule(int time, Metrics &stats, bool timerExpired) {
         Process p2(p);
         p2.setRemainingBurst(1);
         cores[i]->addEvent(Event(ARRIVAL, time, p2));
-        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";
+//        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";
 
         Process p3(p);
         p3.setRemainingBurst(p3.getRemainingBurst() - 1);
@@ -92,7 +95,7 @@ void DARTS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
     mainEventQueue = eventQueue;
 }
 
-void DARTS::removeMissedDeadlines(int time) {
+int DARTS::removeMissedDeadlines(int time) {
     vector<int> toDelete;
     for (int i=0; i<readyQueue->size(); i++) {
         if ((*readyQueue)[i].getNextDeadline() < time) {
@@ -103,4 +106,5 @@ void DARTS::removeMissedDeadlines(int time) {
     for (auto it=toDelete.rbegin(); it != toDelete.rend(); it ++) {
         readyQueue->erase(readyQueue->begin() + *it);
     }
+    return toDelete.size();
 }

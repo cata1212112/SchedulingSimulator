@@ -30,6 +30,10 @@ public:
         contextSwitches += 1;
     }
 
+    int getContextSwitches() const {
+        return contextSwitches;
+    }
+
     void addToGanttChart(int pid, int left, int right) {
         gantt.push_back({pid, left, right});
     }

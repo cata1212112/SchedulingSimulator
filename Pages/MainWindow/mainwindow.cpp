@@ -307,6 +307,106 @@ void MainWindow::handleRealTimeButton() {
             ui->SelectRealTimeAlgorithm->layout()->addWidget(button);
             lastWidget = ui->RunSimulation;
         }
+
+        auto *button = new QPushButton(QString::fromStdString("Evaluate all the above"));
+        button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        button->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
+
+        QFont font;
+        font.setPointSize(12);
+        button->setFont(font);
+
+        connect(button, &QPushButton::clicked, this, [=, this]() {
+
+            for (double i=3; i<=2 * selectedNumberOfCores; i+=0.1) {
+                vector<vector<pair<int,int>>> taskSet = DES::generateTaskSet(10 * i / 2, i);
+
+                double util = 0;
+                for (auto y:taskSet[0]) {
+                    util += (y.first + 0.0) / (y.second + 0.0);
+                }
+                cout << util << "\n";
+                auto f = [&taskSet, i, selectedNumberOfCores](string algname) {
+                    int scheduled = 0;
+                    DES des(algname);
+                    des.setRealTime(true);
+                    for (auto &tasks:taskSet) {
+
+                        string inputData;
+                        priority_queue<Event> *events = new priority_queue<Event>();
+
+                        for (auto task:tasks) {
+                            Process p(task.first, task.second);
+                            inputData += to_string(p.getId()) + " " + to_string(task.first) + " " + to_string(task.second) + "\n";
+                            p.setArrivalTime(0);
+
+                            Event event = Event(ARRIVAL, 0, p);
+
+                            events->push(event);
+                        }
+
+                        int hyperPeriod = std::lcm(tasks[0].second, tasks[1].second);
+                        for (int j=2; j<tasks.size(); j++) {
+                            hyperPeriod = std::lcm(hyperPeriod, tasks[j].second);
+                        }
+                        des.setEvents(events);
+                        des.setToStop(hyperPeriod);
+
+                        auto m = des.startSimulation(selectedNumberOfCores);
+                        if (m[m.size() - 1].getContextSwitches() == 0) {
+                            scheduled += 1;
+                        }
+//                        cout << scheduled << "\n";
+                    }
+                    cout << i << " " << algname << " " << scheduled << "\n";
+                };
+
+                std::thread t1(f, ImplementedAlgorithms::getRealTimeAlgortihms()[0]);
+                std::thread t2(f, ImplementedAlgorithms::getRealTimeAlgortihms()[1]);
+                std::thread t3(f, ImplementedAlgorithms::getRealTimeAlgortihms()[2]);
+
+                t1.join();
+                t2.join();
+                t3.join();
+//                for (auto &s:ImplementedAlgorithms::getRealTimeAlgortihms()) {
+//                    int scheduled = 0;
+//                    DES des(s);
+//                    des.setRealTime(true);
+//                    for (auto &tasks:taskSet) {
+//
+//                        string inputData;
+//                        priority_queue<Event> *events = new priority_queue<Event>();
+//
+//                        for (auto task:tasks) {
+//                            Process p(task.first, task.second);
+//                            inputData += to_string(p.getId()) + " " + to_string(task.first) + " " + to_string(task.second) + "\n";
+//                            p.setArrivalTime(0);
+//
+//                            Event event = Event(ARRIVAL, 0, p);
+//
+//                            events->push(event);
+//                        }
+//
+//                        int hyperPeriod = std::lcm(tasks[0].second, tasks[1].second);
+//                        for (int j=2; j<tasks.size(); j++) {
+//                            hyperPeriod = std::lcm(hyperPeriod, tasks[j].second);
+//                        }
+//                        des.setEvents(events);
+//                        des.setToStop(hyperPeriod);
+//
+//                        auto m = des.startSimulation(selectedNumberOfCores);
+//                        if (m[m.size() - 1].getContextSwitches() == 0) {
+//                            scheduled += 1;
+//                        }
+////                        cout << scheduled << "\n";
+//                    }
+//                    cout << i << " " << s << " " << scheduled << "\n";
+//                }
+            }
+        });
+
+        ui->SelectRealTimeAlgorithm->layout()->addWidget(button);
+
     });
 }
 
