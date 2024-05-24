@@ -352,8 +352,8 @@ Metrics DES::evaluatePerformance() {
 //    return Metrics(__cxx11::basic_string());
 }
 
-vector<vector<pair<int, int>>> DES::generateTaskSet(int utilization, int perTaskNum) {
-    return RealTimeGenerator::generateTaskSet(utilization, perTaskNum);
+vector<vector<pair<int, int>>> DES::generateTaskSet(int perTaskNum, double utilization) {
+    return RealTimeGenerator::generateTaskSet(perTaskNum, utilization);
 }
 
 void DES::setEvents(priority_queue<Event> *events) {

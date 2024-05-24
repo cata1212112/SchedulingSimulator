@@ -98,7 +98,7 @@ void DARTS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
 int DARTS::removeMissedDeadlines(int time) {
     vector<int> toDelete;
     for (int i=0; i<readyQueue->size(); i++) {
-        if ((*readyQueue)[i].getNextDeadline() < time) {
+        if ((*readyQueue)[i].getNextDeadline() <= time) {
             toDelete.push_back(i);
         }
     }

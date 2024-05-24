@@ -29,7 +29,7 @@ vector<Event> LSTR::schedule(int time, Metrics &stats, bool timerExpired) {
     if (missed > 0) {
         stats.incrementCS();
     }
-    sort(readyQueue->begin(), readyQueue->end(), [time](const Process &a, const Process &b) {
+    sort(readyQueue->begin(), readyQueue->end(), [&](const Process &a, const Process &b) {
         int aDiff = a.getNextDeadline() - time;
         int bDiff = b.getNextDeadline() - time;
 
@@ -112,7 +112,7 @@ void LSTR::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
 int LSTR::removeMissedDeadlines(int time) {
     vector<int> toDelete;
     for (int i=0; i<readyQueue->size(); i++) {
-        if ((*readyQueue)[i].getNextDeadline() < time) {
+        if ((*readyQueue)[i].getNextDeadline() <= time) {
             toDelete.push_back(i);
         }
     }

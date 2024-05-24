@@ -114,7 +114,7 @@ public:
 
     Metrics evaluatePerformance();
 
-    static vector<vector<pair<int,int>>> generateTaskSet(int utilization, int perTaskNum);
+    static vector<vector<pair<int,int>>> generateTaskSet(int perTaskNum, double utilization);
 };
 
 

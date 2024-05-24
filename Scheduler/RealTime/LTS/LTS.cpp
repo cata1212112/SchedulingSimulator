@@ -39,7 +39,8 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
         if (proc.getNextDeadline() - time - proc.getRemainingBurst() == 0) {
             P[proc.getId()] = 1e9;
         } else {
-            P[proc.getId()] = (proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0) + (1 - (proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0)) / ((proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0)) * (time%proc.getNextDeadline() - time) - totalRes[proc.getId()];
+//            P[proc.getId()] = (proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0) + (1 - (proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0)) / ((proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0)) * (time%proc.getNextDeadline() - time) - totalRes[proc.getId()];
+            P[proc.getId()] = (proc.getRemainingBurst() + 0.0) / (proc.getPeriod() + 0.0) + (1 - (proc.getRemainingBurst() + 0.0) / (proc.getPeriod() + 0.0)) / ((proc.getPeriod() + 0.0) / (proc.getRemainingBurst() + 0.0)) * (time%proc.getPeriod()) - totalRes[proc.getId()];
         }
     }
     sort(readyQueue->begin(), readyQueue->end(), [this](const Process &a, const Process &b) {
@@ -48,6 +49,7 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
     for (int i=0; i<min(cores.size(), readyQueue->size()); i++) {
         Process p((*readyQueue)[i]);
 
+        totalRes[p.getId()] += res[p.getId()];
         Process p2(p);
         p2.setRemainingBurst(1);
         cores[i]->addEvent(Event(ARRIVAL, time, p2));
@@ -59,6 +61,8 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
 
         if (p3.getRemainingBurst() > 0) {
             mainEventQueue->push(Event(REALTIME, time+1, p3));
+        } else {
+            totalRes[p.getId()] = 0;
         }
     }
     readyQueue->erase(readyQueue->begin(), readyQueue->begin() + min(cores.size(), readyQueue->size()));
@@ -107,7 +111,7 @@ void LTS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
 int LTS::removeMissedDeadlines(int time) {
     vector<int> toDelete;
     for (int i=0; i<readyQueue->size(); i++) {
-        if ((*readyQueue)[i].getNextDeadline() < time) {
+        if ((*readyQueue)[i].getNextDeadline() <= time) {
             toDelete.push_back(i);
         }
     }

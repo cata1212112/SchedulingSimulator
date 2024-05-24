@@ -318,8 +318,8 @@ void MainWindow::handleRealTimeButton() {
 
         connect(button, &QPushButton::clicked, this, [=, this]() {
 
-            for (double i=3; i<=2 * selectedNumberOfCores; i+=0.1) {
-                vector<vector<pair<int,int>>> taskSet = DES::generateTaskSet(10 * i / 2, i);
+            for (double i=2; i<=2 * selectedNumberOfCores; i+=0.1) {
+                vector<vector<pair<int,int>>> taskSet = DES::generateTaskSet(int(10 * i / 2), i);
 
                 double util = 0;
                 for (auto y:taskSet[0]) {
@@ -355,18 +355,24 @@ void MainWindow::handleRealTimeButton() {
                         auto m = des.startSimulation(selectedNumberOfCores);
                         if (m[m.size() - 1].getContextSwitches() == 0) {
                             scheduled += 1;
+                        } else {
+                            ofstream out("out.txt");
+                            for (auto t:tasks) {
+                                out << t.first << " " << t.second << "\n";
+                            }
+                            out.close();
                         }
 //                        cout << scheduled << "\n";
                     }
                     cout << i << " " << algname << " " << scheduled << "\n";
                 };
 
-                std::thread t1(f, ImplementedAlgorithms::getRealTimeAlgortihms()[0]);
-                std::thread t2(f, ImplementedAlgorithms::getRealTimeAlgortihms()[1]);
+//                std::thread t1(f, ImplementedAlgorithms::getRealTimeAlgortihms()[0]);
+//                std::thread t2(f, ImplementedAlgorithms::getRealTimeAlgortihms()[1]);
                 std::thread t3(f, ImplementedAlgorithms::getRealTimeAlgortihms()[2]);
 
-                t1.join();
-                t2.join();
+//                t1.join();
+//                t2.join();
                 t3.join();
 //                for (auto &s:ImplementedAlgorithms::getRealTimeAlgortihms()) {
 //                    int scheduled = 0;
