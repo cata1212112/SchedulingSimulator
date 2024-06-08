@@ -6,6 +6,9 @@
 #define LICENTA_METRICS_H
 
 #include <vector>
+#include <map>
+
+using namespace std;
 
 class Metrics {
 private:
@@ -15,11 +18,14 @@ private:
     double averageTurnaroundTime = 0;
     double averageResponseTime = 0;
     int contextSwitches = 0;
-    std::string algorithm;
-    std::vector<std::tuple<int, int, int>> gantt;
-    std::vector<double> maximumLoadDifference;
-public:
+    string algorithm;
+    vector<std::tuple<int, int, int>> gantt;
+    vector<double> maximumLoadDifference;
+    map<int, double> avgWaitTimeByDistributionId;
+    map<int, double> avgTurnaroundTimeByDistributionId;
+    map<int, double> avgResponseTimeByDistributionId;
 
+public:
     explicit Metrics(const std::string &algorithm, int roundRobinQuant=0) : algorithm(algorithm) {
         if (algorithm == "Round Robin") {
             Metrics::algorithm = algorithm + " TQ = " + std::to_string(roundRobinQuant);
@@ -55,21 +61,29 @@ public:
         cpuUtilization += val;
     }
 
-    void addToWT(int val) {
+    void addToWT(int val, int dId) {
+        avgWaitTimeByDistributionId[dId] += val;
         averageWaitingTime += val;
     }
 
-    void addToTT(int val) {
+    void addToTT(int val, int dId) {
+        avgTurnaroundTimeByDistributionId[dId] += val;
         averageTurnaroundTime += val;
     }
 
-    void addToRT(int val) {
+    void addToRT(int val, int dId) {
+        avgResponseTimeByDistributionId[dId] += val;
         averageResponseTime += val;
     }
 
     std::string getMetrics() {
-        return "\"" + algorithm + "\" " + std::to_string(cpuUtilization) + " " + std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
-                std::to_string(averageResponseTime) + " " + std::to_string(contextSwitches);
+        string perDistributionsStats;
+        for (auto x:avgWaitTimeByDistributionId) {
+            perDistributionsStats += to_string(x.first) + " " + to_string(avgWaitTimeByDistributionId[x.first]) + " " +
+                    to_string(avgResponseTimeByDistributionId[x.first]) + " " + to_string(avgTurnaroundTimeByDistributionId[x.first]) + " ";
+        }
+        return std::to_string(averageWaitingTime) + " " + std::to_string(averageTurnaroundTime) + " " +
+               std::to_string(averageResponseTime) + " " + std::to_string(contextSwitches) + " " + perDistributionsStats + " " + algorithm;
     }
 
     void divide(double timespan, double numOfProcs) {
@@ -77,6 +91,18 @@ public:
         averageWaitingTime /= numOfProcs;
         averageResponseTime /= numOfProcs;
         averageTurnaroundTime /= numOfProcs;
+
+        for (auto x:avgResponseTimeByDistributionId) {
+            avgResponseTimeByDistributionId[x.first] = x.second / numOfProcs;
+        }
+
+        for (auto x:avgTurnaroundTimeByDistributionId) {
+            avgTurnaroundTimeByDistributionId[x.first] = x.second / numOfProcs;
+        }
+
+        for (auto x:avgWaitTimeByDistributionId) {
+            avgWaitTimeByDistributionId[x.first] = x.second / numOfProcs;
+        }
     }
 
     int getCore() const {

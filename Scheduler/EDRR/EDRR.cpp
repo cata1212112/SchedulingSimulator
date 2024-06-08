@@ -5,128 +5,41 @@
 #include <iostream>
 #include "EDRR.h"
 
-std::function<bool(const Process&, const Process&)> EDRR::RRQueue = [](const Process &a, const Process &b) {
-    return a.getArrivalTime() > b.getArrivalTime();
-};
-
 vector<Event> EDRR::processArrived(std::vector<Process> p, int time, Metrics &stats) {
-    if (p.size() > 0) {
-        lastArrived = time;
-    }
     for (auto &process : p) {
         process.setEnteredReadyQueue(time);
-        readyQueue->push(process);
+        readyQueue->push_back(process);
+    }
+    if (!p.empty()) {
+        lastArrived = time;
     }
     return {};
 }
 
 vector<Event> EDRR::processCPUComplete(Process p, int time, Metrics &stats) {
-    stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
-    stats.addToCPUUtilization(time - p.getLastStarted());
-
-    currentProcess = nullptr;
-    std::vector<Event> events;
-    if (p.hasRemainingIO()) {
-        int remainingTime = p.getRemainingBurst();
-        events.push_back(Event(IOBURSTCOMPLETE, time + remainingTime, Process(*p.consumeBurst())));
-    } else {
-        stats.addToTT(time - p.getArrivalTime());
-    }
-    return events;
+    return SchedulingAlgorithm::processCPUComplete(p, time, stats);
 }
 
-vector<Event> EDRR::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
-    vector<Process> addToReadyQueue;
-    for (auto &process:p) {
-        if (process.finished()) {
-            stats.addToTT(time - process.getArrivalTime());
-        } else {
-            process.setEnteredReadyQueue(time);
-            addToReadyQueue.push_back(process);
+std::vector<Event> EDRR::schedule(int time, Metrics &stats, bool timerExpired) {
+    if (time == lastArrived) {
+        int maximumBurstTime = -1;
+        for (const auto &p:*readyQueue) {
+            maximumBurstTime = max(maximumBurstTime, p.getRemainingBurst());
         }
+
+        quant = int(0.8 * maximumBurstTime);
     }
-    for (auto p:addToReadyQueue) {
-        readyQueue->push(p);
+    if (currentProcess == nullptr) {
+        if (readyQueue->empty()) {
+            return {};
+        }
+        return {assignToCPU(time, stats)};
+    } else if (timerExpired){
+        EDRR::preemtCPU(stats, time);
+
+        return {assignToCPU(time, stats)};
     }
     return {};
-}
-
-vector<Event> EDRR::processPreempt(std::vector<Process> p, int time, Metrics &stats) {
-    return std::vector<Event>();
-}
-
-vector<Event> EDRR::schedule(int time, Metrics &stats, bool timerExpired) {
-    int maximumBurstTime = -1;
-
-    std::queue<Process> readyQueueCopy;
-    while (!readyQueue->empty()) {
-        maximumBurstTime = max(maximumBurstTime, readyQueue->front().getRemainingBurst());
-        readyQueueCopy.push(readyQueue->front());
-        readyQueue->pop();
-    }
-
-    while (!readyQueueCopy.empty()) {
-        readyQueue->push(readyQueueCopy.front());
-        readyQueueCopy.pop();
-    }
-
-    if (lastArrived == time) {
-        quant = int(0.8 * (maximumBurstTime + 0.0));
-    }
-
-    if (currentProcess == nullptr && !readyQueue->empty()) {
-        bool assigned = false;
-        int numProcs = readyQueue->size();
-        int i = 0;
-
-        while (i < numProcs) {
-            Process p = readyQueue->front();
-            readyQueue->pop();
-            if (currentProcess != nullptr) {
-                readyQueue->push(p);
-            } else {
-                if (p.getRemainingBurst() <= quant) {
-                    currentProcess = new Process(p);
-                    currentProcess->setLastStarted(time);
-                    stats.incrementCS();
-
-                    if (!currentProcess->getAssigned()) {
-//                        cout << time << "\n";
-                        stats.addToRT(time - currentProcess->getArrivalTime());
-                        currentProcess->setAssigned(true);
-                    }
-
-                    stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-                } else {
-                    readyQueue->push(p);
-                }
-            }
-            i++;
-        }
-        int lastId = -1;
-        if (currentProcess != nullptr) {
-            int remainingBurst = currentProcess->getRemainingBurst();
-            lastId = currentProcess->getId();
-            return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
-        }
-        quant = maximumBurstTime;
-        currentProcess = new Process(readyQueue->front());
-        if (currentProcess->getId() != lastId && lastId != -1) {
-            stats.incrementCS();
-        }
-        readyQueue->pop();
-        currentProcess->setLastStarted(time);
-        if (!currentProcess->getAssigned()) {
-//            cout << time << "\n";
-
-            stats.addToRT(time - currentProcess->getArrivalTime());
-            currentProcess->setAssigned(true);
-        }
-        int remainingBurst = currentProcess->getRemainingBurst();
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
-    }
-    return  {};
 }
 
 string EDRR::getCoreAlgortihm(int coreID) {
@@ -134,5 +47,14 @@ string EDRR::getCoreAlgortihm(int coreID) {
 }
 
 EDRR::EDRR() {
-    readyQueue = new std::queue<Process>();
+    quant = 10;
+    readyQueue = new vector<Process>();
+}
+
+void EDRR::preemtCPU(Metrics &stats, int time) {
+    currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - quant);
+    currentProcess->setEnteredReadyQueue(time);
+    readyQueue->push_back(*currentProcess);
+
+    SchedulingAlgorithm::preemtCPU(stats, time);
 }

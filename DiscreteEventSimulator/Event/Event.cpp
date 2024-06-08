@@ -7,7 +7,7 @@
 
 string Event::toString() {
     string eventString;
-    eventString += to_string(time) + " " + to_string(process.getId()) + " " + to_string(process.getPriority()) + "\n";
+    eventString += to_string(time) + " " + to_string(process.getId()) + " " + to_string(process.getPriority()) + " " + to_string(process.getDistributionId()) +"\n";
 
     for (auto cpuBurst : process.getCpUburst()) {
         eventString += to_string(cpuBurst) + " ";
@@ -40,6 +40,10 @@ Event Event::fromStrings(const string& firstLine, const string &secondLine, cons
 
     firstSS >> processPriority;
     event.process.setPriority(processPriority);
+
+    int distribtuionId;
+    firstSS >> distribtuionId;
+    event.process.setDistributionId(distribtuionId);
 
     vector<int> cpuBursts;
     vector<int> ioBursts;

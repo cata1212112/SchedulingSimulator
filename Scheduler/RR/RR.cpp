@@ -3,6 +3,7 @@
 //
 
 #include <functional>
+#include <iostream>
 #include "RR.h"
 
 std::function<bool(const Process&, const Process&)> RR::RRQueue = [](const Process &a, const Process &b) {
@@ -12,111 +13,26 @@ std::function<bool(const Process&, const Process&)> RR::RRQueue = [](const Proce
 vector<Event> RR::processArrived(std::vector<Process> p, int time, Metrics &stats) {
     for (auto &process : p) {
         process.setEnteredReadyQueue(time);
-        readyQueue->push(process);
+        readyQueue->push_back(process);
     }
+    lastArrived = time;
     return {};
 }
 
 vector<Event> RR::processCPUComplete(Process p, int time, Metrics &stats) {
-    stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
-    stats.addToCPUUtilization(time - p.getLastStarted());
-
-    currentProcess = nullptr;
-    std::vector<Event> events;
-    if (p.hasRemainingIO()) {
-        ioQueue += 1;
-        events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
-    } else {
-        stats.addToTT(time - p.getArrivalTime());
-    }
-    return events;
-}
-
-vector<Event> RR::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
-    vector<Process> addToReadyQueue;
-    for (auto &process:p) {
-        ioQueue -= 1;
-        process.setEnteredReadyQueue(time);
-        addToReadyQueue.push_back(process);
-    }
-    for (auto p:addToReadyQueue) {
-        readyQueue->push(p);
-    }
-    return {};
-}
-
-vector<Event> RR::processPreempt(std::vector<Process> p, int time, Metrics &stats) {
-    return std::vector<Event>();
+    return SchedulingAlgorithm::processCPUComplete(p, time, stats);
 }
 
 std::vector<Event> RR::schedule(int time, Metrics &stats, bool timerExpired) {
-    if (currentProcess == nullptr && !readyQueue->empty()) {
-        currentProcess = new Process(readyQueue->top());
-        currentProcess->setLastStarted(time);
-        readyQueue->pop();
-
-        if (!currentProcess->getAssigned()) {
-            stats.addToRT(time - currentProcess->getArrivalTime());
-            currentProcess->setAssigned(true);
-        }
-
-        int remainingBurst = currentProcess->getRemainingBurst();
-
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-
-        if (remainingBurst > quant) {
-
-            return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}};
-        }
-
-        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
-    } else if (timerExpired) {
+    if (currentProcess == nullptr) {
         if (readyQueue->empty()) {
-            if (currentProcess != nullptr) {
-                currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
-                int remainingBurst = currentProcess->getRemainingBurst();
-                if (remainingBurst > quant) {
-
-                    return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}};
-                }
-
-                return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
-
-            } else if (ioQueue > 0){
-                return {Event{TIMEREXPIRED, time + quant, Process()}};
-            }
+            return {};
         }
-        currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
-        currentProcess->setEnteredReadyQueue(time);
-        int lastId = currentProcess->getId();
+        return {assignToCPU(time, stats)};
+    } else if (timerExpired){
+        RR::preemtCPU(stats, time);
 
-        Process currentCopy(*currentProcess);
-        stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
-
-        stats.addToCPUUtilization(time - currentProcess->getLastStarted());
-        Event e(PREEMT, -1000, currentCopy);
-        currentProcess = new Process(readyQueue->top());
-        if (currentProcess->getId() != lastId) {
-            stats.incrementCS();
-        }
-        currentProcess->setLastStarted(time);
-        readyQueue->pop();
-        readyQueue->push(currentCopy);
-
-        if (!currentProcess->getAssigned()) {
-            stats.addToRT(time - currentProcess->getArrivalTime());
-            currentProcess->setAssigned(true);
-        }
-
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-        int remainingBurst = currentProcess->getRemainingBurst();
-        if (remainingBurst > quant) {
-
-            return {Event{TIMEREXPIRED, time + quant, Process(*currentProcess)}, e};
-        }
-
-        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst())), e};
-
+        return {assignToCPU(time, stats)};
     }
     return {};
 }
@@ -127,4 +43,12 @@ string RR::getCoreAlgortihm(int coreID) {
 
 RR::RR() {
     quant = 10;
+}
+
+void RR::preemtCPU(Metrics &stats, int time) {
+    currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - quant);
+    currentProcess->setEnteredReadyQueue(time);
+    readyQueue->push_back(*currentProcess);
+
+    SchedulingAlgorithm::preemtCPU(stats, time);
 }

@@ -30,8 +30,10 @@ private:
     int absoluteDeadline;
     int period;
     int nextDeadline;
+    int distributionID;
 
 public:
+    int unitsExecuted = 0;
 
     void setCpUburst(const vector<int> &cpUburst);
 
@@ -73,7 +75,9 @@ public:
             waitingTime(other.waitingTime),
             absoluteDeadline(other.absoluteDeadline),
             period(other.period),
-            nextDeadline(other.nextDeadline)
+            nextDeadline(other.nextDeadline),
+            unitsExecuted(other.unitsExecuted),
+            distributionID(other.distributionID)
             {}
 
     const vector<int> &getCpUburst() const;
@@ -125,6 +129,10 @@ public:
     void setAssigned(bool assigned);
 
     virtual ~Process();
+
+    int getDistributionId() const;
+
+    void setDistributionId(int distributionId);
 };
 
 

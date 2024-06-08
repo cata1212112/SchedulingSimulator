@@ -20,7 +20,7 @@ vector<Event> SingleCoreCFS::processArrived(std::vector<Process> p, int time, Me
 vector<Event> SingleCoreCFS::processCPUComplete(Process p, int time, Metrics &stats) {
     stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
     stats.addToCPUUtilization(time - p.getLastStarted());
-    stats.addToTT(time - p.getArrivalTime());
+    stats.addToTT(time - p.getArrivalTime(), 0);
     numProcs -= 1;
     currentProcess = nullptr;
     return {};
@@ -75,7 +75,7 @@ vector<Event> SingleCoreCFS::schedule(int time, Metrics &stats, bool timerExpire
         currentProcess = new Process(readyQueue[minIndex]);
         currentProcess->setLastStarted(time);
         if (!currentProcess->getAssigned()) {
-            stats.addToRT(time - currentProcess->getArrivalTime());
+            stats.addToRT(time - currentProcess->getArrivalTime(), 0);
             currentProcess->setAssigned(true);
         }
         readyQueue.erase(readyQueue.begin() + minIndex);
@@ -91,7 +91,7 @@ vector<Event> SingleCoreCFS::schedule(int time, Metrics &stats, bool timerExpire
         if (processTimeSlice >= currentProcess->getRemainingBurst()) {
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess))};
         }
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
+        stats.addToWT(time - currentProcess->getEnteredReadyQueue(), 0);
         return {Event{TIMEREXPIRED, time + processTimeSlice, Process(*currentProcess)}};
     }
     return {};

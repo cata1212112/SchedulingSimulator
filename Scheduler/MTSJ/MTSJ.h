@@ -15,6 +15,7 @@ private:
     vector<Process> sjfQueue;
     vector<Process> rrQueue;
     int quant = 10;
+    int lastArrived = -1;
 public:
     explicit MTSJ(int quant);
 
@@ -22,13 +23,12 @@ public:
 
     vector<Event> processCPUComplete(Process p, int time, Metrics &stats) override;
 
-    vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats) override;
-
-    vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) override;
 
     vector<Event> schedule(int time, Metrics &stats, bool timerExpired) override;
 
     string getCoreAlgortihm(int coreID) override;
+
+    void preemtCPU(Metrics &stats, int time) override;
 };
 
 

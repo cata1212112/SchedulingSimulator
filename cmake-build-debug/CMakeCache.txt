@@ -299,6 +299,9 @@ Licenta_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 Licenta_SOURCE_DIR:STATIC=C:/Users/Cata/Desktop/Licenta
 
+//The directory containing a CMake configuration file for PythonLibs.
+PythonLibs_DIR:PATH=PythonLibs_DIR-NOTFOUND
+
 //Additional directories where find(Qt6 ...) host Qt components
 // are searched
 QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH:STRING=
@@ -320,6 +323,9 @@ Qt6GuiTools_DIR:PATH=C:/Qt/6.7.0/mingw_64/lib/cmake/Qt6GuiTools
 
 //The directory containing a CMake configuration file for Qt6Gui.
 Qt6Gui_DIR:PATH=C:/Qt/6.7.0/mingw_64/lib/cmake/Qt6Gui
+
+//The directory containing a CMake configuration file for Qt6PythonLibs.
+Qt6PythonLibs_DIR:PATH=Qt6PythonLibs_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for Qt6WidgetsTools.
 Qt6WidgetsTools_DIR:PATH=C:/Qt/6.7.0/mingw_64/lib/cmake/Qt6WidgetsTools

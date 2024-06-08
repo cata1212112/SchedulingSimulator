@@ -107,7 +107,9 @@ def main():
     a = float(sys.argv[4])
     b = float(sys.argv[5])
 
+
     result = StaffordRandFixedSum(n, u, nsets, a, b)
+
     #
     result = ' '.join(map(str, [x for line in result for x in line]))
     print(result)

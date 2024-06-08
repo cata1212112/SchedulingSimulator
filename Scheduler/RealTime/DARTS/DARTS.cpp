@@ -31,8 +31,25 @@ vector<Event> DARTS::schedule(int time, Metrics &stats, bool timerExpired) {
     }
     sort(readyQueue->begin(), readyQueue->end(), [time](const Process &a, const Process &b) {
 
-        double aDynamicScore = (a.getRemainingBurst() + 0.0) / ((a.getNextDeadline() - time + 0.0) * ((a.getNextDeadline() - a.getRemainingBurst() - time + 0.0)));
-        double bDynamicScore = (b.getRemainingBurst() + 0.0) / ((b.getNextDeadline() - time + 0.0) * ((b.getNextDeadline() - b.getRemainingBurst() - time + 0.0)));
+        double aDynamicScore = 0;
+//        if (a.getNextDeadline() - a.getRemainingBurst() - time == 0) {
+        if (a.getNextDeadline() - a.getRemainingBurst() - time == 1) {
+            aDynamicScore = 1e9;
+        } else {
+            aDynamicScore = (a.getRemainingBurst() + 0.0) / ((a.getNextDeadline() - time + 0.0) * ((a.getNextDeadline() - a.getRemainingBurst() - time + 0.0)));
+//            aDynamicScore = (a.getRemainingBurst() + 0.0) / ((a.getNextDeadline() - time + 1.0) * ((a.getNextDeadline() - a.getRemainingBurst() - time + 1.0)));
+//            aDynamicScore = (a.getRemainingBurst() + 0.0) / ((a.getAbsoluteDeadline() + 0.0) * ((a.getAbsoluteDeadline() - a.getRemainingBurst() + 0.0)));
+        }
+
+        double bDynamicScore = 0;
+        if (b.getNextDeadline() - b.getRemainingBurst() - time == 0) {
+//        if (b.getNextDeadline() - b.getRemainingBurst() - time == 1) {
+            bDynamicScore = 1e9;
+        } else {
+            bDynamicScore = (b.getRemainingBurst() + 0.0) / ((b.getNextDeadline() - time + 0.0) * ((b.getNextDeadline() - b.getRemainingBurst() - time + 0.0)));
+//            bDynamicScore = (b.getRemainingBurst() + 0.0) / ((b.getNextDeadline() - time + 1.0) * ((b.getNextDeadline() - b.getRemainingBurst() - time + 1.0)));
+//            bDynamicScore = (b.getRemainingBurst() + 0.0) / ((b.getAbsoluteDeadline() + 0.0) * ((b.getAbsoluteDeadline() - b.getRemainingBurst() + 0.0)));
+         }
 
        return aDynamicScore > bDynamicScore;
     });

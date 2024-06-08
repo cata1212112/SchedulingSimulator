@@ -9,7 +9,7 @@ std::function<bool(const Process&, const Process&)> SRTF::SJFQueue = [](const Pr
     return a.getRemainingBurst() < b.getRemainingBurst();
 };
 
-vector<Event> SRTF::processArrived(std::vector<Process> p, int time, Metrics &stats) {
+std::vector<Event> SRTF::processArrived(std::vector<Process> p, int time, Metrics &stats) {
     for (auto &process : p) {
         process.setEnteredReadyQueue(time);
         readyQueue->push(process);
@@ -17,85 +17,37 @@ vector<Event> SRTF::processArrived(std::vector<Process> p, int time, Metrics &st
     return {};
 }
 
-vector<Event> SRTF::processCPUComplete(Process p, int time, Metrics &stats) {
-//    stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
-    stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
-    stats.addToCPUUtilization(time - p.getLastStarted());
-
-    currentProcess = nullptr;
-    std::vector<Event> events;
-    if (p.hasRemainingIO()) {
-        events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
-    } else {
-        stats.addToTT(time - p.getArrivalTime());
-    }
-    return events;
-}
-
-vector<Event> SRTF::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
-    vector<Process> addToReadyQueue;
-    for (auto &process:p) {
-        process.setEnteredReadyQueue(time);
-        addToReadyQueue.push_back(process);
-    }
-    for (auto p:addToReadyQueue) {
-        readyQueue->push(p);
-    }
-    return {};
-}
-
-vector<Event> SRTF::processPreempt(std::vector<Process> p, int time, Metrics &stats) {
-    return std::vector<Event>();
+std::vector<Event> SRTF::processCPUComplete(Process p, int time, Metrics &stats) {
+    return SchedulingAlgorithm::processCPUComplete(p, time, stats);
 }
 
 std::vector<Event> SRTF::schedule(int time, Metrics &stats, bool timerExpired) {
-    if (currentProcess == nullptr && !readyQueue->empty()) {
-        currentProcess = new Process(readyQueue->top());
-        currentProcess->setLastStarted(time);
-        readyQueue->pop();
-
-        if (!currentProcess->getAssigned()) {
-            stats.addToRT(time - currentProcess->getArrivalTime());
-            currentProcess->setAssigned(true);
+    if (currentProcess == nullptr) {
+        if (readyQueue->empty()) {
+            return {};
         }
+        return {assignToCPU(time, stats)};
+    } else {
+        if (readyQueue->top().getRemainingBurst() <= currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted())) {
+            Event preemtEvent(PREEMT, -1000, *currentProcess);
 
-        int remainingBurst = currentProcess->getRemainingBurst();
+            preemtCPU(stats, time);
 
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-
-        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
-    } else if (currentProcess != nullptr && !readyQueue->empty() && readyQueue->top().getRemainingBurst() < currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted())) {
-        currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
-        currentProcess->setEnteredReadyQueue(time);
-        readyQueue->push(*currentProcess);
-        int lastId = currentProcess->getId();
-        stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
-
-
-        if (!currentProcess->getAssigned()) {
-            stats.addToRT(time - currentProcess->getArrivalTime());
-            currentProcess->setAssigned(true);
+            return {preemtEvent, assignToCPU(time, stats)};
         }
-
-        stats.addToCPUUtilization(time - currentProcess->getLastStarted());
-        Event e(PREEMT, -1000, *currentProcess);
-        currentProcess = new Process(readyQueue->top());
-        if (currentProcess->getId() != lastId) {
-            stats.incrementCS();
-        }
-        currentProcess->setLastStarted(time);
-        readyQueue->pop();
-
-
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-        int remainingBurst = currentProcess->getRemainingBurst();
-
-
-        return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst())), e};
     }
     return {};
 }
 
 string SRTF::getCoreAlgortihm(int coreID) {
     return "Shortest Remaining Time First";
+}
+
+void SRTF::preemtCPU(Metrics &stats, int time) {
+
+    currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
+    currentProcess->setEnteredReadyQueue(time);
+    readyQueue->push(*currentProcess);
+
+    SchedulingAlgorithm::preemtCPU(stats, time);
 }

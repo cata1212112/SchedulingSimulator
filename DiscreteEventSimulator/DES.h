@@ -40,12 +40,29 @@ private:
     bool realTime = false;
     bool isMultiCore = false;
     int toStop = 0;
+
+    map<int, vector<int>> generatedBurstByDistributionId;
+    map<int, int> generatedBurstByDistributionMean;
+    map<int, int> generatedBurstByDistributionSTD;
 public:
     int isToStop() const;
+
+    map<int, int> &getGeneratedBurstByDistributionMean();
+
+    void setGeneratedBurstByDistributionMean(const map<int, int> &generatedBurstByDistributionMean);
+
+    map<int, int> &getGeneratedBurstByDistributionStd();
+
+    void setGeneratedBurstByDistributionStd(const map<int, int> &generatedBurstByDistributionStd);
 
     void setToStop(int toStop);
 
 public:
+
+    const map<int, vector<int>> &getGeneratedBurstByDistributionId() const;
+
+    void setGeneratedBurstByDistributionId(const map<int, vector<int>> &generatedBurstByDistributionId);
+
     bool isRealTime() const;
 
     void setRealTime(bool realTime);
@@ -72,7 +89,7 @@ public:
         roundRobinQuant = 10;
     }
 
-    string generateInputData(int numProcesses, int maximumTime, int mean, int std);
+    string generateInputData(vector<int> numProcesses, int maximumTime, vector<int> mean, vector<int> std);
 
     string generateInputData(int numberOfTasks, int numberOfCores);
 

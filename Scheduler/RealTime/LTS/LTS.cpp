@@ -6,7 +6,7 @@
 #include "LTS.h"
 
 vector<Event> LTS::processArrived(std::vector<Process> p, int time, Metrics &stats) {
-    for (const auto&proc:p) {
+    for (auto&proc:p) {
         readyQueue->push_back(proc);
 
         if (res.find(proc.getId()) == res.end()) {
@@ -40,7 +40,7 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
             P[proc.getId()] = 1e9;
         } else {
 //            P[proc.getId()] = (proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0) + (1 - (proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0)) / ((proc.getRemainingBurst() + 0.0) / (proc.getNextDeadline() - time + 0.0)) * (time%proc.getNextDeadline() - time) - totalRes[proc.getId()];
-            P[proc.getId()] = (proc.getRemainingBurst() + 0.0) / (proc.getPeriod() + 0.0) + (1 - (proc.getRemainingBurst() + 0.0) / (proc.getPeriod() + 0.0)) / ((proc.getPeriod() + 0.0) / (proc.getRemainingBurst() + 0.0)) * (time%proc.getPeriod()) - totalRes[proc.getId()];
+            P[proc.getId()] = (proc.getPriority() + 0.0) / (proc.getPeriod() + 0.0) + (1 - (proc.getPriority() + 0.0) / (proc.getPeriod() + 0.0)) / ((proc.getPeriod() + 0.0) / (proc.getPriority() + 0.0)) * (time%proc.getPeriod()) - totalRes[proc.getId()];
         }
     }
     sort(readyQueue->begin(), readyQueue->end(), [this](const Process &a, const Process &b) {
@@ -57,6 +57,9 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
 
         Process p3(p);
         p3.setRemainingBurst(p3.getRemainingBurst() - 1);
+
+
+//        p3.setPriority(p3.getPriority() - 1);
         p3.setAbsoluteDeadline(p3.getAbsoluteDeadline() - 1);
 
         if (p3.getRemainingBurst() > 0) {
@@ -111,7 +114,7 @@ void LTS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
 int LTS::removeMissedDeadlines(int time) {
     vector<int> toDelete;
     for (int i=0; i<readyQueue->size(); i++) {
-        if ((*readyQueue)[i].getNextDeadline() <= time) {
+        if ((*readyQueue)[i].getNextDeadline() < time) {
             toDelete.push_back(i);
         }
     }

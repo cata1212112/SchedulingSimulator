@@ -22,7 +22,7 @@ vector<Event> FSSCore::processArrived(std::vector<Process> p, int time, Metrics 
 vector<Event> FSSCore::processCPUComplete(Process p, int time, Metrics &stats) {
     stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
     stats.addToCPUUtilization(time - p.getLastStarted());
-    stats.addToTT(time - p.getArrivalTime());
+    stats.addToTT(time - p.getArrivalTime(), 0);
 //    cout << p.getId() << " " << currentProcess->getId() << "\n";
 //    cout << "CPU Finish: " << coreID << ":: " << p.getId() << " " << p.getLastStarted() << " " << time << "\n";
 //    cout << "Finish: " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << " ";
@@ -51,6 +51,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
     workaroundStats = &stats;
     if (currentProcess == nullptr && readyQueue.empty()) {
         isIdle = true;
+        cout << "IDLE\n";
         return {};
     }
     if (timerExpired || currentProcess == nullptr) {
@@ -80,7 +81,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         currentProcess = new Process(readyQueue[minIndex]);
         currentProcess->setLastStarted(time);
         if (!currentProcess->getAssigned()) {
-            stats.addToRT(time - currentProcess->getArrivalTime());
+            stats.addToRT(time - currentProcess->getArrivalTime(), 0);
             currentProcess->setAssigned(true);
         }
         readyQueue.erase(readyQueue.begin() + minIndex);
@@ -96,7 +97,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
         if (processTimeSlice >= currentProcess->getRemainingBurst()) {
             return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess))};
         }
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue());
+        stats.addToWT(time - currentProcess->getEnteredReadyQueue(), 0);
         return {Event{TIMEREXPIRED, time + processTimeSlice, Process(*currentProcess)}};
     }
     return {};

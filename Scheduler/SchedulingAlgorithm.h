@@ -10,16 +10,30 @@
 #include "../Utils/WrapperPriorityQueue.h"
 #include "../Utils/Metrics.h"
 #include <vector>
+#include <iostream>
 
 class SchedulingAlgorithm {
 protected:
     Process* currentProcess = nullptr;
 public:
     int coreID;
+    int lastProc = -1;
     virtual std::vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats)=0;
-    virtual std::vector<Event> processCPUComplete(Process p, int time, Metrics &stats)=0;
-    virtual std::vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats)=0;
-    virtual std::vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats)=0;
+    virtual std::vector<Event> processCPUComplete(Process p, int time, Metrics &stats) {
+        stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
+        std::cout << "Left: " << currentProcess->getLastStarted() << " Right: " << time << " " << "Proc: " << currentProcess->getId() << "\n";
+        stats.addToCPUUtilization(time - currentProcess->getLastStarted());
+        currentProcess = nullptr;
+        stats.addToTT(time - p.getArrivalTime(), p.getDistributionId());
+
+        return {};
+    };
+    virtual std::vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
+        return {};
+    };
+    virtual std::vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) {
+        return {};
+    };
     virtual std::vector<Event> schedule(int time, Metrics &stats, bool timerExpired) =0;
     virtual int assignCPU(Process p) {return 0;}
     virtual string getCoreAlgortihm(int coreID)=0;
@@ -52,7 +66,7 @@ public:
     }
 
     virtual int loadBalance(int time) {
-
+        return 0;
     };
 
     virtual void getMaximumVtimeDiff(Metrics &stats) {
@@ -65,6 +79,32 @@ public:
 
     Process *getCurrentProcess() const {
         return currentProcess;
+    }
+
+    void assignProcessToCPU(Process p, Metrics &stats, int time) {
+        currentProcess = new Process(p);
+        if (lastProc != -1) {
+            if (p.getId() != lastProc) {
+                stats.incrementCS();
+            }
+        }
+
+        lastProc = p.getId();
+        if (!currentProcess->getAssigned()) {
+            cout << "Response time " << currentProcess->getId() << " " << time - currentProcess->getArrivalTime() << "\n";
+            stats.addToRT(time - currentProcess->getArrivalTime(), currentProcess->getDistributionId());
+            currentProcess->setAssigned(true);
+        }
+        currentProcess->setLastStarted(time);
+        cout << "Process " << currentProcess->getId() << " waited from " << currentProcess->getEnteredReadyQueue() << " to " << time << "\n";
+        stats.addToWT(time - currentProcess->getEnteredReadyQueue(), currentProcess->getDistributionId());
+    }
+
+    virtual void preemtCPU(Metrics &stats, int time) {
+        stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
+        std::cout << "Left: " << currentProcess->getLastStarted() << " Right: " << time << " " << "Proc: " << currentProcess->getId() << "\n";
+        stats.addToCPUUtilization(time - currentProcess->getLastStarted());
+        currentProcess = nullptr;
     }
 };
 

@@ -39,7 +39,7 @@
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="font">
        <font>
-        <pointsize>24</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="currentIndex">
@@ -154,17 +154,22 @@ QPushButton:hover {
          <number>0</number>
         </property>
         <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="label_3">
+         <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
           <property name="text">
-           <string>MEAN</string>
+           <string>NUMBER OF DISTRIBUTIONS</string>
           </property>
          </widget>
         </item>
         <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="label_5">
+         <widget class="QLabel" name="label_6">
           <property name="font">
            <font>
-            <pointsize>24</pointsize>
+            <pointsize>16</pointsize>
            </font>
           </property>
           <property name="text">
@@ -173,40 +178,145 @@ QPushButton:hover {
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>STANDARD DEVIATION</string>
-          </property>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="label_6">
+         <widget class="QSlider" name="horizontalSlider_2">
           <property name="font">
            <font>
-            <pointsize>24</pointsize>
+            <pointsize>16</pointsize>
            </font>
           </property>
-          <property name="text">
-           <string>1</string>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>3</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider_2">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="parametriiDistributiii"/>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QLabel" name="medie1">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Distributia 1 are media N/A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="std1">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Distributia 1 are deviatia standard N/A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="numproc1">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Din distributia 1 generez N/A procese</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="medie2">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Distributia 2 are media N/A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="std2">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Distributia 2 are deviatia standard N/A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="numproc2">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Din distributia 2 generez N/A procese</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="medie3">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Distributia 3 are media N/A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="std3">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Distributia 3 are deviatia standard N/A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="numproc3">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Din distributia 3 generez N/A procese</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
          <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>MAXIMUM PROCESS ARRIVAL TIME</string>
           </property>
@@ -216,7 +326,7 @@ QPushButton:hover {
          <widget class="QLabel" name="timpselectat">
           <property name="font">
            <font>
-            <pointsize>24</pointsize>
+            <pointsize>16</pointsize>
            </font>
           </property>
           <property name="text">
@@ -231,6 +341,11 @@ QPushButton:hover {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
           </property>
           <property name="styleSheet">
            <string notr="true">QSlider::groove:horizontal {
@@ -268,65 +383,6 @@ QSlider::handle:horizontal:hover {
           </property>
          </widget>
         </item>
-        <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>NUMBER OF PROCESSES</string>
-          </property>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="proceseselectate">
-          <property name="font">
-           <font>
-            <pointsize>24</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="numarprocese">
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QSlider::groove:horizontal {
-    border: 1px solid #4682B4;
-    height: 8px;
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4682B4, stop:1 #87CEEB);
-    margin: 2px 0;
-    border-radius: 4px;
-}
-
-QSlider::handle:horizontal {
-    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #4682B4);
-    border: 1px solid #4682B4;
-    width: 20px;
-    margin: -2px 0;
-    border-radius: 10px;
-}
-
-QSlider::handle:horizontal:hover {
-    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #1E90FF);
-}
-</string>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>500</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
         <item alignment="Qt::AlignmentFlag::AlignVCenter">
          <widget class="QPushButton" name="generate">
           <property name="sizePolicy">
@@ -340,6 +396,11 @@ QSlider::handle:horizontal:hover {
             <width>16777215</width>
             <height>16</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
           </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
@@ -358,6 +419,11 @@ QPushButton:hover {
         </item>
         <item>
          <widget class="QPushButton" name="usefileasinput">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
 	background: rgb(0, 170, 255);
@@ -375,6 +441,11 @@ QPushButton:hover {
         </item>
         <item>
          <widget class="QPushButton" name="goback">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
 	background: rgb(0, 170, 255);

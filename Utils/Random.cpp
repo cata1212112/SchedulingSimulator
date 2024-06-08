@@ -32,9 +32,9 @@ void Random::setGaussian(int mean, int deviation) {
 }
 
 int Random::randomGaussian(double multiplier) {
-    int randomValue = static_cast<int>(gaussian(gen) * multiplier);
+    int randomValue = static_cast<int>(gaussian(gen));
     while (randomValue <= 0) {
-        randomValue = static_cast<int>(gaussian(gen) * multiplier);
+        randomValue = static_cast<int>(gaussian(gen));
     }
     return randomValue;
 }

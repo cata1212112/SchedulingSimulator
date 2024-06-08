@@ -18,6 +18,7 @@ Process::Process(int burst, int deadline) : absoluteDeadline(deadline), period(d
     id = ID++;
     currentBurst = 0;
     remainingBurst = CPUburst[0];
+    priority = remainingBurst;
 }
 
 
@@ -155,4 +156,12 @@ void Process::setVtime(double vtime) {
 
 Process::~Process() {
 
+}
+
+int Process::getDistributionId() const {
+    return distributionID;
+}
+
+void Process::setDistributionId(int distributionId) {
+    distributionID = distributionId;
 }

@@ -45,14 +45,12 @@ add_executable(Licenta main.cpp
         Scheduler/TestMultiCore1/TestMultiCore1.h
         Scheduler/EDRR/EDRR.cpp
         Scheduler/EDRR/EDRR.h
-        Scheduler/ETRR/ETRR.cpp
-        Scheduler/ETRR/ETRR.h
+        Scheduler/ETRR/MMRR.cpp
+        Scheduler/ETRR/MMRR.h
         Scheduler/MTSJ/MTSJ.cpp
         Scheduler/MTSJ/MTSJ.h
-        Scheduler/RRKMEANS/RRKMEANS.cpp
-        Scheduler/RRKMEANS/RRKMEANS.h
-        Scheduler/DMFQ/DMFQ.cpp
-        Scheduler/DMFQ/DMFQ.h
+        Scheduler/RRKMEANS/MinMaxRR.cpp
+        Scheduler/RRKMEANS/MinMaxRR.h
         Utils/KMEANS/KMEANS.cpp
         Utils/KMEANS/KMEANS.h
         Scheduler/TestMultiCore2/TestMultiCore2.cpp
@@ -72,10 +70,6 @@ add_executable(Licenta main.cpp
         Scheduler/FairShareScheduling/FSS.h
         Scheduler/FairShareScheduling/FSSCore.cpp
         Scheduler/FairShareScheduling/FSSCore.h
-        Scheduler/DWRR/DWRR.cpp
-        Scheduler/DWRR/DWRR.h
-        Scheduler/DWRR/SingleCoreDWRR.cpp
-        Scheduler/DWRR/SingleCoreDWRR.h
         Scheduler/RealTime/LTS/LTS.cpp
         Scheduler/RealTime/LTS/LTS.h
         Scheduler/RealTime/LTS/LTSCore/LTSCore.cpp

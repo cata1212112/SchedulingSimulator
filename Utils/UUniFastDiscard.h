@@ -30,22 +30,24 @@ public:
     }
 
     static std::vector<double> generatePeriodsLogUniform(int n, double min, double max) {
-        static std::uniform_real_distribution<> uniform(log(min), log(max + 1));
+//        static std::uniform_real_distribution<> uniform(log(min), log(max + 1));
+        static std::uniform_real_distribution<> uniform(min, 100);
         static std::mt19937 gen;
 
         std::vector<double> periods;
         for (int i=0; i<n; i++) {
-            periods.push_back(exp(uniform(gen)));
+//            periods.push_back(exp(uniform(gen)));
+            periods.push_back(uniform(gen));
         }
         return periods;
     }
 
     static std::vector<int> adjustPeriods(std::vector<double> &periods) {
         std::vector<int> refprd;
-        int exp2 = 5;
-        int exp3 = 3;
-        int exp5 = 2;
-        int exp7 = 1;
+        int exp2 = 3;
+        int exp3 = 2;
+        int exp5 = 1;
+        int exp7 = 0;
 
         for (int i = 0; i <= exp2; ++i) {
             for (int j = 0; j <= exp3; ++j) {
@@ -113,7 +115,7 @@ public:
         return tasks;
     }
 
-    static vector<vector<pair<int,int>>> generateTaskSet(double n, double utilization, int howMany=500) {
+    static vector<vector<pair<int,int>>> generateTaskSet(double n, double utilization, int howMany=100000) {
 
         std::string source_dir = __FILE__;
         source_dir = source_dir.substr(0, source_dir.find_last_of("\\/") + 1);
@@ -133,9 +135,9 @@ public:
         }
 
         pclose(pipe);
-        result.erase(0, 1);
-        result.pop_back();
-        result.pop_back();
+//        result.erase(0, 1);
+//        result.pop_back();
+//        result.pop_back();
         std::vector<double> utilizations;
 
         std::stringstream ss(result);

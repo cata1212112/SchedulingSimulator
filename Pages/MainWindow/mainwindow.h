@@ -5,13 +5,15 @@
 #ifndef LICENTA_MAINWINDOW_H
 #define LICENTA_MAINWINDOW_H
 
+#include <windows.h>
+
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include "../../Utils/Style.h"
 #include "../../Utils/Metrics.h"
 #include "../../DiscreteEventSimulator/DES.h"
 #include "../../Utils/UUniFastDiscard.h"
-
+#include <regex>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

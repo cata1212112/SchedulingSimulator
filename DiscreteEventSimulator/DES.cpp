@@ -11,42 +11,44 @@
 
 vector<string> DES::algortihms;
 
-string DES::generateInputData(int numProcesses, int maximumTime, int mean, int std) {
+string DES::generateInputData(vector<int> numProcesses, int maximumTime, vector<int> mean, vector<int> std) {
 
     events = new priority_queue<Event>();
-
-    numberOfProcesses = numProcesses;
-    Random::setGaussian(mean, std);
     string inputData;
-    for (int i=0; i<numProcesses; i++) {
-        int arrival = Random::randomInteger(maximumTime);
-        int numBursts = Random::randomInteger(MAXIMUMNUMCPUBURSTS) + 1;
-        bool processType = Random::randomBit();
-        int priority = Random::randomInteger(8) + 1;
 
-        numBursts = 1;
-        vector<int> cpuBursts;
-        vector<int> ioBursts;
+    for (auto x:generatedBurstByDistributionId) {
+        generatedBurstByDistributionId[x.first].clear();
+    }
 
-        for (int j=0; j<numBursts; j++) {
-            int cpuBurst = Random::randomGaussian(getMultiplier(processType));
-            int ioBurst = Random::randomGaussian(getMultiplier(!processType));
+    numberOfProcesses = 0;
+    for (int i=0; i<numProcesses.size(); i++) {
+        numberOfProcesses += numProcesses[i];
 
-            cpuBursts.push_back(cpuBurst);
-            if (j < numBursts - 1) {
-                ioBursts.push_back(ioBurst);
-            }
+        generatedBurstByDistributionMean[i] = mean[i];
+        generatedBurstByDistributionSTD[i] = std[i];
+
+        for (int k=0; k<numProcesses[i]; k++) {
+            Random::setGaussian(mean[i], std[i]);
+
+            int arrival = Random::randomInteger(maximumTime);
+            int priority = Random::randomInteger(8) + 1;
+
+            int cpuBurst = Random::randomGaussian(1);
+
+            generatedBurstByDistributionId[i].push_back(cpuBurst);
+
+            Process p({cpuBurst}, {}, priority);
+
+            p.setDistributionId(i);
+
+            p.setArrivalTime(arrival);
+
+            Event event = Event(ARRIVAL, arrival, p);
+
+            inputData += event.toString();
+
+            events->push(event);
         }
-
-        Process p(cpuBursts, ioBursts, priority);
-
-        p.setArrivalTime(arrival);
-
-        Event event = Event(ARRIVAL, arrival, p);
-
-        inputData += event.toString();
-
-        events->push(event);
     }
     input = inputData;
     return inputData;
@@ -156,6 +158,9 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                             }
                             timerExpired = true;
                         }
+//                        if (e.getType() == IDLE) {
+//                            cout << "aici\n";
+//                        }
                     }
                     if (osTime >= 1000000) {
                         timerExpired = false;
@@ -169,7 +174,9 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                             core[schedAlgo.assignCPU(event.getProcess())]->addEvent(event);
                         }
                     }
-
+//                    if (currentTime > 0) {
+//                        events->push(Event(IDLE, currentTime, Process()));
+//                    }
                     osTime = currentTime;
                 }
                 else if (isRealTime()) {
@@ -177,6 +184,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                     for (const auto &event : currentEvents) {
                         if (event.getType() == ARRIVAL) {
                             Process p(event.getProcess());
+                            p.setPriority(p.getRemainingBurst());
                             p.setNextDeadline(currentTime + p.getPeriod());
                             arrivals.push_back(p);
                             events->push(Event(ARRIVAL, p.getPeriod() + currentTime, p));
@@ -255,6 +263,9 @@ void DES::setAlgorithm(const string &algorithm) {
 
 void DES::setInputFromString(const string &input, bool realTime) {
     stringstream ss(input);
+    for (auto x:generatedBurstByDistributionId) {
+        generatedBurstByDistributionId[x.first].clear();
+    }
     events = new priority_queue<Event>();
     if (realTime) {
         vector<int> periods;
@@ -275,12 +286,16 @@ void DES::setInputFromString(const string &input, bool realTime) {
     } else {
         string firstLine, secondLine, thirdLine;
         vector<Event> eventVec;
+        for (int i=0; i<3; i++) {
+            generatedBurstByDistributionMean[i] = 0;
+            generatedBurstByDistributionSTD[i] = 0;
+        }
         while (getline(ss, firstLine) && getline(ss, secondLine) && getline(ss, thirdLine)) {
             if (!firstLine.empty()) {
                 numberOfProcesses += 1;
                 Event event = Event::fromStrings(firstLine, secondLine, thirdLine);
                 events->push(event);
-
+                generatedBurstByDistributionId[event.getProcess().getDistributionId()].push_back(event.getProcess().getRemainingBurst());
             }
         }
     }
@@ -358,4 +373,28 @@ vector<vector<pair<int, int>>> DES::generateTaskSet(int perTaskNum, double utili
 
 void DES::setEvents(priority_queue<Event> *events) {
     DES::events = events;
+}
+
+const map<int, vector<int>> &DES::getGeneratedBurstByDistributionId() const {
+    return generatedBurstByDistributionId;
+}
+
+void DES::setGeneratedBurstByDistributionId(const map<int, vector<int>> &generatedBurstByDistributionId) {
+    DES::generatedBurstByDistributionId = generatedBurstByDistributionId;
+}
+
+map<int, int> &DES::getGeneratedBurstByDistributionMean() {
+    return generatedBurstByDistributionMean;
+}
+
+void DES::setGeneratedBurstByDistributionMean(const map<int, int> &generatedBurstByDistributionMean) {
+    DES::generatedBurstByDistributionMean = generatedBurstByDistributionMean;
+}
+
+map<int, int> &DES::getGeneratedBurstByDistributionStd() {
+    return generatedBurstByDistributionSTD;
+}
+
+void DES::setGeneratedBurstByDistributionStd(const map<int, int> &generatedBurstByDistributionStd) {
+    generatedBurstByDistributionSTD = generatedBurstByDistributionStd;
 }

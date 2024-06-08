@@ -35,18 +35,23 @@ public:
     QPushButton *realtime;
     QWidget *RunSimulation;
     QVBoxLayout *verticalLayout;
-    QLabel *label_3;
-    QLabel *label_5;
-    QSlider *horizontalSlider;
     QLabel *label_4;
     QLabel *label_6;
     QSlider *horizontalSlider_2;
+    QHBoxLayout *parametriiDistributiii;
+    QVBoxLayout *verticalLayout_5;
+    QLabel *medie1;
+    QLabel *std1;
+    QLabel *numproc1;
+    QLabel *medie2;
+    QLabel *std2;
+    QLabel *numproc2;
+    QLabel *medie3;
+    QLabel *std3;
+    QLabel *numproc3;
     QLabel *label;
     QLabel *timpselectat;
     QSlider *maximumTime;
-    QLabel *label_2;
-    QLabel *proceseselectate;
-    QSlider *numarprocese;
     QPushButton *generate;
     QPushButton *usefileasinput;
     QPushButton *goback;
@@ -87,7 +92,7 @@ public:
         stackedWidget = new QStackedWidget(centralwidget);
         stackedWidget->setObjectName("stackedWidget");
         QFont font;
-        font.setPointSize(24);
+        font.setPointSize(16);
         stackedWidget->setFont(font);
         StartPage = new QWidget();
         StartPage->setObjectName("StartPage");
@@ -102,9 +107,7 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(singlecore->sizePolicy().hasHeightForWidth());
         singlecore->setSizePolicy(sizePolicy);
-        QFont font1;
-        font1.setPointSize(16);
-        singlecore->setFont(font1);
+        singlecore->setFont(font);
         singlecore->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background: rgb(0, 170, 255);\n"
 "	border-radius: 20px;\n"
@@ -120,7 +123,7 @@ public:
         multicore->setObjectName("multicore");
         sizePolicy.setHeightForWidth(multicore->sizePolicy().hasHeightForWidth());
         multicore->setSizePolicy(sizePolicy);
-        multicore->setFont(font1);
+        multicore->setFont(font);
         multicore->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background: rgb(0, 170, 255);\n"
 "	border-radius: 20px;\n"
@@ -136,7 +139,7 @@ public:
         realtime->setObjectName("realtime");
         sizePolicy.setHeightForWidth(realtime->sizePolicy().hasHeightForWidth());
         realtime->setSizePolicy(sizePolicy);
-        realtime->setFont(font1);
+        realtime->setFont(font);
         realtime->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background: rgb(0, 170, 255);\n"
 "	border-radius: 20px;\n"
@@ -154,25 +157,9 @@ public:
         verticalLayout = new QVBoxLayout(RunSimulation);
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
-        label_3 = new QLabel(RunSimulation);
-        label_3->setObjectName("label_3");
-
-        verticalLayout->addWidget(label_3, 0, Qt::AlignmentFlag::AlignHCenter);
-
-        label_5 = new QLabel(RunSimulation);
-        label_5->setObjectName("label_5");
-        label_5->setFont(font);
-
-        verticalLayout->addWidget(label_5, 0, Qt::AlignmentFlag::AlignHCenter);
-
-        horizontalSlider = new QSlider(RunSimulation);
-        horizontalSlider->setObjectName("horizontalSlider");
-        horizontalSlider->setOrientation(Qt::Orientation::Horizontal);
-
-        verticalLayout->addWidget(horizontalSlider);
-
         label_4 = new QLabel(RunSimulation);
         label_4->setObjectName("label_4");
+        label_4->setFont(font);
 
         verticalLayout->addWidget(label_4, 0, Qt::AlignmentFlag::AlignHCenter);
 
@@ -184,12 +171,80 @@ public:
 
         horizontalSlider_2 = new QSlider(RunSimulation);
         horizontalSlider_2->setObjectName("horizontalSlider_2");
+        horizontalSlider_2->setFont(font);
+        horizontalSlider_2->setMinimum(1);
+        horizontalSlider_2->setMaximum(3);
         horizontalSlider_2->setOrientation(Qt::Orientation::Horizontal);
 
         verticalLayout->addWidget(horizontalSlider_2);
 
+        parametriiDistributiii = new QHBoxLayout();
+        parametriiDistributiii->setObjectName("parametriiDistributiii");
+
+        verticalLayout->addLayout(parametriiDistributiii);
+
+        verticalLayout_5 = new QVBoxLayout();
+        verticalLayout_5->setObjectName("verticalLayout_5");
+        medie1 = new QLabel(RunSimulation);
+        medie1->setObjectName("medie1");
+        medie1->setFont(font);
+
+        verticalLayout_5->addWidget(medie1);
+
+        std1 = new QLabel(RunSimulation);
+        std1->setObjectName("std1");
+        std1->setFont(font);
+
+        verticalLayout_5->addWidget(std1);
+
+        numproc1 = new QLabel(RunSimulation);
+        numproc1->setObjectName("numproc1");
+        numproc1->setFont(font);
+
+        verticalLayout_5->addWidget(numproc1);
+
+        medie2 = new QLabel(RunSimulation);
+        medie2->setObjectName("medie2");
+        medie2->setFont(font);
+
+        verticalLayout_5->addWidget(medie2);
+
+        std2 = new QLabel(RunSimulation);
+        std2->setObjectName("std2");
+        std2->setFont(font);
+
+        verticalLayout_5->addWidget(std2);
+
+        numproc2 = new QLabel(RunSimulation);
+        numproc2->setObjectName("numproc2");
+        numproc2->setFont(font);
+
+        verticalLayout_5->addWidget(numproc2);
+
+        medie3 = new QLabel(RunSimulation);
+        medie3->setObjectName("medie3");
+        medie3->setFont(font);
+
+        verticalLayout_5->addWidget(medie3);
+
+        std3 = new QLabel(RunSimulation);
+        std3->setObjectName("std3");
+        std3->setFont(font);
+
+        verticalLayout_5->addWidget(std3);
+
+        numproc3 = new QLabel(RunSimulation);
+        numproc3->setObjectName("numproc3");
+        numproc3->setFont(font);
+
+        verticalLayout_5->addWidget(numproc3);
+
+
+        verticalLayout->addLayout(verticalLayout_5);
+
         label = new QLabel(RunSimulation);
         label->setObjectName("label");
+        label->setFont(font);
 
         verticalLayout->addWidget(label, 0, Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter);
 
@@ -206,6 +261,7 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(maximumTime->sizePolicy().hasHeightForWidth());
         maximumTime->setSizePolicy(sizePolicy1);
+        maximumTime->setFont(font);
         maximumTime->setStyleSheet(QString::fromUtf8("QSlider::groove:horizontal {\n"
 "    border: 1px solid #4682B4;\n"
 "    height: 8px;\n"
@@ -233,48 +289,6 @@ public:
 
         verticalLayout->addWidget(maximumTime);
 
-        label_2 = new QLabel(RunSimulation);
-        label_2->setObjectName("label_2");
-
-        verticalLayout->addWidget(label_2, 0, Qt::AlignmentFlag::AlignHCenter);
-
-        proceseselectate = new QLabel(RunSimulation);
-        proceseselectate->setObjectName("proceseselectate");
-        proceseselectate->setFont(font);
-
-        verticalLayout->addWidget(proceseselectate, 0, Qt::AlignmentFlag::AlignHCenter);
-
-        numarprocese = new QSlider(RunSimulation);
-        numarprocese->setObjectName("numarprocese");
-        QFont font2;
-        font2.setPointSize(9);
-        numarprocese->setFont(font2);
-        numarprocese->setStyleSheet(QString::fromUtf8("QSlider::groove:horizontal {\n"
-"    border: 1px solid #4682B4;\n"
-"    height: 8px;\n"
-"    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4682B4, stop:1 #87CEEB);\n"
-"    margin: 2px 0;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"QSlider::handle:horizontal {\n"
-"    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #4682B4);\n"
-"    border: 1px solid #4682B4;\n"
-"    width: 20px;\n"
-"    margin: -2px 0;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QSlider::handle:horizontal:hover {\n"
-"    background: qradialgradient(cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #87CEEB, stop:1 #1E90FF);\n"
-"}\n"
-""));
-        numarprocese->setMinimum(1);
-        numarprocese->setMaximum(500);
-        numarprocese->setOrientation(Qt::Orientation::Horizontal);
-
-        verticalLayout->addWidget(numarprocese);
-
         generate = new QPushButton(RunSimulation);
         generate->setObjectName("generate");
         QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
@@ -283,6 +297,7 @@ public:
         sizePolicy2.setHeightForWidth(generate->sizePolicy().hasHeightForWidth());
         generate->setSizePolicy(sizePolicy2);
         generate->setMaximumSize(QSize(16777215, 16));
+        generate->setFont(font);
         generate->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background: rgb(0, 170, 255);\n"
 "	border-radius: 20px;\n"
@@ -296,6 +311,7 @@ public:
 
         usefileasinput = new QPushButton(RunSimulation);
         usefileasinput->setObjectName("usefileasinput");
+        usefileasinput->setFont(font);
         usefileasinput->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background: rgb(0, 170, 255);\n"
 "	border-radius: 20px;\n"
@@ -309,6 +325,7 @@ public:
 
         goback = new QPushButton(RunSimulation);
         goback->setObjectName("goback");
+        goback->setFont(font);
         goback->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background: rgb(0, 170, 255);\n"
 "	border-radius: 20px;\n"
@@ -343,7 +360,9 @@ public:
 
         selectednumberofcores = new QLabel(MultiCore);
         selectednumberofcores->setObjectName("selectednumberofcores");
-        selectednumberofcores->setFont(font);
+        QFont font1;
+        font1.setPointSize(24);
+        selectednumberofcores->setFont(font1);
 
         verticalLayout_3->addWidget(selectednumberofcores, 0, Qt::AlignmentFlag::AlignHCenter);
 
@@ -412,7 +431,7 @@ public:
 
         label_8 = new QLabel(GenerateRealTimeData);
         label_8->setObjectName("label_8");
-        label_8->setFont(font);
+        label_8->setFont(font1);
 
         verticalLayout_4->addWidget(label_8, 0, Qt::AlignmentFlag::AlignHCenter);
 
@@ -496,14 +515,19 @@ public:
         singlecore->setText(QCoreApplication::translate("MainWindow", "Single Core", nullptr));
         multicore->setText(QCoreApplication::translate("MainWindow", "Multi Core", nullptr));
         realtime->setText(QCoreApplication::translate("MainWindow", "Real Time", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "MEAN", nullptr));
-        label_5->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
-        label_4->setText(QCoreApplication::translate("MainWindow", "STANDARD DEVIATION", nullptr));
-        label_6->setText(QCoreApplication::translate("MainWindow", "1", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "NUMBER OF DISTRIBUTIONS", nullptr));
+        label_6->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        medie1->setText(QCoreApplication::translate("MainWindow", "Distributia 1 are media N/A", nullptr));
+        std1->setText(QCoreApplication::translate("MainWindow", "Distributia 1 are deviatia standard N/A", nullptr));
+        numproc1->setText(QCoreApplication::translate("MainWindow", "Din distributia 1 generez N/A procese", nullptr));
+        medie2->setText(QCoreApplication::translate("MainWindow", "Distributia 2 are media N/A", nullptr));
+        std2->setText(QCoreApplication::translate("MainWindow", "Distributia 2 are deviatia standard N/A", nullptr));
+        numproc2->setText(QCoreApplication::translate("MainWindow", "Din distributia 2 generez N/A procese", nullptr));
+        medie3->setText(QCoreApplication::translate("MainWindow", "Distributia 3 are media N/A", nullptr));
+        std3->setText(QCoreApplication::translate("MainWindow", "Distributia 3 are deviatia standard N/A", nullptr));
+        numproc3->setText(QCoreApplication::translate("MainWindow", "Din distributia 3 generez N/A procese", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "MAXIMUM PROCESS ARRIVAL TIME", nullptr));
         timpselectat->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
-        label_2->setText(QCoreApplication::translate("MainWindow", "NUMBER OF PROCESSES", nullptr));
-        proceseselectate->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         generate->setText(QCoreApplication::translate("MainWindow", "Generate New Data", nullptr));
         usefileasinput->setText(QCoreApplication::translate("MainWindow", "Use File as Input", nullptr));
         goback->setText(QCoreApplication::translate("MainWindow", "Go back", nullptr));

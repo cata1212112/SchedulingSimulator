@@ -11,10 +11,11 @@ class RR : public SchedulingAlgorithm{
 private:
     int quant = 10;
     int ioQueue = 0;
+    int lastArrived = 0;
 
     static std::function<bool(const Process&, const Process&)> RRQueue;
 
-    WrapperPriorityQueue<decltype(RRQueue)>* readyQueue;
+   vector<Process>* readyQueue;
 public:
     int getQuant() const {
         return quant;
@@ -27,20 +28,32 @@ public:
     RR();
 
     RR(int quant = 10) :quant(quant){
-        readyQueue = new WrapperPriorityQueue<decltype(RRQueue)>(RRQueue);
+        readyQueue = new vector<Process>();
     }
 
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;
 
     vector<Event> processCPUComplete(Process p, int time, Metrics &stats) override;
 
-    vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats) override;
-
-    vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) override;
-
     string getCoreAlgortihm(int coreID) override;
 
     std::vector<Event> schedule(int time, Metrics &stats, bool timerExpired) override;
+
+    Event assignToCPU(int time, Metrics &stats) {
+        currentProcess = new Process(*readyQueue->begin());
+        readyQueue->erase(readyQueue->begin());
+
+        if (currentProcess->getRemainingBurst() <= quant) {
+            assignProcessToCPU(*currentProcess, stats, time);
+            return Event(CPUBURSTCOMPLETE, time + currentProcess->getRemainingBurst(), *currentProcess);
+
+        } else {
+            assignProcessToCPU(*currentProcess, stats, time);
+            return Event{TIMEREXPIRED, time + quant, *currentProcess};
+        }
+    }
+
+    void preemtCPU(Metrics &stats, int time) override;
 };
 
 

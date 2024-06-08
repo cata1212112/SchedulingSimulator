@@ -29,6 +29,7 @@ void Core::runSimulation() {
             cv->wait(lk, [this] { return *osTimeUpdated; });
         }
 
+
         while (!events->empty() && !finished) {
             Event e = events->top();
 
@@ -81,6 +82,16 @@ void Core::runSimulation() {
                     events->push(tmp.top());
                     tmp.pop();
                 }
+                for (const auto &e:currentEvents[ARRIVAL]) {
+                    events->push(e);
+                }
+                for (const auto &e:currentEvents[CPUBURSTCOMPLETE]) {
+                    events->push(e);
+                }
+                for (const auto &e:currentEvents[TIMEREXPIRED]) {
+                    events->push(e);
+                }
+
                 continue;
             }
 

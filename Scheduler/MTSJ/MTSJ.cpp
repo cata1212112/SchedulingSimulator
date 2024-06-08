@@ -5,145 +5,108 @@
 #include <iostream>
 #include "MTSJ.h"
 
-vector<Event> MTSJ::processArrived(std::vector<Process> p, int time, Metrics &stats) {
+std::vector<Event> MTSJ::processArrived(std::vector<Process> p, int time, Metrics &stats) {
     for (auto &process : p) {
         process.setEnteredReadyQueue(time);
         readyQueue.push_back(process);
     }
-
-    vector<Event> toPreemt;
-
     if (!p.empty()) {
-        for (auto &process:sjfQueue) {
-            readyQueue.push_back(process);
-            toPreemt.push_back(Event(PREEMT,-1000, Process(process)));
+        lastArrived = time;
+    }
+    return {};
+}
+
+std::vector<Event> MTSJ::processCPUComplete(Process p, int time, Metrics &stats) {
+    return SchedulingAlgorithm::processCPUComplete(p, time, stats);
+}
+
+std::vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
+    vector<Event> events;
+    int preemtedProcId = -1;
+    if (time == lastArrived) {
+        if (currentProcess != nullptr) {
+            Event preemtEvent(PREEMT, -1000, *currentProcess);
+            preemtedProcId = currentProcess->getId();
+            preemtCPU(stats, time);
+            events.push_back(preemtEvent);
         }
 
-        for (auto &process:rrQueue) {
-            readyQueue.push_back(process);
-            toPreemt.push_back(Event(PREEMT,-1000, Process(process)));
+
+        for (auto p:sjfQueue) {
+            readyQueue.push_back(p);
         }
 
         sjfQueue.clear();
+
+        for (auto p:rrQueue) {
+            readyQueue.push_back(p);
+        }
+
         rrQueue.clear();
 
         int sumOfBursts = 0;
-        for (const auto &process:readyQueue) {
-            sumOfBursts += process.getRemainingBurst();
+        for (const auto &p:readyQueue) {
+            sumOfBursts += p.getRemainingBurst();
         }
-        if (!readyQueue.empty()) {
-            sumOfBursts /= readyQueue.size();
 
-            for (const auto &process:readyQueue) {
-                if (process.getRemainingBurst() <= sumOfBursts) {
-                    sjfQueue.push_back(process);
-                } else {
-                    rrQueue.push_back(process);
-                }
+        sumOfBursts /= readyQueue.size();
+
+        for (auto p:readyQueue) {
+            if (p.getRemainingBurst() <= sumOfBursts) {
+                sjfQueue.push_back(p);
+            } else {
+                rrQueue.push_back(p);
             }
-            sort(sjfQueue.begin(), sjfQueue.end(), [](const Process &a, const Process &b) {return a.getRemainingBurst() < b.getRemainingBurst();});
-            readyQueue.clear();
         }
+
+        readyQueue.clear();
+        sort(sjfQueue.begin(), sjfQueue.end(), [](const Process &a, const Process &b) {
+            return a.getRemainingBurst() < b.getRemainingBurst();
+        });
+
+        cout << sumOfBursts << "\n";
+        //        quant = sumOfBursts;
+        lastArrived = -1;
     }
-
-
-    return toPreemt;
-}
-
-vector<Event> MTSJ::processCPUComplete(Process p, int time, Metrics &stats) {
-    stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
-    stats.addToCPUUtilization(time - p.getLastStarted());
-
-    currentProcess = nullptr;
-    std::vector<Event> events;
-    if (p.hasRemainingIO()) {
-//        ioQueue += 1;
-        events.push_back(Event(IOBURSTCOMPLETE, time + p.getRemainingBurst(), Process(*p.consumeBurst())));
-    } else {
-        stats.addToTT(time - p.getArrivalTime());
-    }
-    return events;
-}
-
-vector<Event> MTSJ::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
-    vector<Process> addToReadyQueue;
-    for (auto &process:p) {
-//        ioQueue -= 1;
-        process.setEnteredReadyQueue(time);
-        addToReadyQueue.push_back(process);
-    }
-    for (auto p:addToReadyQueue) {
-        readyQueue.push_back(p);
-    }
-    return {};
-}
-
-vector<Event> MTSJ::processPreempt(std::vector<Process> p, int time, Metrics &stats) {
-    return std::vector<Event>();
-}
-
-vector<Event> MTSJ::schedule(int time, Metrics &stats, bool timerExpired) {
-    if (currentProcess == nullptr || timerExpired) {
-        if (!sjfQueue.empty()) {
-            currentProcess = new Process(sjfQueue[0]);
+    if (!sjfQueue.empty()) {
+        if (currentProcess == nullptr) {
+            currentProcess = new Process(*sjfQueue.begin());
             sjfQueue.erase(sjfQueue.begin());
 
-            if (!currentProcess->getAssigned()) {
-                stats.addToRT(time - currentProcess->getArrivalTime());
-                currentProcess->setAssigned(true);
-            }
-
-
+            assignProcessToCPU(*currentProcess, stats, time);
             int remainingBurst = currentProcess->getRemainingBurst();
-            currentProcess->setLastStarted(time);
-
-            stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-
-            return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst()))};
-        } else if (!rrQueue.empty()){
-            vector<Event> toReturn;
-            int lastId = -1;
-
-            if (currentProcess != nullptr) {
-                currentProcess->setEnteredReadyQueue(time);
-                rrQueue.push_back(Process(*currentProcess));
-                lastId = currentProcess->getId();
-//                Event e(PREEMT, -1000, Process(*currentProcess));
-//                toReturn.push_back(e);
-
+            if (currentProcess->getId() == preemtedProcId) {
+                events.clear();
             }
-            currentProcess = new Process(rrQueue[0]);
-            if (currentProcess->getId() != lastId && lastId != -1) {
-                stats.incrementCS();
+            events.push_back(Event(CPUBURSTCOMPLETE, time + remainingBurst, *currentProcess));
+        }
+    } else {
+        if (currentProcess == nullptr && rrQueue.empty()) {
+            return {};
+        }
+        if (currentProcess != nullptr) {
+            if (!timerExpired) {
+                return {};
             }
-            currentProcess->setLastStarted(time);
+            preemtCPU(stats, time);
+        }
+        currentProcess = new Process(*rrQueue.begin());
+        rrQueue.erase(rrQueue.begin());
 
-            rrQueue.erase(rrQueue.begin());
+        if (currentProcess->getId() == preemtedProcId) {
+            events.clear();
+        }
 
+        if (currentProcess->getRemainingBurst() <= quant) {
+            assignProcessToCPU(*currentProcess, stats, time);
+            events.push_back(Event(CPUBURSTCOMPLETE, time + currentProcess->getRemainingBurst(), *currentProcess));
 
-
-            if (!currentProcess->getAssigned()) {
-                stats.addToRT(time - currentProcess->getArrivalTime());
-                currentProcess->setAssigned(true);
-            }
-
-            int remainingBurst = currentProcess->getRemainingBurst();
-
-            stats.addToWT(time - currentProcess->getEnteredReadyQueue());
-
-            if (remainingBurst > quant) {
-                stats.addToGanttChart(currentProcess->getId(), time, time + quant);
-                stats.addToCPUUtilization(quant);
-                currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - quant);
-                toReturn.push_back(Event{TIMEREXPIRED, time + quant, Process(*currentProcess)});
-                return toReturn;
-            }
-            toReturn.push_back(Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess->consumeBurst())));
-
-            return toReturn;
+        } else {
+            assignProcessToCPU(*currentProcess, stats, time);
+            events.push_back(Event{TIMEREXPIRED, time + quant, *currentProcess});
         }
     }
-    return {};
+    return events;
 }
 
 string MTSJ::getCoreAlgortihm(int coreID) {
@@ -151,3 +114,14 @@ string MTSJ::getCoreAlgortihm(int coreID) {
 }
 
 MTSJ::MTSJ(int quant) : quant(quant) {}
+
+void MTSJ::preemtCPU(Metrics &stats, int time) {
+
+    currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
+    currentProcess->setEnteredReadyQueue(time);
+    if (currentProcess->getRemainingBurst() > 0) {
+        rrQueue.push_back(*currentProcess);
+    }
+
+    SchedulingAlgorithm::preemtCPU(stats, time);
+}

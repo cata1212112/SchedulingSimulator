@@ -16,9 +16,9 @@ class LTS : public SchedulingAlgorithm{
     vector<Core*> cores;
     priority_queue<Event> *mainEventQueue;
     std::mutex *queueMutex;
-    std::map<int, double> res;
-    std::map<int, double> totalRes;
-    std::map<int, double> P;
+    std::map<int, long double> res;
+    std::map<int, long double> totalRes;
+    std::map<int, long double> P;
 
 public:
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;

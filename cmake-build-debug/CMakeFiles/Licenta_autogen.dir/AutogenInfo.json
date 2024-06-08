@@ -305,33 +305,15 @@
 			null
 		],
 		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/DMFQ/DMFQ.h",
-			"MU",
-			"E7WY4KM4US/moc_DMFQ.cpp",
-			null
-		],
-		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/DWRR.h",
-			"MU",
-			"V6EOUYWXN5/moc_DWRR.cpp",
-			null
-		],
-		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/SingleCoreDWRR.h",
-			"MU",
-			"V6EOUYWXN5/moc_SingleCoreDWRR.cpp",
-			null
-		],
-		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.h",
 			"MU",
 			"7KQB2LUAZ2/moc_EDRR.cpp",
 			null
 		],
 		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/ETRR/ETRR.h",
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/ETRR/MMRR.h",
 			"MU",
-			"PE3UKRQXRK/moc_ETRR.cpp",
+			"PE3UKRQXRK/moc_MMRR.cpp",
 			null
 		],
 		[
@@ -365,9 +347,9 @@
 			null
 		],
 		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.h",
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/MinMaxRR.h",
 			"MU",
-			"W6C5K2B73X/moc_RRKMEANS.cpp",
+			"W6C5K2B73X/moc_MinMaxRR.cpp",
 			null
 		],
 		[
@@ -594,15 +576,8 @@
 			"MU",
 			null
 		],
-		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/DMFQ/DMFQ.cpp", "MU", null ],
-		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/DWRR.cpp", "MU", null ],
-		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/DWRR/SingleCoreDWRR.cpp",
-			"MU",
-			null
-		],
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/EDRR/EDRR.cpp", "MU", null ],
-		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/ETRR/ETRR.cpp", "MU", null ],
+		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/ETRR/MMRR.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/FIFO/FIFO.cpp", "MU", null ],
 		[
 			"C:/Users/Cata/Desktop/Licenta/Scheduler/FairShareScheduling/FSS.cpp",
@@ -617,7 +592,7 @@
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/MTSJ/MTSJ.cpp", "MU", null ],
 		[ "C:/Users/Cata/Desktop/Licenta/Scheduler/RR/RR.cpp", "MU", null ],
 		[
-			"C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/RRKMEANS.cpp",
+			"C:/Users/Cata/Desktop/Licenta/Scheduler/RRKMEANS/MinMaxRR.cpp",
 			"MU",
 			null
 		],

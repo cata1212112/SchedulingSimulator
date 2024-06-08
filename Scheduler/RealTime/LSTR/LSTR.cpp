@@ -8,7 +8,11 @@
 vector<Event> LSTR::processArrived(std::vector<Process> p, int time, Metrics &stats) {
     for (const auto&proc:p) {
         readyQueue->push_back(proc);
+        if (!setMot) {
+            MOT = min(MOT, proc.getNextDeadline() - proc.getRemainingBurst() );
+        }
     }
+    setMot = true;
     return {};
 }
 
@@ -53,22 +57,26 @@ vector<Event> LSTR::schedule(int time, Metrics &stats, bool timerExpired) {
     for (int i=0; i<min(cores.size(), readyQueue->size()); i++) {
         Process p((*readyQueue)[i]);
 
-        Process p2(p);
-        p2.setRemainingBurst(1);
-        cores[i]->addEvent(Event(ARRIVAL, time, p2));
+        if (p.unitsExecuted < MOT || readyQueue->size() < cores.size()) {
+            Process p2(p);
+            p2.setRemainingBurst(1);
+            cores[i]->addEvent(Event(ARRIVAL, time, p2));
 //        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";
 
-        Process p3(p);
-        p3.setRemainingBurst(p3.getRemainingBurst() - 1);
-        p3.setAbsoluteDeadline(p3.getAbsoluteDeadline() - 1);
+            Process p3(p);
+            p3.setRemainingBurst(p3.getRemainingBurst() - 1);
+            p3.setAbsoluteDeadline(p3.getAbsoluteDeadline() - 1);
 
-        if (p3.getRemainingBurst() > 0) {
-            mainEventQueue->push(Event(REALTIME, time+1, p3));
+            if (p3.getRemainingBurst() > 0) {
+                p3.unitsExecuted = p.unitsExecuted + 1;
+                mainEventQueue->push(Event(REALTIME, time+1, p3));
+            }
         }
     }
     readyQueue->erase(readyQueue->begin(), readyQueue->begin() + min(cores.size(), readyQueue->size()));
     for (auto &p:*readyQueue) {
         p.setAbsoluteDeadline(p.getAbsoluteDeadline()-1);
+        p.unitsExecuted = 0;
     }
     mainEventQueue->push(Event(TICK, time+1, Process()));
 

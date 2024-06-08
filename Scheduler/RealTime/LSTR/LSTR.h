@@ -14,7 +14,8 @@ class LSTR : public SchedulingAlgorithm {
     vector<Core*> cores;
     priority_queue<Event> *mainEventQueue;
     std::mutex *queueMutex;
-    int MOT = -1;
+    int MOT = 1e9;
+    bool setMot = false;
 
 public:
     vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats) override;

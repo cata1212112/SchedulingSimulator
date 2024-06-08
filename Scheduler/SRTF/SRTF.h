@@ -24,11 +24,16 @@ public:
 
     string getCoreAlgortihm(int coreID) override;
 
-    vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats) override;
-
-    vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) override;
-
     std::vector<Event> schedule(int time, Metrics &stats, bool timerExpired) override;
+
+    Event assignToCPU(int time, Metrics &stats) {
+        currentProcess = new Process(readyQueue->top());
+        readyQueue->pop();
+        assignProcessToCPU(*currentProcess, stats, time);
+        return Event(CPUBURSTCOMPLETE, time + currentProcess->getRemainingBurst(), *currentProcess);
+    }
+
+    void preemtCPU(Metrics &stats, int time) override;
 };
 
 

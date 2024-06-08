@@ -12,7 +12,6 @@
 #include "../Scheduler/FIFO/FIFO.h"
 #include "../Scheduler/SJF/SJF.h"
 #include "../Scheduler/RR/RR.h"
-#include "../Scheduler/DMFQ/DMFQ.h"
 #include "../Scheduler/SRTF/SRTF.h"
 #include "../Scheduler/EDRR/EDRR.h"
 #include "../Scheduler/TestMultiCore1/TestMultiCore1.h"
@@ -26,15 +25,16 @@
 #include "../Scheduler/RealTime/LSTR/LSTRCore/LSTRCore.h"
 #include "../Scheduler/RealTime/LTS/LTSCore/LTSCore.h"
 #include "../Scheduler/MTSJ/MTSJ.h"
-#include "../Scheduler/RRKMEANS/RRKMEANS.h"
+#include "../Scheduler/RRKMEANS/MinMaxRR.h"
 #include "../Scheduler/CompletlyFairScheduler/CFS.h"
 #include "../Scheduler/FairShareScheduling/FSS.h"
 #include "../Scheduler/FairShareScheduling/FSSCore.h"
+#include "../Scheduler/ETRR/MMRR.h"
 
 class ImplementedAlgorithms {
 public:
     static std::vector<std::string> getSingleCoreAlgorithms() {
-        return {"Efficient Dynamic Round Robin", "First In First Out", "Shortest Job First", "Shortest Remaining Time First", "Round Robin", "Developed Multilevel Feedback Queue Scheduling", "Mean Threshold Shortest Job Round Robin", "Round Robin K-Means"};
+        return {"Efficient Dynamic Round Robin", "First In First Out", "Shortest Job First", "Shortest Remaining Time First", "Round Robin", "Mean Threshold Shortest Job Round Robin", "Mean Median Time Quantum Round Robin", "Min Max Round Robin"};
     }
 
     static SchedulingAlgorithm& getAlgorithm(const std::string &name, int quant=-1) {
@@ -65,15 +65,15 @@ public:
         } else if (name == "LSTRCore") {
             LSTRCore *lstrCore = new LSTRCore();
             return *lstrCore;
-        } else if (name == "Developed Multilevel Feedback Queue Scheduling") {
-            DMFQ *dmfq = new DMFQ();
-            return *dmfq;
         } else if (name == "Mean Threshold Shortest Job Round Robin") {
             MTSJ *mtsj = new MTSJ(quant);
             return *mtsj;
-        } else if (name == "Round Robin K-Means") {
-            RRKMEANS *rrkmeans = new RRKMEANS();
-            return *rrkmeans;
+        } else if (name == "Proficient Time Quantum Round Robin") {
+            MMRR *ptqrr = new MMRR();
+            return *ptqrr;
+        } else if (name == "Min Max Round Robin") {
+            MinMaxRR *minMaxRr = new MinMaxRR();
+            return *minMaxRr;
         } else if (name == "Completely Fair Scheduler") {
             CFS *cfs = new CFS();
             return *cfs;
