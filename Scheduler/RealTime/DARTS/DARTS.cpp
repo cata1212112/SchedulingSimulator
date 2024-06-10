@@ -28,6 +28,7 @@ vector<Event> DARTS::schedule(int time, Metrics &stats, bool timerExpired) {
     int missed = removeMissedDeadlines(time);
     if (missed > 0) {
         stats.incrementCS();
+//        cout << "???????????????\n";
     }
     sort(readyQueue->begin(), readyQueue->end(), [time](const Process &a, const Process &b) {
 

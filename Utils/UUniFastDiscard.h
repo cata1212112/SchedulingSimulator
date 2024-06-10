@@ -115,7 +115,7 @@ public:
         return tasks;
     }
 
-    static vector<vector<pair<int,int>>> generateTaskSet(double n, double utilization, int howMany=100000) {
+    static vector<vector<pair<int,int>>> generateTaskSet(double n, double utilization, int howMany=10000) {
 
         std::string source_dir = __FILE__;
         source_dir = source_dir.substr(0, source_dir.find_last_of("\\/") + 1);

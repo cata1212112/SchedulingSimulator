@@ -38,7 +38,7 @@ std::vector<Event> MMRR::schedule(int time, Metrics &stats, bool timerExpired) {
 }
 
 string MMRR::getCoreAlgortihm(int coreID) {
-    return "Proficient Time Quantum Round Robin";
+    return "Mean Median Time Quantum Round Robin";
 }
 
 MMRR::MMRR() {

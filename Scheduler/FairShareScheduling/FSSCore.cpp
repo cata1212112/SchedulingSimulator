@@ -51,7 +51,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
     workaroundStats = &stats;
     if (currentProcess == nullptr && readyQueue.empty()) {
         isIdle = true;
-        cout << "IDLE\n";
+//        cout << "IDLE\n";
         return {};
     }
     if (timerExpired || currentProcess == nullptr) {

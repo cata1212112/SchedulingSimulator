@@ -33,6 +33,8 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
     int missed = removeMissedDeadlines(time);
     if (missed > 0) {
         stats.incrementCS();
+//        cout << "???????????????\n";
+
     }
     P.clear();
     for (const auto &proc:*readyQueue) {

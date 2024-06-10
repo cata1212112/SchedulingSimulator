@@ -45,6 +45,7 @@ private:
     map<int, int> generatedBurstByDistributionMean;
     map<int, int> generatedBurstByDistributionSTD;
 public:
+
     int isToStop() const;
 
     map<int, int> &getGeneratedBurstByDistributionMean();

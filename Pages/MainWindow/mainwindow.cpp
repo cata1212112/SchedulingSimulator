@@ -84,6 +84,9 @@ void MainWindow::handleMultiCoreButton() {
 
 
 void MainWindow::gotoRunning(DES *des, int numCores) {
+//    cout << des->getAlgorithm() << "\n";
+//    cout << des->isRealTime() << "\n";
+
     ui->stackedWidget->setCurrentWidget(ui->running);
     lastWidget = ui->InputData;
 
@@ -394,7 +397,7 @@ void MainWindow::handleRealTimeButton() {
                         }
 //                        cout << util << "\n";
 
-                        if (!(abs(util - 2.0) < 0.0001)) {
+                        if (!(abs(util - 4.0) < 0.0001)) {
                             continue;
                         }
 
@@ -433,6 +436,12 @@ void MainWindow::handleRealTimeButton() {
 
                         if (m[m.size() - 1].getContextSwitches() == 0) {
                             validScheduled += 1;
+//                            ofstream out("outPoate.txt");
+//                            for (auto t:tasks) {
+//                                out << t.first << " " << t.second << "\n";
+//                            }
+//                            out.close();
+//                            exit(0);
                         } else {
                             ofstream out("out.txt");
                             for (auto t:tasks) {
@@ -449,17 +458,31 @@ void MainWindow::handleRealTimeButton() {
                     cout << i << " " << algname << " " << validScheduled << "/" << valid << "\n";
                 };
 
-                int a_min = 3;
-                int b_min = 19;
-                for (int cnt = a_min; cnt <= b_min; cnt++) {
-                    for (int j=0; j<3; j++) {
+                int a_min = 18;
+                int b_min = 38;
+                for (int cnt = a_min; cnt <= b_min; cnt+=4) {
+                    for (int j=0; j<10; j++) {
                         cout << "Numarul de taskuri este " << cnt << "\n";
-                        taskSet = DES::generateTaskSet(cnt, 2.1);
-                        std::thread t1(f, ImplementedAlgorithms::getRealTimeAlgortihms()[2]);
+                        taskSet = DES::generateTaskSet(cnt, 4.1);
+                        auto newTaskset = DES::generateTaskSet(cnt, 4.2);
+                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
+
+                        newTaskset = DES::generateTaskSet(cnt, 4.3);
+                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
+
+                        newTaskset = DES::generateTaskSet(cnt, 4.4);
+                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
+
+                        std::thread t1(f, ImplementedAlgorithms::getRealTimeAlgortihms()[0]);
+                        std::thread t2(f, ImplementedAlgorithms::getRealTimeAlgortihms()[1]);
+                        std::thread t3(f, ImplementedAlgorithms::getRealTimeAlgortihms()[2]);
                         t1.join();
+                        t2.join();
+                        t3.join();
                     }
                 }
                 cout << "DONEEEE\n";
+                exit(0);
 //                std::thread t2(f, ImplementedAlgorithms::getRealTimeAlgortihms()[1]);
 //                std::thread t3(f, ImplementedAlgorithms::getRealTimeAlgortihms()[2]);
 

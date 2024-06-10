@@ -68,7 +68,7 @@ public:
         } else if (name == "Mean Threshold Shortest Job Round Robin") {
             MTSJ *mtsj = new MTSJ(quant);
             return *mtsj;
-        } else if (name == "Proficient Time Quantum Round Robin") {
+        } else if (name == "Mean Median Time Quantum Round Robin") {
             MMRR *ptqrr = new MMRR();
             return *ptqrr;
         } else if (name == "Min Max Round Robin") {

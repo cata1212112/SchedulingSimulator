@@ -124,8 +124,12 @@ void Core::runSimulation() {
             for (const auto& eventGenerated : eventsGenerated) {
                 events->push(eventGenerated);
             }
-        }
 
+//            cout << "Core " << coreID << " timp minim " << events->top().getTime() << "\n";
+//            if (schedAlgo.getCurrentProcess() == nullptr && schedAlgo.getReadyQueue()->empty()) {
+//                cout << "Core " << coreID << " IDLE\n";
+//            }
+        }
         if (finished) {
             barrier->arrive_and_drop();
             secondBarrier->arrive_and_drop();

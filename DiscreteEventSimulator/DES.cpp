@@ -216,6 +216,8 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
             osTimeUpdated = false;
         }
         secondBarrier.arrive_and_wait();
+//        cout << "########\n";
+//        cout << "########\n";
 
     }
     vector<Metrics> vec;
