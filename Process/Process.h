@@ -27,12 +27,22 @@ private:
     int waitingTime = 0;
     int lastStarted;
     double vtime = 0;
+    double ptime = 0;
     int absoluteDeadline;
     int period;
     int nextDeadline;
     int distributionID;
+    int timeSlice;
 
 public:
+    int getTimeSlice() const;
+
+    void setTimeSlice(int timeSlice);
+
+    double getPtime() const;
+
+    void setPtime(double ptime);
+
     int unitsExecuted = 0;
 
     void setCpUburst(const vector<int> &cpUburst);
@@ -77,7 +87,9 @@ public:
             period(other.period),
             nextDeadline(other.nextDeadline),
             unitsExecuted(other.unitsExecuted),
-            distributionID(other.distributionID)
+            distributionID(other.distributionID),
+            timeSlice(other.timeSlice),
+            ptime(other.ptime)
             {}
 
     const vector<int> &getCpUburst() const;

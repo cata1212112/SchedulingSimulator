@@ -44,6 +44,8 @@ public:
     void addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) override;
 
     int removeMissedDeadlines(int time);
+
+    vector<Process> *getReadyQueue() override;
 };
 
 

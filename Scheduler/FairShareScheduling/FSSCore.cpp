@@ -144,42 +144,36 @@ long long int FSSCore::getLoad(int time, bool preemt) {
 
         currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
         currentProcess->setEnteredReadyQueue(time);
-        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted() + 0.0) / prio_to_weight[currentProcess->getPriority()]);
+        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted() + 0.0) * prio_to_weight[20] / prio_to_weight[currentProcess->getPriority()]);
 
         if (workaroundStats != nullptr) {
             workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
             workaroundStats->addToCPUUtilization(time - currentProcess->getLastStarted());
         }
-//
-//        priority_queue<Event> tmp;
-//
-//        while (!eventQueue->empty()) {
-//            if (eventQueue->top().getType() == TICK || eventQueue->top().getProcess().getId() != currentProcess->getId()) {
-//                tmp.push(eventQueue->top());
-//            }
-//            eventQueue->pop();
-//        }
-//
-//        while (!tmp.empty()) {
-//            eventQueue->push(tmp.top());
-//            tmp.pop();
-//        }
-//
-//        if (currentProcess->getRemainingBurst() > 0) {
-//            load += prio_to_weight[currentProcess->getPriority()];
-//            eventQueue->push(Event(ARRIVAL, time, Process(*currentProcess)));
-////            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
 
-//        } else {
-//            cout << "Finish " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
-//        }
-        readyQueue.push_back(Process(*currentProcess));
-        currentProcess = nullptr;
-    }
-    if (preemt) {
+        priority_queue<Event> tmp;
+
         while (!eventQueue->empty()) {
+            if (eventQueue->top().getType() == TICK || eventQueue->top().getProcess().getId() != currentProcess->getId()) {
+                tmp.push(eventQueue->top());
+            }
             eventQueue->pop();
         }
+
+        while (!tmp.empty()) {
+            eventQueue->push(tmp.top());
+            tmp.pop();
+        }
+
+        if (currentProcess->getRemainingBurst() > 0) {
+            load += prio_to_weight[currentProcess->getPriority()];
+            eventQueue->push(Event(ARRIVAL, time, Process(*currentProcess)));
+//            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
+
+        } else {
+//            cout << "Finish " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
+        }
+        currentProcess = nullptr;
     }
     for (const auto &p:readyQueue) {
         load += prio_to_weight[p.getPriority()];
@@ -187,12 +181,61 @@ long long int FSSCore::getLoad(int time, bool preemt) {
     return load;
 }
 
+//long long int FSSCore::getLoad(int time, bool preemt) {
+//    long long int load = 0;
+//    if (preemt && currentProcess != nullptr) {
+//
+//        currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
+//        currentProcess->setEnteredReadyQueue(time);
+//        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted() + 0.0) * prio_to_weight[20] / prio_to_weight[currentProcess->getPriority()]);
+//
+//        if (workaroundStats != nullptr) {
+//            workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
+//            workaroundStats->addToCPUUtilization(time - currentProcess->getLastStarted());
+//        }
+////
+////        priority_queue<Event> tmp;
+////
+////        while (!eventQueue->empty()) {
+////            if (eventQueue->top().getType() == TICK || eventQueue->top().getProcess().getId() != currentProcess->getId()) {
+////                tmp.push(eventQueue->top());
+////            }
+////            eventQueue->pop();
+////        }
+////
+////        while (!tmp.empty()) {
+////            eventQueue->push(tmp.top());
+////            tmp.pop();
+////        }
+////
+////        if (currentProcess->getRemainingBurst() > 0) {
+////            load += prio_to_weight[currentProcess->getPriority()];
+////            eventQueue->push(Event(ARRIVAL, time, Process(*currentProcess)));
+//////            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
+//
+////        } else {
+////            cout << "Finish " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
+////        }
+//        readyQueue.push_back(Process(*currentProcess));
+//        currentProcess = nullptr;
+//    }
+//    if (preemt) {
+//        while (!eventQueue->empty()) {
+//            eventQueue->pop();
+//        }
+//    }
+//    for (const auto &p:readyQueue) {
+//        load += prio_to_weight[p.getPriority()];
+//    }
+//    return load;
+//}
+
 vector<Process> *FSSCore::getReadyQueue() {
     return &readyQueue;
 }
 
 string FSSCore::getCoreAlgortihm(int coreID) {
-    return "FSSCore";
+    return "SingleCoreCFS";
 }
 
 bool FSSCore::isRunning() {

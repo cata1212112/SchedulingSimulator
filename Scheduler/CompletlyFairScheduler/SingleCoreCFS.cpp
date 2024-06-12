@@ -6,96 +6,41 @@
 
 vector<Event> SingleCoreCFS::processArrived(std::vector<Process> p, int time, Metrics &stats) {
     for (auto &process : p) {
-        isIdle = false;
-        if (process.getId() < 0) {
-            cout << "ok";
-        }
         process.setEnteredReadyQueue(time);
         readyQueue.push_back(process);
-        numProcs += 1;
     }
     return {};
 }
 
 vector<Event> SingleCoreCFS::processCPUComplete(Process p, int time, Metrics &stats) {
-    stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
-    stats.addToCPUUtilization(time - p.getLastStarted());
-    stats.addToTT(time - p.getArrivalTime(), 0);
-    numProcs -= 1;
-    currentProcess = nullptr;
-    return {};
-}
-
-vector<Event> SingleCoreCFS::processIOComplete(std::vector<Process> p, int time, Metrics &stats) {
-    vector<Process> addToReadyQueue;
-    for (auto &process:p) {
-        process.setEnteredReadyQueue(time);
-        addToReadyQueue.push_back(process);
-    }
-    for (auto p:addToReadyQueue) {
-        readyQueue.push_back(p);
-    }
-    return {};
-}
-
-vector<Event> SingleCoreCFS::processPreempt(std::vector<Process> p, int time, Metrics &stats) {
-    return std::vector<Event>();
+    return SchedulingAlgorithm::processCPUComplete(p, time, stats);
 }
 
 vector<Event> SingleCoreCFS::schedule(int time, Metrics &stats, bool timerExpired) {
-    workaroundStats = &stats;
-    if (currentProcess == nullptr && readyQueue.empty()) {
-        isIdle = true;
-        return {};
-    }
-    if (timerExpired || currentProcess == nullptr) {
-        isIdle = false;
-        if (currentProcess != nullptr) {
-            currentProcess->setVtime(currentProcess->getVtime() +
-                                     ((time - currentProcess->getLastStarted() + 0.0) * prio_to_weight[0] / prio_to_weight[currentProcess->getPriority()]));
-            currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
-            currentProcess->setEnteredReadyQueue(time);
-            stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
-            stats.addToCPUUtilization(time - currentProcess->getLastStarted());
-            if (currentProcess->getRemainingBurst() > 0) {
-                readyQueue.push_back(Process(*currentProcess));
-            }
-            currentProcess = nullptr;
+    if (currentProcess == nullptr) {
+        if (readyQueue.empty()) {
+            return {};
         }
+        return {assignToCPU(time, stats)};
+    } else if (timerExpired){
+        SingleCoreCFS::preemtCPU(stats, time);
 
-        int minIndex = 0;
-        for (int i = 0; i < readyQueue.size(); i++) {
-            if (readyQueue[i].getVtime() < readyQueue[minIndex].getVtime()) {
-                minIndex = i;
-            }
-        }
-
-        int processTimeSlice = ((0.0 + getTimeSlice() * (prio_to_weight[readyQueue[minIndex].getPriority()] + 0.0) / (getLoad(time) + 0.0)));
-        processTimeSlice = max(processTimeSlice, sched_min_granularity);
-        currentProcess = new Process(readyQueue[minIndex]);
-        currentProcess->setLastStarted(time);
-        if (!currentProcess->getAssigned()) {
-            stats.addToRT(time - currentProcess->getArrivalTime(), 0);
-            currentProcess->setAssigned(true);
-        }
-        readyQueue.erase(readyQueue.begin() + minIndex);
-        int remainingBurst = currentProcess->getRemainingBurst();
-//
-//        if (time + min(processTimeSlice, currentProcess->getRemainingBurst()) > throttleMaixmum) {
-//            processTimeSlice = throttleMaixmum - time;
-//        }
-//        if (processTimeSlice <= 0) {
-//            return {};
-//        }
-
-        if (processTimeSlice >= currentProcess->getRemainingBurst()) {
-            return {Event(CPUBURSTCOMPLETE, time + remainingBurst, Process(*currentProcess))};
-        }
-        stats.addToWT(time - currentProcess->getEnteredReadyQueue(), 0);
-        return {Event{TIMEREXPIRED, time + processTimeSlice, Process(*currentProcess)}};
+        return {assignToCPU(time, stats)};
     }
     return {};
 }
+
+void SingleCoreCFS::preemtCPU(Metrics &stats, int time) {
+    currentProcess->setPtime(currentProcess->getPtime() + currentProcess->getTimeSlice());
+    currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - currentProcess->getTimeSlice());
+    currentProcess->setEnteredReadyQueue(time);
+    if (currentProcess->getRemainingBurst() > 0) {
+        readyQueue.push_back(*currentProcess);
+    }
+
+    SchedulingAlgorithm::preemtCPU(stats, time);
+}
+
 
 int SingleCoreCFS::getSchedLatency() const {
     return sched_latency;
@@ -134,40 +79,11 @@ int SingleCoreCFS::getIsIdle() const {
 
 long long int SingleCoreCFS::getLoad(int time, bool preemt) {
     long long int load = 0;
+    Metrics workaroundStats("");
+
     if (preemt && currentProcess != nullptr) {
-
-        currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
-        currentProcess->setEnteredReadyQueue(time);
-        currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted() + 0.0) / prio_to_weight[currentProcess->getPriority()]);
-
-        if (workaroundStats != nullptr) {
-            workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
-            workaroundStats->addToCPUUtilization(time - currentProcess->getLastStarted());
-        }
-
-        priority_queue<Event> tmp;
-
-        while (!eventQueue->empty()) {
-            if (eventQueue->top().getType() == TICK || eventQueue->top().getProcess().getId() != currentProcess->getId()) {
-                tmp.push(eventQueue->top());
-            }
-            eventQueue->pop();
-        }
-
-        while (!tmp.empty()) {
-            eventQueue->push(tmp.top());
-            tmp.pop();
-        }
-
-        if (currentProcess->getRemainingBurst() > 0) {
-            load += prio_to_weight[currentProcess->getPriority()];
-            eventQueue->push(Event(ARRIVAL, time, Process(*currentProcess)));
-//            cout << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
-
-        } else {
-//            cout << "Finish " << coreID << ":: " << currentProcess->getId() << " " << currentProcess->getLastStarted() << " " << time << "\n";
-        }
-        currentProcess = nullptr;
+        eventQueue->push(Event(PREEMT, time, *currentProcess));
+        SingleCoreCFS::preemtCPU(workaroundStats, time);
     }
     for (const auto &p:readyQueue) {
         load += prio_to_weight[p.getPriority()];
@@ -194,11 +110,11 @@ void SingleCoreCFS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *
 vector<double> SingleCoreCFS::getVtimes() {
     vector<double> vtimes;
     if (currentProcess != nullptr) {
-        vtimes.push_back(currentProcess->getVtime());
+        vtimes.push_back(currentProcess->getPtime() * prio_to_weight[20] / prio_to_weight[currentProcess->getPriority()]);
     }
 
     for (const auto &p:readyQueue) {
-        vtimes.push_back(p.getVtime());
+        vtimes.push_back(p.getPtime() * prio_to_weight[20] / prio_to_weight[p.getPriority()]);
     }
     return vtimes;
 }

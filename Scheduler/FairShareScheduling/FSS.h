@@ -15,7 +15,7 @@ class FSS : public SchedulingAlgorithm{
     int sched_latency;
     int sched_nr_latency;
     int sched_min_granularity;
-    int load_balanicng_period = 100;
+    int load_balanicng_period = 50;
     priority_queue<Event> *mainEventQueue;
 
     vector<Core*> cores;

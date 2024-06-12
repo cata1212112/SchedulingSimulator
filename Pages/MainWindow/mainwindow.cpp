@@ -107,6 +107,7 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
     auto *containerLayout = new QVBoxLayout(containerWidget);
 
     vector<Metrics> metrics = des->startSimulation(numCores);
+//    vector<Metrics> metrics = des->startSimulation(1);
 
     string stats = metrics[0].getMetrics() + "\n";
     for (auto x:des->getGeneratedBurstByDistributionId()) {
@@ -397,7 +398,7 @@ void MainWindow::handleRealTimeButton() {
                         }
 //                        cout << util << "\n";
 
-                        if (!(abs(util - 4.0) < 0.0001)) {
+                        if (!(abs(util - 2.1) < 0.0001)) {
                             continue;
                         }
 
@@ -436,12 +437,12 @@ void MainWindow::handleRealTimeButton() {
 
                         if (m[m.size() - 1].getContextSwitches() == 0) {
                             validScheduled += 1;
-//                            ofstream out("outPoate.txt");
-//                            for (auto t:tasks) {
-//                                out << t.first << " " << t.second << "\n";
-//                            }
-//                            out.close();
-//                            exit(0);
+                            ofstream out("outPoate.txt");
+                            for (auto t:tasks) {
+                                out << t.first << " " << t.second << "\n";
+                            }
+                            out.close();
+                            exit(0);
                         } else {
                             ofstream out("out.txt");
                             for (auto t:tasks) {
@@ -458,27 +459,27 @@ void MainWindow::handleRealTimeButton() {
                     cout << i << " " << algname << " " << validScheduled << "/" << valid << "\n";
                 };
 
-                int a_min = 18;
+                int a_min = 4;
                 int b_min = 38;
                 for (int cnt = a_min; cnt <= b_min; cnt+=4) {
                     for (int j=0; j<10; j++) {
                         cout << "Numarul de taskuri este " << cnt << "\n";
-                        taskSet = DES::generateTaskSet(cnt, 4.1);
-                        auto newTaskset = DES::generateTaskSet(cnt, 4.2);
-                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
-
-                        newTaskset = DES::generateTaskSet(cnt, 4.3);
-                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
-
-                        newTaskset = DES::generateTaskSet(cnt, 4.4);
-                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
+                        taskSet = DES::generateTaskSet(cnt, 2.2);
+//                        auto newTaskset = DES::generateTaskSet(cnt, 4.2);
+//                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
+//
+//                        newTaskset = DES::generateTaskSet(cnt, 4.3);
+//                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
+//
+//                        newTaskset = DES::generateTaskSet(cnt, 4.4);
+//                        taskSet.insert(taskSet.end(), newTaskset.begin(), newTaskset.end());
 
                         std::thread t1(f, ImplementedAlgorithms::getRealTimeAlgortihms()[0]);
-                        std::thread t2(f, ImplementedAlgorithms::getRealTimeAlgortihms()[1]);
-                        std::thread t3(f, ImplementedAlgorithms::getRealTimeAlgortihms()[2]);
+//                        std::thread t2(f, ImplementedAlgorithms::getRealTimeAlgortihms()[1]);
+//                        std::thread t3(f, ImplementedAlgorithms::getRealTimeAlgortihms()[2]);
                         t1.join();
-                        t2.join();
-                        t3.join();
+//                        t2.join();
+//                        t3.join();
                     }
                 }
                 cout << "DONEEEE\n";

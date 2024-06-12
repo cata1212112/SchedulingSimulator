@@ -165,3 +165,19 @@ int Process::getDistributionId() const {
 void Process::setDistributionId(int distributionId) {
     distributionID = distributionId;
 }
+
+double Process::getPtime() const {
+    return ptime;
+}
+
+void Process::setPtime(double ptime) {
+    Process::ptime = ptime;
+}
+
+int Process::getTimeSlice() const {
+    return timeSlice;
+}
+
+void Process::setTimeSlice(int timeSlice) {
+    Process::timeSlice = timeSlice;
+}

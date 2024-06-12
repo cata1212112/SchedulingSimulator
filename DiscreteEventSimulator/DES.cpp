@@ -31,7 +31,7 @@ string DES::generateInputData(vector<int> numProcesses, int maximumTime, vector<
             Random::setGaussian(mean[i], std[i]);
 
             int arrival = Random::randomInteger(maximumTime);
-            int priority = Random::randomInteger(8) + 1;
+            int priority = Random::randomInteger(40);
 
             int cpuBurst = Random::randomGaussian(1);
 
@@ -83,10 +83,19 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     std::barrier barrier(numCPUS + 1);
     std::barrier secondBarrier(numCPUS + 1);
 
+
+    std::barrier firstCoresBarrier(numCPUS);
+    std::barrier secondCoresBarrier(numCPUS);
+    int cateSunt = 0;
+    vector<int> minimums(numCPUS);
+    std::mutex m;
+
     for (int i=0; i<numCPUS; i++) {
-        core[i] = new Core(&osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated,&barrier,&secondBarrier, i, roundRobinQuant);
+        core[i] = new Core(numCPUS, &osTime, &cv, &cvMutex, schedAlgo.getCoreAlgortihm(i), &osTimeUpdated, &barrier, &secondBarrier, i, &firstCoresBarrier, &secondCoresBarrier, &m, &cateSunt, &minimums,
+                           events, roundRobinQuant);
         if (isRealTime()) {
             core[i]->setIsRealTime(true);
+            core[i]->setHyperPeriod(toStop);
         }
         schedAlgo.addCore(core[i]);
     }
@@ -158,9 +167,34 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                             }
                             timerExpired = true;
                         }
-//                        if (e.getType() == IDLE) {
-//                            cout << "aici\n";
-//                        }
+                        if (e.getType() == IDLE) {
+//                            cout << "Verificare IDLE la timpul " << e.getTime() << "\n";
+                            int numIdleCores = 0;
+//
+//                            for (auto c:core) {
+//                                c->addEvent(Event(TICK, e.getTime(), Process()));
+//                            }
+
+                            for (auto c:core) {
+                                if (c->getSchedAlgo().getReadyQueue()->empty() && c->getSchedAlgo().getCurrentProcess() ==
+                                                                                          nullptr) {
+//                                    cout << "Core-ul " << c->getCoreId() << " este IDLE\n";
+                                    numIdleCores += 1;
+                                }
+                            }
+
+                            if (numIdleCores >= 1 && numIdleCores < numCPUS) {
+//                                cout << "IDLE\n";
+
+                                schedAlgo.loadBalance(currentTime);
+//                                loadBalance = true;
+//                                for (int i=0; i<numCPUS; i++) {
+//                                    core[i]->addEvent(Event(LOADBALANCE, e.getTime(), Process()));
+//                                }
+//                                events->push(Event(LOADBALANCE, e.getTime(), Process()));
+                            }
+//                            cout << "\n";
+                        }
                     }
                     if (osTime >= 1000000) {
                         timerExpired = false;
@@ -178,6 +212,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
 //                        events->push(Event(IDLE, currentTime, Process()));
 //                    }
                     osTime = currentTime;
+//                    if (currentEvents.size() == 1 && currentEvents[0].getType() == id)
                 }
                 else if (isRealTime()) {
                     vector<Process> arrivals;
@@ -205,6 +240,7 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
                 }
             }
         }
+//        cout << "OS time " << osTime << "\n";
         {
             std::lock_guard lk(cvMutex);
             osTimeUpdated = true;
@@ -216,6 +252,9 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
             osTimeUpdated = false;
         }
         secondBarrier.arrive_and_wait();
+
+//        cout << "\n\n\n";
+
 //        cout << "########\n";
 //        cout << "########\n";
 
@@ -227,6 +266,11 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     }
 
     if (realTime) {
+        for (int i=0; i<schedAlgo.getReadyQueue()->size(); i++) {
+            if ((*schedAlgo.getReadyQueue())[i].getNextDeadline() <= toStop) {
+                realTimeMetrics.incrementCS();
+            }
+        }
         vec.push_back(realTimeMetrics);
     }
 

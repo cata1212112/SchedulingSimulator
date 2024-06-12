@@ -21,7 +21,7 @@ public:
     virtual std::vector<Event> processArrived(std::vector<Process> p, int time, Metrics &stats)=0;
     virtual std::vector<Event> processCPUComplete(Process p, int time, Metrics &stats) {
         stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
-        std::cout << "Left: " << currentProcess->getLastStarted() << " Right: " << time << " " << "Proc: " << currentProcess->getId() << "\n";
+//        std::cout << "Left: " << currentProcess->getLastStarted() << " Right: " << time << " " << "Proc: " << currentProcess->getId() << "\n";
         stats.addToCPUUtilization(time - currentProcess->getLastStarted());
         currentProcess = nullptr;
         stats.addToTT(time - p.getArrivalTime(), p.getDistributionId());
@@ -91,18 +91,18 @@ public:
 
         lastProc = p.getId();
         if (!currentProcess->getAssigned()) {
-            cout << "Response time " << currentProcess->getId() << " " << time - currentProcess->getArrivalTime() << "\n";
+//            cout << "Response time " << currentProcess->getId() << " " << time - currentProcess->getArrivalTime() << "\n";
             stats.addToRT(time - currentProcess->getArrivalTime(), currentProcess->getDistributionId());
             currentProcess->setAssigned(true);
         }
         currentProcess->setLastStarted(time);
-        cout << "Process " << currentProcess->getId() << " waited from " << currentProcess->getEnteredReadyQueue() << " to " << time << "\n";
+//        cout << "Process " << currentProcess->getId() << " waited from " << currentProcess->getEnteredReadyQueue() << " to " << time << "\n";
         stats.addToWT(time - currentProcess->getEnteredReadyQueue(), currentProcess->getDistributionId());
     }
 
     virtual void preemtCPU(Metrics &stats, int time) {
         stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
-        std::cout << "Left: " << currentProcess->getLastStarted() << " Right: " << time << " " << "Proc: " << currentProcess->getId() << "\n";
+//        std::cout << "Left: " << currentProcess->getLastStarted() << " Right: " << time << " " << "Proc: " << currentProcess->getId() << "\n";
         stats.addToCPUUtilization(time - currentProcess->getLastStarted());
         currentProcess = nullptr;
     }

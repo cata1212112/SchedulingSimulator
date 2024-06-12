@@ -22,6 +22,7 @@ void Core::runSimulation() {
     Metrics stats(algortihm, roundRobinQuant);
     stats.setCore(coreID);
     schedAlgo.coreID = getCoreId();
+    int whereEntered = 0;
 
     while (true) {
         {
@@ -29,107 +30,144 @@ void Core::runSimulation() {
             cv->wait(lk, [this] { return *osTimeUpdated; });
         }
 
-
-        while (!events->empty() && !finished) {
+        if (!events->empty()) {
             Event e = events->top();
 
             if (e.getTime() > *osTime) {
                 if (e.getType() == FINISHEXECUTION) {
                     finished = true;
                 }
-                break;
-            }
-
-            events->pop();
-            if (e.getTime() > 0) {
-                coreTime = e.getTime();
-            }
-            currentEvents[ARRIVAL] = {};
-            currentEvents[CPUBURSTCOMPLETE] = {};
-            currentEvents[IOBURSTCOMPLETE] = {};
-            currentEvents[TIMEREXPIRED] = {};
-            currentEvents[PREEMT] = {};
-            currentEvents[FINISHEXECUTION] = {};
-            currentEvents[REALTIME] = {};
-            currentEvents[TICK] = {};
-            currentEvents[LOADBALANCE] = {};
-
-            currentEvents[e.getType()].push_back(e);
-
-            while (!events->empty() && events->top().getTime() == coreTime) {
-                e = events->top();
-                if (e.getType() == LOADBALANCE) {
-                    loadBalanceState = true;
-                }
-                currentEvents[e.getType()].push_back(e);
+            } else {
                 events->pop();
-            }
-
-            if (!currentEvents[PREEMT].empty()) {
-                priority_queue<Event> tmp;
-                map<int, bool> toPreempt;
-                for (const auto &event : currentEvents[PREEMT]) {
-                    toPreempt[event.getProcess().getId()] = true;
+                if (e.getTime() > 0) {
+                    coreTime = e.getTime();
                 }
-                while (!events->empty()) {
-                    if (!toPreempt[events->top().getProcess().getId()]) {
-                        tmp.push(events->top());
+                currentEvents[ARRIVAL] = {};
+                currentEvents[CPUBURSTCOMPLETE] = {};
+                currentEvents[IOBURSTCOMPLETE] = {};
+                currentEvents[TIMEREXPIRED] = {};
+                currentEvents[PREEMT] = {};
+                currentEvents[FINISHEXECUTION] = {};
+                currentEvents[REALTIME] = {};
+                currentEvents[TICK] = {};
+                currentEvents[LOADBALANCE] = {};
+
+                currentEvents[e.getType()].push_back(e);
+
+                while (!events->empty() && events->top().getTime() == coreTime) {
+                    e = events->top();
+                    if (e.getType() == LOADBALANCE) {
+                        loadBalanceState = true;
                     }
+                    currentEvents[e.getType()].push_back(e);
                     events->pop();
                 }
 
-                while (!tmp.empty()) {
-                    events->push(tmp.top());
-                    tmp.pop();
+                if (!currentEvents[PREEMT].empty()) {
+                    priority_queue<Event> tmp;
+                    map<int, bool> toPreempt;
+                    for (const auto &event : currentEvents[PREEMT]) {
+                        toPreempt[event.getProcess().getId()] = true;
+                    }
+                    while (!events->empty()) {
+                        if (!toPreempt[events->top().getProcess().getId()]) {
+                            tmp.push(events->top());
+                        }
+                        events->pop();
+                    }
+
+                    while (!tmp.empty()) {
+                        events->push(tmp.top());
+                        tmp.pop();
+                    }
+
+                    for (auto& [key, events] : currentEvents) {
+                        auto it = std::remove_if(events.begin(), events.end(), [&](const Event &e) {
+                            return toPreempt[e.getProcess().getId()];
+                        });
+
+                        events.erase(it, events.end());
+                    }
+
                 }
-                for (const auto &e:currentEvents[ARRIVAL]) {
-                    events->push(e);
+
+
+                vector<Process> arrivedProcesses;
+                vector<Process> ioCompleteProcesses;
+
+                for (const auto& event : currentEvents[ARRIVAL]) {
+                    numberOfProcesses += 1;
+                    seenIds[event.getProcess().getId()] = 1;
+                    arrivedProcesses.push_back(event.getProcess());
                 }
-                for (const auto &e:currentEvents[CPUBURSTCOMPLETE]) {
-                    events->push(e);
+
+                for (const auto &event : currentEvents[IOBURSTCOMPLETE]) {
+                    ioCompleteProcesses.push_back(event.getProcess());
                 }
-                for (const auto &e:currentEvents[TIMEREXPIRED]) {
-                    events->push(e);
+                vector<Event> eventsGenerated;
+
+                auto newEvents = schedAlgo.processArrived(arrivedProcesses, coreTime, stats);
+
+                schedAlgo.processIOComplete(ioCompleteProcesses, coreTime, stats);
+                if (!currentEvents[CPUBURSTCOMPLETE].empty()) {
+                    eventsGenerated = schedAlgo.processCPUComplete(currentEvents[CPUBURSTCOMPLETE][0].getProcess(), coreTime, stats);
                 }
 
-                continue;
+                vector<Event> aux = schedAlgo.schedule(coreTime, stats, !currentEvents[TIMEREXPIRED].empty());
+                eventsGenerated.insert(eventsGenerated.end(), aux.begin(), aux.end());
+                eventsGenerated.insert(eventsGenerated.end(), newEvents.begin(), newEvents.end());
+
+                for (const auto& eventGenerated : eventsGenerated) {
+                    events->push(eventGenerated);
+                }
             }
-
-
-            vector<Process> arrivedProcesses;
-            vector<Process> ioCompleteProcesses;
-
-            for (const auto& event : currentEvents[ARRIVAL]) {
-                numberOfProcesses += 1;
-                seenIds[event.getProcess().getId()] = 1;
-                arrivedProcesses.push_back(event.getProcess());
-            }
-
-            for (const auto &event : currentEvents[IOBURSTCOMPLETE]) {
-                ioCompleteProcesses.push_back(event.getProcess());
-            }
-            vector<Event> eventsGenerated;
-
-            auto newEvents = schedAlgo.processArrived(arrivedProcesses, coreTime, stats);
-
-            schedAlgo.processIOComplete(ioCompleteProcesses, coreTime, stats);
-            if (!currentEvents[CPUBURSTCOMPLETE].empty()) {
-                eventsGenerated = schedAlgo.processCPUComplete(currentEvents[CPUBURSTCOMPLETE][0].getProcess(), coreTime, stats);
-            }
-
-            vector<Event> aux = schedAlgo.schedule(coreTime, stats, !currentEvents[TIMEREXPIRED].empty());
-            eventsGenerated.insert(eventsGenerated.end(), aux.begin(), aux.end());
-            eventsGenerated.insert(eventsGenerated.end(), newEvents.begin(), newEvents.end());
-
-            for (const auto& eventGenerated : eventsGenerated) {
-                events->push(eventGenerated);
-            }
-
-//            cout << "Core " << coreID << " timp minim " << events->top().getTime() << "\n";
-//            if (schedAlgo.getCurrentProcess() == nullptr && schedAlgo.getReadyQueue()->empty()) {
-//                cout << "Core " << coreID << " IDLE\n";
-//            }
         }
+
+
+        if (events->empty()) {
+            (*minimums)[coreID] = 1e9;
+        } else {
+            (*minimums)[coreID] = events->top().getTime();
+        }
+
+        if (finished) {
+            firstCoresBarrier->arrive_and_drop();
+        } else {
+            firstCoresBarrier->arrive_and_wait();
+        }
+
+        {
+            lock_guard lk(*m);
+//            cout << "Core time " << coreTime << "\n";
+
+            int timpulMinim = 1e9;
+            if (*cateSunt == 0) {
+                for (auto it:*minimums) {
+//                        cout << it << " ";
+                    if (it != 0) {
+                        timpulMinim = min(it, timpulMinim);
+                    }
+                }
+
+//                cout << "\n";
+                if (timpulMinim != 1e9) {
+                    DESevents->push(Event(IDLE, timpulMinim, Process()));
+                }
+            }
+            *cateSunt = *cateSunt + 1;
+            *cateSunt = *cateSunt % numCPUs;
+        }
+
+        if (finished) {
+            secondCoresBarrier->arrive_and_drop();
+        } else {
+            secondCoresBarrier->arrive_and_wait();
+        }
+
+        (*minimums)[coreID] = 1e9;
+
+        ///
+
         if (finished) {
             barrier->arrive_and_drop();
             secondBarrier->arrive_and_drop();
@@ -144,9 +182,11 @@ void Core::runSimulation() {
     finished = true;
 }
 
-Core::Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
-           bool *osTimeUpdated, std::barrier<> *barrier, std::barrier<> *secondBarrier,int coreID, int roundRobinQuant)
-        : osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), secondBarrier(secondBarrier),algortihm(algorithm), osTimeUpdated(osTimeUpdated), coreID(coreID),   schedAlgo(ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant)){
+Core::Core(int numCPUs, int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
+           bool *osTimeUpdated, std::barrier<> *barrier, std::barrier<> *secondBarrier,int coreID, std::barrier<> *firstCoresBarrier, std::barrier<> *secondCoresBarrier, mutex *m, int *cateSunt, vector<int> *minimums, priority_queue<Event> *DESevents,
+           int roundRobinQuant)
+        : numCPUs(numCPUs), osTime(osTime), cv(cv),cvMutex(cvMutex),roundRobinQuant(roundRobinQuant),barrier(barrier), secondBarrier(secondBarrier),algortihm(algorithm), osTimeUpdated(osTimeUpdated),
+        coreID(coreID),   schedAlgo(ImplementedAlgorithms::getAlgorithm(algortihm, roundRobinQuant)), firstCoresBarrier(firstCoresBarrier), secondCoresBarrier(secondCoresBarrier), m(m), cateSunt(cateSunt), minimums(minimums), DESevents(DESevents){
     roundRobinQuant = 10;
     events = new priority_queue<Event>();
     runningThread = new std::thread(&Core::runSimulation, this);
@@ -192,4 +232,12 @@ SchedulingAlgorithm &Core::getSchedAlgo() const {
 
 void Core::setIsRealTime(bool isRealTime) {
     Core::isRealTime = isRealTime;
+}
+
+int Core::getHyperPeriod() const {
+    return hyperPeriod;
+}
+
+void Core::setHyperPeriod(int hyperPeriod) {
+    Core::hyperPeriod = hyperPeriod;
 }

@@ -30,7 +30,7 @@ vector<Event> FSS::schedule(int time, Metrics &stats, bool timerExpired) {
 }
 
 string FSS::getCoreAlgortihm(int coreID) {
-    return "FSSCore";
+    return "SingleCoreCFS";
 }
 
 int FSS::assignCPU(Process p) {
@@ -81,59 +81,64 @@ void FSS::setSchedMinGranularity(int schedMinGranularity) {
 
 int FSS::loadBalance(int time) {
 
-    vector<vector<Process>> taskGroups;
-    int cnt = 0;
-    for (const auto &c:cores) {
-        int coreLoad = c->getLoad(time, true);
-    }
-
-
-    for (auto &c:cores){
-        vector<Process> group;
-        map<int, bool> seenIds;
-
-        for (auto &p:*c->getReadyQueue()) {
-            group.push_back(Process(p));
-            cnt += 1;
-            seenIds[p.getId()] = true;
-        }
-        if (!c->getReadyQueue()->empty()) {
-            c->getReadyQueue()->clear();
-        }
-
-        priority_queue<Event> tmp;
-
-        while (!c->getEventQueue()->empty()) {
-            if (c->getEventQueue()->top().getType() == TICK || !seenIds[c->getEventQueue()->top().getProcess().getId()]) {
-                tmp.push(c->getEventQueue()->top());
-            }
-            c->getEventQueue()->pop();
-        }
-
-        while (!tmp.empty()) {
-            c->getEventQueue()->push(tmp.top());
-            tmp.pop();
-        }
-
-
-        taskGroups.push_back(group);
-    }
-
-    if (cnt > 0) {
-        auto pb = progressBalancing(cores.size(), taskGroups);
-
-
-        for (int i=0; i<pb.size(); i++) {
-            for (auto &p:pb[i].first) {
-                cores[i]->addEvent(Event(ARRIVAL, time, Process(p)));
-            }
-            Process auxProc = Process();
-            auxProc.setId(-1);
-            auxProc.setPriority(pb[i].second);
-//            cout << pb[i].second << "\n";
-//            cores[i]->addEvent(Event(ARRIVAL, time, auxProc));
-        }
-    }
+//    vector<vector<Process>> taskGroups;
+//    int cnt = 0;
+//    for (const auto &c:cores) {
+//        int coreLoad = c->getLoad(time, true);
+//        cout << "Core Load " << coreLoad << "\n";
+//
+//    }
+//
+//
+//    for (auto &c:cores){
+//        while (!c->getEventQueue()->empty()) {
+//            c->getEventQueue()->pop();
+//        }
+//        vector<Process> group;
+//        map<int, bool> seenIds;
+//
+//        for (auto &p:*c->getReadyQueue()) {
+//            group.push_back(Process(p));
+//            cnt += 1;
+//            seenIds[p.getId()] = true;
+//        }
+//        if (!c->getReadyQueue()->empty()) {
+//            c->getReadyQueue()->clear();
+//        }
+////
+////        priority_queue<Event> tmp;
+////
+////        while (!c->getEventQueue()->empty()) {
+////            if (c->getEventQueue()->top().getType() == TICK || !seenIds[c->getEventQueue()->top().getProcess().getId()]) {
+////                tmp.push(c->getEventQueue()->top());
+////            }
+////            c->getEventQueue()->pop();
+////        }
+////
+////        while (!tmp.empty()) {
+////            c->getEventQueue()->push(tmp.top());
+////            tmp.pop();
+////        }
+//
+//
+//        taskGroups.push_back(group);
+//    }
+//
+//    if (cnt > 0) {
+//        auto pb = progressBalancing(cores.size(), taskGroups);
+//
+//
+//        for (int i=0; i<pb.size(); i++) {
+//            for (auto &p:pb[i].first) {
+//                cores[i]->addEvent(Event(ARRIVAL, time, Process(p)));
+//            }
+//            Process auxProc = Process();
+//            auxProc.setId(-1);
+//            auxProc.setPriority(pb[i].second);
+////            cout << pb[i].second << "\n";
+////            cores[i]->addEvent(Event(ARRIVAL, time, auxProc));
+//        }
+//    }
 
 
     return 0;
@@ -159,7 +164,7 @@ vector<pair<vector<Process>, double>> FSS::progressBalancing(int numCores, vecto
             wmax = max(wmax, prio_to_weight[p.getPriority()]);
         }
     }
-    cout << (load_balanicng_period + 0.0) / wmin * 100 << "\n";
+//    cout << (load_balanicng_period + 0.0) / wmin * 100 << "\n";
 //    cout << wmin << "\n";
 //    cout << wmax << "\n";
     vector<int> toDelete;

@@ -79,81 +79,72 @@ void CFS::setSchedMinGranularity(int schedMinGranularity) {
 }
 
 int CFS::loadBalance(int time) {
-//    cout << "Load Balance " << time << "\n";
     double totalLoad = 0;
     map<int, int> coreLoads;
-
+//
     for (const auto &c:cores) {
         int coreLoad = c->getLoad(time, true);
         coreLoads[c->getCoreId()] = coreLoad;
         totalLoad += coreLoad;
     }
+
+
     totalLoad /= cores.size();
-    int maximumDif = 0;
+
     for (int i=0; i<cores.size(); i++) {
-        for (int j=0; j<cores.size(); j++) {
-            maximumDif = max(maximumDif, abs(coreLoads[cores[i]->getCoreId()] - coreLoads[cores[j]->getCoreId()]));
-        }
-    }
+        while (coreLoads[cores[i]->getCoreId()] > totalLoad) {
+            auto minTask = std::min_element(cores[i]->getReadyQueue()->begin(), cores[i]->getReadyQueue()->end(), [](const Process &a, const Process &b) {
+                return prio_to_weight[a.getPriority()] < prio_to_weight[b.getPriority()];
+            });
 
-    auto leastLoadedCPU = [&](){
-        int indexMin = 0;
-        for (int i=1; i<cores.size(); i++) {
-            if (coreLoads[cores[i]->getCoreId()] < coreLoads[cores[indexMin]->getCoreId()]) {
-                indexMin = i;
+            if (minTask == cores[i]->getReadyQueue()->end()) {
+                break;
             }
-        }
-        return indexMin;
-    };
 
-    auto mostLoadedCPU = [&](){
-        int indexMin = 0;
-        for (int i=1; i<cores.size(); i++) {
-            if (coreLoads[cores[i]->getCoreId()] > coreLoads[cores[indexMin]->getCoreId()]) {
-                indexMin = i;
-            }
-        }
-        return indexMin;
-    };
-
-    for (auto &c:cores) {
-        int coreLoad = coreLoads[c->getCoreId()];
-        if (coreLoad > totalLoad) {
-            int excessLoad = coreLoad - totalLoad;
-            while (excessLoad > 0 && !c->getReadyQueue()->empty()) {
-                Process task = Process(*c->getReadyQueue()->begin());
-                c->getReadyQueue()->erase(c->getReadyQueue()->begin());
-
-
-                int targetCPU = leastLoadedCPU();
-
-                excessLoad -= prio_to_weight[task.getPriority()];
-                coreLoads[cores[targetCPU]->getCoreId()] += prio_to_weight[task.getPriority()];
-                cores[targetCPU]->addEvent(Event(ARRIVAL, time, task));
-//                cores[targetCPU]->getReadyQueue()->push_back(task);
-//                cores[targetCPU]->addProcessIfNoTSeen(task.getId());
-            }
-        } else if (coreLoad < totalLoad){
-            int deficitLoad = totalLoad - coreLoad;
-            while (deficitLoad > 0) {
-                int mostLoadedCPU_ = mostLoadedCPU();
-                if (cores[mostLoadedCPU_]->getReadyQueue()->empty()) {
-                    deficitLoad = 0;
-                    break;
+            int minCore = 0;
+            for (int k=0; k<cores.size(); k++) {
+                if (coreLoads[k] < coreLoads[minCore]) {
+                    minCore = k;
                 }
-                Process task = Process(*cores[mostLoadedCPU_]->getReadyQueue()->begin());
+            }
 
-                cores[mostLoadedCPU_]->getReadyQueue()->erase(cores[mostLoadedCPU_]->getReadyQueue()->begin());
-//                c->getReadyQueue()->push_back(task);
-//                c->addProcessIfNoTSeen(task.getId());
-                c->addEvent(Event(ARRIVAL, time, task));
-                deficitLoad -= prio_to_weight[task.getPriority()];
-                coreLoads[c->getCoreId()] += prio_to_weight[task.getPriority()];
+            if (minCore == i) {
+                break;
+            }
+
+            coreLoads[i] -= prio_to_weight[minTask->getPriority()];
+            coreLoads[minCore] += prio_to_weight[minTask->getPriority()];
+
+            auto it = std::find_if(cores[i]->getReadyQueue()->begin(), cores[i]->getReadyQueue()->end(),
+                                   [&](const Process &a) {
+                                       return a.getId() == minTask->getId();
+                                   });
+
+            if (it != cores[i]->getReadyQueue()->end()) {
+                cores[i]->getReadyQueue()->erase(it);
+            }
+
+            cores[minCore]->addEvent(Event(ARRIVAL, time, *minTask));
+
+            priority_queue<Event> tmp;
+
+            while (!cores[i]->getEventQueue()->empty()) {
+                tmp.push(cores[i]->getEventQueue()->top());
+                cores[i]->getEventQueue()->pop();
+            }
+
+            while (!tmp.empty()) {
+                if (tmp.top().getProcess().getId() != minTask->getId()) {
+                    cores[i]->getEventQueue()->push(tmp.top());
+                }
+                tmp.pop();
             }
         }
+
+        cores[i]->addEvent(Event(TICK, time, Process()));
     }
 
-    return maximumDif;
+    return 0;
 }
 
 void CFS::addMainEventQueue(priority_queue<Event> *eventQueue, mutex *m) {
