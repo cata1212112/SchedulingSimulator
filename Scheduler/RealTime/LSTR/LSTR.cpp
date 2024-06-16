@@ -133,3 +133,7 @@ int LSTR::removeMissedDeadlines(int time) {
     return toDelete.size();
 
 }
+
+vector<Process> *LSTR::getReadyQueue() {
+    return readyQueue;
+}

@@ -18,15 +18,15 @@ def createTheOutput(statistics):
         break
 
 
-    fig, ax = plt.subplots(nrows=1, ncols=5, figsize=(24, 12), dpi=80)
-    ax[0].title.set_text("Histograma Burst Times")
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(12, 8), dpi=300)
+    # ax[0].title.set_text("Histograma Burst Times")
 
-    for x, c in zip(burst_distribution, colors):
-        distributioId = int(x[0])
-        mean = float(x[1])
-        std = float(x[2])
-        ax[0].hist(list(map(int, x[3:])), bins=10, alpha=0.75, color=c, label=f"Distributia {distributioId} de medie {mean} si deviatie standard {std}")
-    ax[0].legend(loc='upper right')
+    # for x, c in zip(burst_distribution, colors):
+    #     distributioId = int(x[0])
+    #     mean = float(x[1])
+    #     std = float(x[2])
+    #     ax[0].hist(list(map(int, x[3:])), bins=10, alpha=0.75, color=c, label=f"Distributia {distributioId} de medie {mean} si deviatie standard {std}")
+    # ax[0].legend(loc='upper right')
 
     algorithms = []
     perAlgorithmWaits = []
@@ -83,45 +83,77 @@ def createTheOutput(statistics):
 
     for alg, waitingTimes in zip(algorithms, perAlgorithmWaits):
         bottom = 0
+        if alg == "Efficient Dynamic Round Robin":
+            algo = "EDRR"
+        elif "Mean Threshold Shortest Job Round Robin" in alg:
+            algo = "MTSJRR T = " + alg.split()[-1]
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif alg == "Min Max Round Robin":
+            algo = "MinMaxRR"
         for i, value in enumerate(waitingTimes):
-            ax[1].bar(alg, value, bottom=bottom, color=colors[i])
+            ax[0,0].bar(algo, value, bottom=bottom, color=colors[i])
             bottom += value
-        ax[1].title.set_text('Average Waiting Time')
+        ax[0,0].title.set_text('Average Waiting Time')
 
     for alg, responseTimes in zip(algorithms, perAlgorithmrT):
         bottom = 0
+        if alg == "Efficient Dynamic Round Robin":
+            algo = "EDRR"
+        elif "Mean Threshold Shortest Job Round Robin" in alg:
+            algo = "MTSJRR T = " + alg.split()[-1]
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif alg == "Min Max Round Robin":
+            algo = "MinMaxRR"
         for i, value in enumerate(responseTimes):
-            ax[2].bar(alg, value, bottom=bottom, color=colors[i])
+            ax[0,1].bar(algo, value, bottom=bottom, color=colors[i])
             bottom += value
-        ax[2].title.set_text('Average Response Time')
+        ax[0,1].title.set_text('Average Response Time')
 
     for alg, turnaroundTimes in zip(algorithms, perAlgorithmTT):
         bottom = 0
+        if alg == "Efficient Dynamic Round Robin":
+            algo = "EDRR"
+        elif "Mean Threshold Shortest Job Round Robin" in alg:
+            algo = "MTSJRR T = " + alg.split()[-1]
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif alg == "Min Max Round Robin":
+            algo = "MinMaxRR"
         for i, value in enumerate(turnaroundTimes):
-            ax[3].bar(alg, value, bottom=bottom, color=colors[i])
+            ax[1,0].bar(algo, value, bottom=bottom, color=colors[i])
             bottom += value
-        ax[3].title.set_text('Average Turnaround Time')
+        ax[1,0].title.set_text('Average Turnaround Time')
 
-    for alg, contexSwitches in zip(algorithms, perAlgorithmTT):
-        ax[4].bar(alg, contexSwitches)
-        ax[4].title.set_text('Number of Context Switches')
+    for alg, contexSwitches in zip(algorithms, perAlgoritmContextSwitches):
+        if alg == "Efficient Dynamic Round Robin":
+            algo = "EDRR"
+        elif "Mean Threshold Shortest Job Round Robin" in alg:
+            algo = "MTSJRR T = " + alg.split()[-1]
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif alg == "Min Max Round Robin":
+            algo = "MinMaxRR"
+        ax[1,1].bar(algo, contexSwitches)
+        ax[1,1].title.set_text('Number of Context Switches')
 
 
-    for i, label in enumerate(ax[1].get_xticklabels()):
+    for i, label in enumerate(ax[0,0].get_xticklabels()):
         if i % 2 == 1:
-            label.set_y(-0.02)  # Default position
+            label.set_y(-0.03)  # Default position
 
-    for i, label in enumerate(ax[2].get_xticklabels()):
+    for i, label in enumerate(ax[0,1].get_xticklabels()):
         if i % 2 == 1:
-            label.set_y(-0.02)  # Default position
+            label.set_y(-0.03)  # Default position
 
-    for i, label in enumerate(ax[3].get_xticklabels()):
+    for i, label in enumerate(ax[1,0].get_xticklabels()):
         if i % 2 == 1:
-            label.set_y(-0.02)  # Default position
+            label.set_y(-0.03)  # Default position
 
-    for i, label in enumerate(ax[4].get_xticklabels()):
+    for i, label in enumerate(ax[1,1].get_xticklabels()):
         if i % 2 == 1:
-            label.set_y(-0.02)  # Default position
+            label.set_y(-0.03)  # Default position
 
 
 

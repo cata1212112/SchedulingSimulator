@@ -24,6 +24,8 @@ public:
 
     vector<Event> processIOComplete(std::vector<Process> p, int time, Metrics &stats) override;
 
+    vector<Process> *getReadyQueue() override;
+
     vector<Event> processPreempt(std::vector<Process> p, int time, Metrics &stats) override;
 
     LSTR();

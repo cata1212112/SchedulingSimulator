@@ -11,6 +11,31 @@
 
 vector<string> DES::algortihms;
 
+int generatePriority() {
+    // Define the mean and standard deviation
+    const double mean = 10.0;
+    const double stddev = 2.0;
+
+    // Define the min and max bounds
+    const int min_priority = 1;
+    const int max_priority = 40;
+
+    // Random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    // Normal distribution
+    std::normal_distribution<> d(mean, stddev);
+
+    // Generate a number and clamp it within the bounds
+    int priority;
+    do {
+        priority = std::round(d(gen));
+    } while (priority < min_priority || priority > max_priority);
+
+    return priority;
+}
+
 string DES::generateInputData(vector<int> numProcesses, int maximumTime, vector<int> mean, vector<int> std) {
 
     events = new priority_queue<Event>();
@@ -31,7 +56,8 @@ string DES::generateInputData(vector<int> numProcesses, int maximumTime, vector<
             Random::setGaussian(mean[i], std[i]);
 
             int arrival = Random::randomInteger(maximumTime);
-            int priority = Random::randomInteger(8) + 1;
+//            int priority = Random::randomInteger(8) + 1;
+            int priority = generatePriority();
 
             int cpuBurst = Random::randomGaussian(1);
 
@@ -227,9 +253,14 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
     }
 
     if (realTime) {
+        for (int i=0; i<schedAlgo.getReadyQueue()->size(); i++) {
+            if ((*schedAlgo.getReadyQueue())[i].getNextDeadline() <= toStop) {
+                realTimeMetrics.incrementCS();
+            }
+        }
+//        cout << realTimeMetrics.getContextSwitches() << "\n";
         vec.push_back(realTimeMetrics);
     }
-
     ofstream out("output.txt");
     for (auto v:multicoreFairness.getMaximumLoadDifference()) {
         out << v << " ";

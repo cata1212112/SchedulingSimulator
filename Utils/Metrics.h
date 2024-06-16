@@ -29,6 +29,8 @@ public:
     explicit Metrics(const std::string &algorithm, int roundRobinQuant=0) : algorithm(algorithm) {
         if (algorithm == "Round Robin") {
             Metrics::algorithm = algorithm + " TQ = " + std::to_string(roundRobinQuant);
+        } else if (algorithm == "Mean Threshold Shortest Job Round Robin") {
+            Metrics::algorithm = algorithm + " T = " + std::to_string(roundRobinQuant);
         }
     }
 

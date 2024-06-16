@@ -127,3 +127,7 @@ int LTS::removeMissedDeadlines(int time) {
     return toDelete.size();
 
 }
+
+vector<Process> *LTS::getReadyQueue() {
+    return readyQueue;
+}

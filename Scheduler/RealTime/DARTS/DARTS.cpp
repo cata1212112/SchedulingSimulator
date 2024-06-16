@@ -126,3 +126,7 @@ int DARTS::removeMissedDeadlines(int time) {
     }
     return toDelete.size();
 }
+
+vector<Process> *DARTS::getReadyQueue() {
+    return readyQueue;
+}
