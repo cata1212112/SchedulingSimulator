@@ -43,7 +43,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -562,7 +562,7 @@ QPushButton:hover {
         <item alignment="Qt::AlignmentFlag::AlignHCenter">
          <widget class="QLabel" name="label_7">
           <property name="text">
-           <string>NUMBER OF TASKS</string>
+           <string>TOTAL UTILIZATION</string>
           </property>
          </widget>
         </item>
@@ -608,6 +608,9 @@ QSlider::handle:horizontal:hover {
           <property name="maximum">
            <number>100</number>
           </property>
+          <property name="singleStep">
+           <number>1</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Orientation::Horizontal</enum>
           </property>
@@ -644,6 +647,23 @@ QPushButton:hover {
           </property>
           <property name="text">
            <string>Use file as input</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_3">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background: rgb(0, 170, 255);
+	border-radius: 20px;
+}
+
+QPushButton:hover {
+	background: rgb(0, 145, 217)
+}</string>
+          </property>
+          <property name="text">
+           <string>Back</string>
           </property>
          </widget>
         </item>

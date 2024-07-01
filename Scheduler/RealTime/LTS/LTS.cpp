@@ -56,6 +56,7 @@ vector<Event> LTS::schedule(int time, Metrics &stats, bool timerExpired) {
         p2.setRemainingBurst(1);
         cores[i]->addEvent(Event(ARRIVAL, time, p2));
 //        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";
+        stats.addToGantt(to_string(time) + " " + "Core " + to_string(i) + " Task " + to_string( p2.getId()) + " 1\n");
 
         Process p3(p);
         p3.setRemainingBurst(p3.getRemainingBurst() - 1);

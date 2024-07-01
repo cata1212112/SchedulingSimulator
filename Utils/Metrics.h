@@ -18,8 +18,10 @@ private:
     double averageTurnaroundTime = 0;
     double averageResponseTime = 0;
     int contextSwitches = 0;
+    bool promtGantt = false;
+
     string algorithm;
-    vector<std::tuple<int, int, int>> gantt;
+    string gantt = "";
     vector<double> maximumLoadDifference;
     map<int, double> avgWaitTimeByDistributionId;
     map<int, double> avgTurnaroundTimeByDistributionId;
@@ -34,6 +36,14 @@ public:
         }
     }
 
+    bool isPromtGantt() const {
+        return promtGantt;
+    }
+
+    void setPromtGantt(bool promtGantt) {
+        Metrics::promtGantt = promtGantt;
+    }
+
     void incrementCS() {
         contextSwitches += 1;
     }
@@ -42,21 +52,8 @@ public:
         return contextSwitches;
     }
 
-    void addToGanttChart(int pid, int left, int right) {
-        gantt.push_back({pid, left, right});
-    }
-
-    std::string getGanttData() {
-        if (gantt.empty()) {
-            return "[]";
-        }
-        std::string data = "[";
-        for (auto x : gantt) {
-            data += "[" + std::to_string(std::get<0>(x)) + "," + std::to_string(std::get<1>(x)) + "," + std::to_string(std::get<2>(x)) + "],";
-        }
-        data.pop_back();
-        data += "]";
-        return data;
+    const string &getGantt() const {
+        return gantt;
     }
 
     void addToCPUUtilization(int val) {
@@ -121,6 +118,10 @@ public:
 
     const std::vector<double> &getMaximumLoadDifference() const {
         return maximumLoadDifference;
+    }
+
+    void addToGantt(string execution) {
+        gantt += execution;
     }
 };
 

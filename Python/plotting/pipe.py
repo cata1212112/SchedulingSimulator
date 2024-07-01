@@ -6,9 +6,12 @@ import numpy as np
 pipe_name = r'\\.\pipe\plotting_pipe'
 pipe_feedback_name = r'\\.\pipe\plotting_pipe_feedback'
 
+ganttCores = []
+statistics = []
+realtimeGantt = []
 
 def createTheOutput(statistics):
-
+    print(statistics)
     colors = ["#e60049", "#0bb4ff", "#50e991"]
     burst_distribution = []
     for stat in statistics:
@@ -17,16 +20,20 @@ def createTheOutput(statistics):
             burst_distribution.append(stat[i].split())
         break
 
+    fig, ax = plt.subplots()
+    ax.set_title("Histograma Burst Times")
 
-    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(12, 8), dpi=300)
-    # ax[0].title.set_text("Histograma Burst Times")
+    for x, c in zip(burst_distribution, colors):
+        distributioId = int(x[0])
+        mean = float(x[1])
+        std = float(x[2])
+        data = list(map(int, x[3:]))
+        ax.hist(data, bins=10, alpha=0.75, color=c, label=f"Distributia {distributioId} de medie {mean} si deviatie standard {std}")
 
-    # for x, c in zip(burst_distribution, colors):
-    #     distributioId = int(x[0])
-    #     mean = float(x[1])
-    #     std = float(x[2])
-    #     ax[0].hist(list(map(int, x[3:])), bins=10, alpha=0.75, color=c, label=f"Distributia {distributioId} de medie {mean} si deviatie standard {std}")
-    # ax[0].legend(loc='upper right')
+    ax.legend(loc='upper right')
+    plt.savefig('histograms.png')
+
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(12, 8), dpi=80)
 
     algorithms = []
     perAlgorithmWaits = []
@@ -63,14 +70,10 @@ def createTheOutput(statistics):
         allResponse = []
 
         for i in range(distNums):
-            #                wait                   response                turnaround
             perDist[i] = [values[4 + 4 * i + 1], values[4 + 4 * i + 2], values[4 + 4 * i + 3]]
-
             allWaiting.append(values[4 + 4 * i + 1])
             allResponse.append(values[4 + 4 * i + 2])
             allTurnAround.append(values[4 + 4 * i + 3])
-
-        print(alg, avgWaitTime, allWaiting)
 
         algorithms.append(alg)
         perAlgorithmWaits.append(allWaiting)
@@ -78,19 +81,24 @@ def createTheOutput(statistics):
         perAlgorithmrT.append(allResponse)
         perAlgoritmContextSwitches.append(values[3])
 
-    print(algorithms)
-    print(perAlgorithmWaits)
-
     for alg, waitingTimes in zip(algorithms, perAlgorithmWaits):
         bottom = 0
         if alg == "Efficient Dynamic Round Robin":
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "Mean Median Time Quantum Round Robin":
             algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "First In First Out":
+            algo = "FIFO"
+        elif alg == "Shortest Job First":
+            algo = "SJF"
+        elif alg == "Shortest Remaining Time First":
+            algo = "SRTF"
         for i, value in enumerate(waitingTimes):
             ax[0,0].bar(algo, value, bottom=bottom, color=colors[i])
             bottom += value
@@ -102,10 +110,18 @@ def createTheOutput(statistics):
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "Mean Median Time Quantum Round Robin":
             algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "First In First Out":
+            algo = "FIFO"
+        elif alg == "Shortest Job First":
+            algo = "SJF"
+        elif alg == "Shortest Remaining Time First":
+            algo = "SRTF"
         for i, value in enumerate(responseTimes):
             ax[0,1].bar(algo, value, bottom=bottom, color=colors[i])
             bottom += value
@@ -117,10 +133,18 @@ def createTheOutput(statistics):
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "Mean Median Time Quantum Round Robin":
             algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "First In First Out":
+            algo = "FIFO"
+        elif alg == "Shortest Job First":
+            algo = "SJF"
+        elif alg == "Shortest Remaining Time First":
+            algo = "SRTF"
         for i, value in enumerate(turnaroundTimes):
             ax[1,0].bar(algo, value, bottom=bottom, color=colors[i])
             bottom += value
@@ -131,42 +155,131 @@ def createTheOutput(statistics):
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "Mean Median Time Quantum Round Robin":
             algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "First In First Out":
+            algo = "FIFO"
+        elif alg == "Shortest Job First":
+            algo = "SJF"
+        elif alg == "Shortest Remaining Time First":
+            algo = "SRTF"
         ax[1,1].bar(algo, contexSwitches)
         ax[1,1].title.set_text('Number of Context Switches')
-
-
-    for i, label in enumerate(ax[0,0].get_xticklabels()):
-        if i % 2 == 1:
-            label.set_y(-0.03)  # Default position
-
-    for i, label in enumerate(ax[0,1].get_xticklabels()):
-        if i % 2 == 1:
-            label.set_y(-0.03)  # Default position
-
-    for i, label in enumerate(ax[1,0].get_xticklabels()):
-        if i % 2 == 1:
-            label.set_y(-0.03)  # Default position
-
-    for i, label in enumerate(ax[1,1].get_xticklabels()):
-        if i % 2 == 1:
-            label.set_y(-0.03)  # Default position
-
-
 
     fig.tight_layout()
     plt.savefig('statistici.png')
 
 
-def pipe_server():
-    statistics = []
+def plotGanttRealTime(ganttData):
+    algName = None
+    cores = 0
+    procs = []
+    for line in ganttData.split("\n"):
+        if len(line.strip().split()) == 6:
+            if "0 Core" in line:
+                cores += 1
 
+    coreData = {}
+    coreGantt = {}
+
+    for i in range(cores):
+        coreData[f"{i}"] = []
+        coreGantt[f"{i}"] = []
+
+    for line in ganttData.split("\n"):
+        if 2 < len(line.strip().split()) < 6:
+            algName = line.split()
+        elif len(line.strip().split()) == 6:
+            info = line.split()
+            coreData[info[2]].append(info[4])
+            procs.append(info[4])
+
+    for k in range(cores):
+        i = 0
+        j = 0
+        while i < len(coreData[f"{k}"]):
+            j = i
+            while j < len(coreData[f"{k}"]) and coreData[f"{k}"][i] == coreData[f"{k}"][j]:
+                j += 1
+            coreGantt[f"{k}"].append((i, j, coreData[f"{k}"][i]))
+            i = j
+
+    nColums = len(coreGantt)
+
+    realtimeGantt.append((algName, coreGantt))
+    print(realtimeGantt)
+    processes = sorted(set(procs))
+    color_map = plt.get_cmap('tab20')
+    colors = {process: color_map(i / len(processes)) for i, process in enumerate(processes)}
+
+    fig, ax = plt.subplots(nrows=len(realtimeGantt), ncols=nColums, figsize=(15, 5 * len(realtimeGantt)))
+
+    if len(realtimeGantt) == 1:
+        ax = [ax]
+
+    for i in range(len(realtimeGantt)):
+        for j in range(nColums):
+            for start, end, process in realtimeGantt[i][1][f"{j}"]:
+                duration = end - start
+                ax[i][j].barh(process, duration, left=start, color=colors[process])
+                ax[i][j].text(start + duration / 2, process, str(duration), va='center', ha='center', color='black')
+            ax[i][j].set_title(f"Core {j} -- {' '.join(realtimeGantt[i][0])}")
+
+    fig.suptitle("Gantt Chart", fontsize=16)
+
+    plt.tight_layout()
+    plt.savefig("realtime.png")
+
+
+
+
+def plotGantt(ganttData, statistics):
+    data = ganttData.split("\n")
+
+    coreId = None
+    processes = []
+    coreData = []
+    for line in data:
+        if len(line) == 1:
+            coreId = int(line.strip())
+        elif len(line) > 5:
+            info = line.split()
+            coreData.append((int(info[1]), int(info[3]), int(info[5])))
+            processes.append(int(info[5]))
+
+    processes = sorted(set(processes))
+    ganttCores.append((processes, coreData))
+
+    fig, axes = plt.subplots(nrows=len(ganttCores), figsize=(10, 5 * len(ganttCores)), squeeze=False)
+
+    for ax, (stat, (processes, coreData)) in zip(axes.flat, zip(statistics, ganttCores)):
+        strings = re.findall(r'\b[a-zA-Z]+\b', stat)
+        idx = stat.split().index(strings[0])
+        information = stat.split('\n')[0]
+        alg = ' '.join(information.split()[idx:])
+
+        color_map = plt.get_cmap('tab20')
+        colors = {process: color_map(i / len(processes)) for i, process in enumerate(processes)}
+
+        for start, end, process in coreData:
+            duration = end - start
+            ax.barh(process, duration, left=start, color=colors[process])
+            ax.text(start + duration / 2, process, str(duration), va='center', ha='center', color='black')
+
+        ax.set_xlabel('Time')
+        ax.set_ylabel('Process')
+        ax.set_title(f'{alg}')
+
+    plt.tight_layout()
+    plt.savefig('burstTimes.png')
+
+def pipe_server():
 
     while True:
-
         print("Connecting to named pipes...")
 
         pipe = None
@@ -182,14 +295,12 @@ def pipe_server():
                     None
                 )
                 print("Pipe exists and opened successfully!")
-                # Continue using the pipe...
-                break  # Exit the loop since pipe is successfully opened
+                break
             except:
                 pass
         print("Connected to main pipe.")
         win32file.WriteFile(pipe, b"OK\n")
 
-        # Connect to the feedback named pipe
         pipe_feedback = win32file.CreateFile(
             pipe_feedback_name,
             win32file.GENERIC_READ | win32file.GENERIC_WRITE,
@@ -202,25 +313,36 @@ def pipe_server():
         print("Connected to feedback pipe.")
 
         try:
-            print("Reading from main pipe...")
+            print("Reading opcode from main pipe...")
             resp = win32file.ReadFile(pipe, 64 * 1024)
-            line = resp[1].decode().strip()
 
-            statistics.append(line)
-            # Write to the file
-            with open("test.txt", "w") as f:
+            package = resp[1].decode().strip()
+            print(package)
+            if "realtime" in package:
+                plotGanttRealTime(package.replace("realtime\n", ""))
+                win32file.WriteFile(pipe_feedback, b"OK\n")
+            elif "singlecore" in package:
+
+                statistics.append(package.replace("singlecore\n", ""))
                 createTheOutput(statistics)
-                f.write('\n'.join(statistics))
+                win32file.WriteFile(pipe_feedback, b"OK\n")
+            # Add more opcodes and their corresponding actions here as needed
+            elif "gantt" in package:
+                print(package.replace("gantt\n", ""))
 
-            # Send feedback
-            print("Sending feedback...")
-            win32file.WriteFile(pipe_feedback, b"OK\n")
+                plotGantt(package.replace("gantt\n", ""), statistics)
+
+                win32file.WriteFile(pipe_feedback, b"OK\n")
+
+            else:
+                print(f"Unknown opcode: {opcode}")
+                win32file.WriteFile(pipe_feedback, b"Unknown opcode\n")
+
         except pywintypes.error as e:
             if e.args[0] == 109:  # ERROR_BROKEN_PIPE
                 print("Client disconnected.")
                 break
 
-    # Close the pipes
     win32file.CloseHandle(pipe)
     win32file.CloseHandle(pipe_feedback)
     print("Pipes closed.")

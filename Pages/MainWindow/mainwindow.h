@@ -52,6 +52,8 @@ private:
 
     void selectedAlgorithmButton(const std::string& algorithmName, QLayout* layout, bool isMultiCore= false);
 
+    void selectedAlgorithmButtonRealTime(const std::string& algorithmName, QLayout* layout);
+
     void goBackButton(QLayout* layout, QWidget* parent);
 
     void selectAlgortihm(const std::string &algortihm, bool isMultiCore = false);
@@ -61,7 +63,67 @@ private:
     void setupInputData(QWidget *parent, bool isMultiCore = false);
 
     void generateDataButton(QLayout *layout, QWidget *parent, bool isMultiCore = false);
-//    void se
+
+    void sendInstructionToPipeAndWait(string op, string package) {
+        HANDLE hPipe = CreateNamedPipe(
+                L"\\\\.\\pipe\\plotting_pipe",
+                PIPE_ACCESS_DUPLEX,
+                PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+                1, 65536, 65536,
+                0,
+                NULL
+        );
+
+        HANDLE hFeedbackPipe = CreateNamedPipe(
+                L"\\\\.\\pipe\\plotting_pipe_feedback",
+                PIPE_ACCESS_DUPLEX,
+                PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+                1, 65536, 65536,
+                0,
+                NULL
+        );
+
+        if (hPipe == INVALID_HANDLE_VALUE) {
+            std::cerr << "Failed to create main pipe. " << std::endl;
+            std::cerr << GetLastError() << "\n";
+        }
+
+        if (hFeedbackPipe == INVALID_HANDLE_VALUE) {
+            std::cerr << "Failed to create feedback pipe." << std::endl;
+            std::cerr << GetLastError() << "\n";
+
+            CloseHandle(hPipe);
+        }
+        ConnectNamedPipe(hPipe, NULL);
+        DWORD dwWritten;
+
+        string toSend = op + "\n" + package;
+        if (!WriteFile(hPipe, toSend.c_str(), toSend.length(), &dwWritten, NULL)) {
+            std::cerr << "Failed to write to main pipe." << std::endl;
+            std::cerr << GetLastError() << std::endl;
+
+            CloseHandle(hPipe);
+            CloseHandle(hFeedbackPipe);
+            return;
+        }
+        cout << "trimis package\n";
+
+        ConnectNamedPipe(hFeedbackPipe, NULL);
+
+        char buffer[128];
+        DWORD dwRead;
+        if (ReadFile(hFeedbackPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL)) {
+            buffer[dwRead] = '\0';
+            std::cout << "Received: " << buffer << std::endl;
+        } else {
+            std::cerr << "Failed to read from feedback pipe." << std::endl;
+            std::cerr << GetLastError() << "\n";
+        }
+
+        CloseHandle(hPipe);
+        CloseHandle(hFeedbackPipe);
+    }
+
 };
 
 

@@ -45,7 +45,7 @@ private:
     map<int, int> generatedBurstByDistributionMean;
     map<int, int> generatedBurstByDistributionSTD;
 public:
-
+    string filename = "";
     int isToStop() const;
 
     map<int, int> &getGeneratedBurstByDistributionMean();
@@ -88,6 +88,7 @@ public:
         algortihms.push_back(algorithm);
         events = new priority_queue<Event>();
         roundRobinQuant = 10;
+        usedFileAsInput = false;
     }
 
     string generateInputData(vector<int> numProcesses, int maximumTime, vector<int> mean, vector<int> std);

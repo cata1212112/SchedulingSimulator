@@ -20,7 +20,7 @@ vector<Event> FSSCore::processArrived(std::vector<Process> p, int time, Metrics 
 }
 
 vector<Event> FSSCore::processCPUComplete(Process p, int time, Metrics &stats) {
-    stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
+//    stats.addToGanttChart(p.getId(), p.getLastStarted(), time);
     stats.addToCPUUtilization(time - p.getLastStarted());
     stats.addToTT(time - p.getArrivalTime(), 0);
 //    cout << p.getId() << " " << currentProcess->getId() << "\n";
@@ -61,7 +61,7 @@ vector<Event> FSSCore::schedule(int time, Metrics &stats, bool timerExpired) {
                                      ((time - currentProcess->getLastStarted() + 0.0) * prio_to_weight[0] / prio_to_weight[currentProcess->getPriority()]));
             currentProcess->setRemainingBurst(currentProcess->getRemainingBurst() - (time - currentProcess->getLastStarted()));
             currentProcess->setEnteredReadyQueue(time);
-            stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
+//            stats.addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
             stats.addToCPUUtilization(time - currentProcess->getLastStarted());
             if (currentProcess->getRemainingBurst() > 0) {
                 readyQueue.push_back(Process(*currentProcess));
@@ -147,7 +147,7 @@ long long int FSSCore::getLoad(int time, bool preemt) {
         currentProcess->setVtime(currentProcess->getVtime() + (time - currentProcess->getLastStarted() + 0.0) / prio_to_weight[currentProcess->getPriority()]);
 
         if (workaroundStats != nullptr) {
-            workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
+//            workaroundStats->addToGanttChart(currentProcess->getId(), currentProcess->getLastStarted(), time);
             workaroundStats->addToCPUUtilization(time - currentProcess->getLastStarted());
         }
 //

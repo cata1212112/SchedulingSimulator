@@ -72,6 +72,7 @@ public:
     QSlider *horizontalSlider_3;
     QPushButton *pushButton;
     QPushButton *pushButton_2;
+    QPushButton *pushButton_3;
     QWidget *InputData;
     QWidget *SingleCore;
 
@@ -459,6 +460,7 @@ public:
 ""));
         horizontalSlider_3->setMinimum(2);
         horizontalSlider_3->setMaximum(100);
+        horizontalSlider_3->setSingleStep(1);
         horizontalSlider_3->setOrientation(Qt::Orientation::Horizontal);
 
         verticalLayout_4->addWidget(horizontalSlider_3);
@@ -489,6 +491,19 @@ public:
 
         verticalLayout_4->addWidget(pushButton_2);
 
+        pushButton_3 = new QPushButton(GenerateRealTimeData);
+        pushButton_3->setObjectName("pushButton_3");
+        pushButton_3->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background: rgb(0, 170, 255);\n"
+"	border-radius: 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: rgb(0, 145, 217)\n"
+"}"));
+
+        verticalLayout_4->addWidget(pushButton_3);
+
         stackedWidget->addWidget(GenerateRealTimeData);
         InputData = new QWidget();
         InputData->setObjectName("InputData");
@@ -503,7 +518,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(6);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -535,10 +550,11 @@ public:
         selectednumberofcores->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         next->setText(QCoreApplication::translate("MainWindow", "Next", nullptr));
         back->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
-        label_7->setText(QCoreApplication::translate("MainWindow", "NUMBER OF TASKS", nullptr));
+        label_7->setText(QCoreApplication::translate("MainWindow", "TOTAL UTILIZATION", nullptr));
         label_8->setText(QCoreApplication::translate("MainWindow", "2", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "GENERATE", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "Use file as input", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
     } // retranslateUi
 
 };

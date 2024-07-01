@@ -28,7 +28,7 @@ vector<Event> LTSCore::schedule(int time, Metrics &stats, bool timerExpired) {
     if (currentProcess == nullptr && !readyQueue->empty()) {
         currentProcess = new Process(readyQueue->front());
         readyQueue->pop();
-        stats.addToGanttChart(currentProcess->getId(), time, time + currentProcess->getRemainingBurst());
+//        stats.addToGanttChart(currentProcess->getId(), time, time + currentProcess->getRemainingBurst());
         return {Event(CPUBURSTCOMPLETE, time + currentProcess->getRemainingBurst(), Process(*currentProcess->consumeBurst()))};
     }
     return {};

@@ -12,22 +12,17 @@
 vector<string> DES::algortihms;
 
 int generatePriority() {
-    // Define the mean and standard deviation
     const double mean = 10.0;
     const double stddev = 2.0;
 
-    // Define the min and max bounds
     const int min_priority = 1;
     const int max_priority = 40;
 
-    // Random number generator
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    // Normal distribution
     std::normal_distribution<> d(mean, stddev);
 
-    // Generate a number and clamp it within the bounds
     int priority;
     do {
         priority = std::round(d(gen));
@@ -81,7 +76,7 @@ string DES::generateInputData(vector<int> numProcesses, int maximumTime, vector<
 }
 
 void DES::readInputDataFromFile(const string& filename, bool realTime) {
-    usedFileAsInput = true;
+    this->filename = filename;
     events = new priority_queue<Event>();
 
     ifstream in(filename);
@@ -92,6 +87,10 @@ void DES::readInputDataFromFile(const string& filename, bool realTime) {
     input = buffer.str();
 
     setInputFromString(input, realTime);
+
+    if (events->size() < 10) {
+        usedFileAsInput = true;
+    }
 
     in.close();
 }
@@ -266,6 +265,12 @@ vector<Metrics> DES::startSimulation(int numCPUS) {
         out << v << " ";
     }
 
+    if (isUsedFileAsInput()) {
+        for (int i=0; i<vec.size(); i++) {
+            vec[i].setPromtGantt(true);
+        }
+    }
+
     return vec;
 
 }
@@ -352,6 +357,7 @@ void DES::setRoundRobinQuant(int roundRobinQuant) {
 }
 
 string DES::generateInputData(int numberOfTasks, int numberOfCores) {
+    this->filename = "";
     std::vector<std::pair<int,int>> tasks = RealTimeGenerator::generateTasks(numberOfTasks, numberOfCores);
     string inputData;
     events = new priority_queue<Event>();
