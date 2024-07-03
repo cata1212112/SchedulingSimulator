@@ -118,7 +118,7 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
                 allGantt = allGantt + m.getGantt();
             }
         }
-        if (plotGantt) {
+        if (plotGantt && metrics[metrics.size()-1].getContextSwitches() == 0) {
             sendInstructionToPipeAndWait("realtime", "\n"+allGantt);
 
             QPixmap pixmapBurst(QString::fromStdString("realtime.png"));
@@ -127,6 +127,13 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
             imageLabelBurst->setAlignment(Qt::AlignCenter);
 
             containerLayout->addWidget(imageLabelBurst);
+        } else {
+            auto *label = new QLabel(QString::fromStdString("Nu s-a putut planifica!"));
+
+            QFont font;
+            font.setPointSize(16);
+            label->setFont(font);
+            containerLayout->addWidget(label);
         }
 
     } else if (selectedNumberOfCores <= 1){
