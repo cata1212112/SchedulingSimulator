@@ -173,7 +173,7 @@ public:
         horizontalSlider_2 = new QSlider(RunSimulation);
         horizontalSlider_2->setObjectName("horizontalSlider_2");
         horizontalSlider_2->setFont(font);
-        horizontalSlider_2->setMinimum(1);
+        horizontalSlider_2->setMinimum(0);
         horizontalSlider_2->setMaximum(3);
         horizontalSlider_2->setOrientation(Qt::Orientation::Horizontal);
 
@@ -518,7 +518,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(6);
+        stackedWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -551,7 +551,7 @@ public:
         next->setText(QCoreApplication::translate("MainWindow", "Next", nullptr));
         back->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
         label_7->setText(QCoreApplication::translate("MainWindow", "TOTAL UTILIZATION", nullptr));
-        label_8->setText(QCoreApplication::translate("MainWindow", "2", nullptr));
+        label_8->setText(QCoreApplication::translate("MainWindow", "1", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "GENERATE", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "Use file as input", nullptr));
         pushButton_3->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));

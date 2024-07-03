@@ -43,7 +43,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -185,7 +185,7 @@ QPushButton:hover {
            </font>
           </property>
           <property name="minimum">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="maximum">
            <number>3</number>
@@ -574,7 +574,7 @@ QPushButton:hover {
            </font>
           </property>
           <property name="text">
-           <string>2</string>
+           <string>1</string>
           </property>
          </widget>
         </item>

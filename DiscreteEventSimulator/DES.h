@@ -129,6 +129,10 @@ public:
         return algortihms;
     }
 
+    static void resetAlgos() {
+        algortihms.clear();
+    }
+
     void setIsMultiCore(bool isMultiCore);
 
     Metrics evaluatePerformance();

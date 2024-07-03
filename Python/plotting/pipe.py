@@ -9,9 +9,9 @@ pipe_feedback_name = r'\\.\pipe\plotting_pipe_feedback'
 ganttCores = []
 statistics = []
 realtimeGantt = []
+multicore = []
 
 def createTheOutput(statistics):
-    print(statistics)
     colors = ["#e60049", "#0bb4ff", "#50e991"]
     burst_distribution = []
     for stat in statistics:
@@ -87,12 +87,12 @@ def createTheOutput(statistics):
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
-        elif "Round Robin" in alg:
-            algo = "RR T = " + alg.split()[-1]
-        elif alg == "Mean Median Time Quantum Round Robin":
-            algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "First In First Out":
             algo = "FIFO"
         elif alg == "Shortest Job First":
@@ -110,12 +110,12 @@ def createTheOutput(statistics):
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
-        elif "Round Robin" in alg:
-            algo = "RR T = " + alg.split()[-1]
-        elif alg == "Mean Median Time Quantum Round Robin":
-            algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "First In First Out":
             algo = "FIFO"
         elif alg == "Shortest Job First":
@@ -133,12 +133,12 @@ def createTheOutput(statistics):
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
-        elif "Round Robin" in alg:
-            algo = "RR T = " + alg.split()[-1]
-        elif alg == "Mean Median Time Quantum Round Robin":
-            algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "First In First Out":
             algo = "FIFO"
         elif alg == "Shortest Job First":
@@ -155,12 +155,12 @@ def createTheOutput(statistics):
             algo = "EDRR"
         elif "Mean Threshold Shortest Job Round Robin" in alg:
             algo = "MTSJRR T = " + alg.split()[-1]
-        elif "Round Robin" in alg:
-            algo = "RR T = " + alg.split()[-1]
-        elif alg == "Mean Median Time Quantum Round Robin":
-            algo = "MeanMedianRR"
         elif alg == "Min Max Round Robin":
             algo = "MinMaxRR"
+        elif alg == "Mean Median Time Quantum Round Robin":
+            algo = "MeanMedianRR"
+        elif "Round Robin" in alg:
+            algo = "RR T = " + alg.split()[-1]
         elif alg == "First In First Out":
             algo = "FIFO"
         elif alg == "Shortest Job First":
@@ -180,12 +180,14 @@ def plotGanttRealTime(ganttData):
     procs = []
     for line in ganttData.split("\n"):
         if len(line.strip().split()) == 6:
-            if "0 Core" in line:
+            if line.startswith("0 Core"):
                 cores += 1
 
+    print(cores)
     coreData = {}
     coreGantt = {}
 
+    print(cores)
     for i in range(cores):
         coreData[f"{i}"] = []
         coreGantt[f"{i}"] = []
@@ -211,7 +213,6 @@ def plotGanttRealTime(ganttData):
     nColums = len(coreGantt)
 
     realtimeGantt.append((algName, coreGantt))
-    print(realtimeGantt)
     processes = sorted(set(procs))
     color_map = plt.get_cmap('tab20')
     colors = {process: color_map(i / len(processes)) for i, process in enumerate(processes)}
@@ -235,7 +236,24 @@ def plotGanttRealTime(ganttData):
     plt.savefig("realtime.png")
 
 
+def plotFairness(data):
+    tmp = []
+    algname = data.split("\n")[-1]
+    for x in data.split("\n")[0].split():
+        tmp.append(float(x))
 
+    multicore.append(tmp)
+
+    plt.figure()
+
+    plt.title(f"Multicore Fairness")
+    plt.xlabel('Numarul operatiei de load balancing')
+    plt.ylabel('Diferenta maxima de virtual runtime')
+    for x in multicore:
+        plt.plot(x, label=algname)
+
+    plt.legend()
+    plt.savefig("fairness.png")
 
 def plotGantt(ganttData, statistics):
     data = ganttData.split("\n")
@@ -280,7 +298,6 @@ def plotGantt(ganttData, statistics):
 def pipe_server():
 
     while True:
-        print("Connecting to named pipes...")
 
         pipe = None
         while True:
@@ -294,11 +311,9 @@ def pipe_server():
                     0,
                     None
                 )
-                print("Pipe exists and opened successfully!")
                 break
             except:
                 pass
-        print("Connected to main pipe.")
         win32file.WriteFile(pipe, b"OK\n")
 
         pipe_feedback = win32file.CreateFile(
@@ -310,42 +325,46 @@ def pipe_server():
             0,
             None
         )
-        print("Connected to feedback pipe.")
 
         try:
-            print("Reading opcode from main pipe...")
             resp = win32file.ReadFile(pipe, 64 * 1024)
 
             package = resp[1].decode().strip()
-            print(package)
             if "realtime" in package:
+                print(package)
                 plotGanttRealTime(package.replace("realtime\n", ""))
                 win32file.WriteFile(pipe_feedback, b"OK\n")
             elif "singlecore" in package:
-
                 statistics.append(package.replace("singlecore\n", ""))
                 createTheOutput(statistics)
                 win32file.WriteFile(pipe_feedback, b"OK\n")
-            # Add more opcodes and their corresponding actions here as needed
             elif "gantt" in package:
-                print(package.replace("gantt\n", ""))
+                # print(package.replace("gantt\n", ""))
 
                 plotGantt(package.replace("gantt\n", ""), statistics)
 
                 win32file.WriteFile(pipe_feedback, b"OK\n")
+            elif "reset" in package:
+                ganttCores.clear()
+                statistics.clear()
+                realtimeGantt.clear()
+                multicore.clear()
+                win32file.WriteFile(pipe_feedback, b"OK\n")
+
+            elif "fairness" in package:
+                print(package)
+                plotFairness(package.replace("fairness\n", "").strip())
+                win32file.WriteFile(pipe_feedback, b"OK\n")
 
             else:
-                print(f"Unknown opcode: {opcode}")
                 win32file.WriteFile(pipe_feedback, b"Unknown opcode\n")
 
         except pywintypes.error as e:
-            if e.args[0] == 109:  # ERROR_BROKEN_PIPE
-                print("Client disconnected.")
+            if e.args[0] == 109:
                 break
 
     win32file.CloseHandle(pipe)
     win32file.CloseHandle(pipe_feedback)
-    print("Pipes closed.")
 
 if __name__ == "__main__":
     pipe_server()

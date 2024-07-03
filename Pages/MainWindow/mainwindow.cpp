@@ -51,6 +51,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::handleSingleCoreButton() {
+
     selectedNumberOfCores = 1;
     ui->stackedWidget->setCurrentWidget(ui->SingleCore);
 
@@ -128,7 +129,7 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
             containerLayout->addWidget(imageLabelBurst);
         }
 
-    } else {
+    } else if (selectedNumberOfCores <= 1){
         string stats = metrics[0].getMetrics() + "\n";
         for (auto x:des->getGeneratedBurstByDistributionId()) {
             string distributionString = to_string(x.first) + " " + to_string(des->getGeneratedBurstByDistributionMean()[x.first]) + " " +
@@ -170,11 +171,22 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
             imageLabel->setAlignment(Qt::AlignCenter);
             containerLayout->addWidget(imageLabel);
         }
+    } else {
+        string vtimeDiffs = "";
+        for (auto x:metrics[metrics.size() - 1].getMaximumLoadDifference()) {
+            vtimeDiffs += to_string(x) + " ";
+        }
+        sendInstructionToPipeAndWait("fairness", "\n"+vtimeDiffs + "\n" + metrics[metrics.size() - 1].getAlgorithm());
+        QPixmap pixmap(QString::fromStdString("fairness.png"));
+        auto *imageLabel = new QLabel;
+        imageLabel->setPixmap(pixmap);
+        imageLabel->setAlignment(Qt::AlignCenter);
+        containerLayout->addWidget(imageLabel);
+
     }
 
     scrollArea->setWidget(containerWidget);
     ui->running->layout()->addWidget(scrollArea);
-
 
     auto *menuButton = new QPushButton(QString::fromStdString("Run and compare results with other algorithm"));
 
@@ -204,7 +216,7 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
             }
             menu.exec(QCursor::pos());
             menu.show();
-        } else {
+        } else if (selectedNumberOfCores <= 1){
             for (auto algorithm : ImplementedAlgorithms::getSingleCoreAlgorithms()) {
                 if (algorithm == "Round Robin" || algorithm == "Mean Threshold Shortest Job Round Robin" || std::find(alreadyTried.begin(), alreadyTried.end(), algorithm) == alreadyTried.end()) {
                     QAction *action = menu.addAction(QString::fromStdString(algorithm));
@@ -233,11 +245,29 @@ void MainWindow::gotoRunning(DES *des, int numCores) {
             }
             menu.exec(QCursor::pos());
             menu.show();
+        } else {
+            for (auto algorithm : ImplementedAlgorithms::getMultiCoreAlgortihms()) {
+                if ( std::find(alreadyTried.begin(), alreadyTried.end(), algorithm) == alreadyTried.end()) {
+                    QAction *action = menu.addAction(QString::fromStdString(algorithm));
+
+                    connect(action, &QAction::triggered, this, [=, this](){
+                        des->setAlgorithm(algorithm);
+                        des->setInputFromString(des->getInput());
+                        des->setRoundRobinQuant(quantum);
+                        deleteContent(ui->running);
+                        gotoRunning(des, numCores);
+                    });
+                }
+            }
+            menu.exec(QCursor::pos());
+            menu.show();
         }
 
     });
 
-    ui->running->layout()->addWidget(menuButton);
+    if (!des->isRealTime()) {
+        ui->running->layout()->addWidget(menuButton);
+    }
     goBackButton(ui->running->layout(), ui->StartPage);
 }
 
@@ -287,6 +317,7 @@ void MainWindow::handleRealTimeButton() {
     });
 
     connect(ui->back, &QPushButton::clicked, this, [&]() {
+        sendInstructionToPipeAndWait("reset", "");
         ui->stackedWidget->setCurrentWidget(ui->StartPage);
     });
 }
@@ -301,6 +332,8 @@ void MainWindow::selectNumberOfCores() {
 
     });
     connect(ui->back, &QPushButton::clicked, this, [&]() {
+        sendInstructionToPipeAndWait("reset", "");
+
         ui->stackedWidget->setCurrentWidget(ui->StartPage);
     });
     connect(ui->next, &QPushButton::clicked, this, [&] {
@@ -351,6 +384,7 @@ void MainWindow::selectedAlgorithmButtonRealTime(const std::string& algorithmNam
         });
 
         DES *des = new DES(selectedAlgorithm);
+//        des->resetAlgos();
         des->setRealTime(true);
 
         connect(ui->pushButton_2, &QPushButton::clicked, this, [=, this]() {
@@ -361,6 +395,134 @@ void MainWindow::selectedAlgorithmButtonRealTime(const std::string& algorithmNam
                 des->readInputDataFromFile(fileName.toStdString(), true);
                 gotoRunning(des, selectedNumberOfCores);
             }
+        });
+
+        connect(ui->pushButton, &QPushButton::clicked, this, [=, this]() {
+            vector<vector<pair<int,int>>> allGenerated[10];
+
+            vector<int> cntT;
+            vector<int> scheduledD;
+
+
+            double startUtil = ui->label_8->text().toDouble();
+
+
+            for (int k=0; k<10; k++) {
+                    for (int numTasks = int(ui->label_8->text().toDouble())+1; numTasks < int(10 * ui->label_8->text().toDouble()) - 2; numTasks += 2) {
+
+//                        cout << "Experimentul " << k << " numarul de procese " << numTasks << "\n";
+                        startUtil = ui->label_8->text().toDouble();
+                        int lastcnt = 0;
+                        int cnt = 0;
+                        int scheduled = 0;
+                        int rowZeros = 0;
+                        while (cnt < 100) {
+//                            cout << k << " " << numTasks << " " << startUtil << " " << cnt[k] << "\n";
+//                            cout << cnt << "\n";
+                            auto taskSets = DES::generateTaskSet(numTasks, startUtil);
+
+                            for (auto taskSet:taskSets) {
+                                double util = 0;
+                                for (auto y:taskSet) {
+                                    util += (y.first + 0.0) / (y.second + 0.0);
+                                }
+
+                                if (!abs(util - ui->label_8->text().toDouble()) < 0.001){
+                                    continue;
+                                }
+
+                                allGenerated[k].push_back(taskSet);
+
+                                string inputData = "";
+                                priority_queue<Event> *events = new priority_queue<Event>();
+
+                                for (auto task : taskSet) {
+                                    Process p(task.first, task.second);
+                                    inputData += to_string(p.getId()) + " " + to_string(task.first) + " " + to_string(task.second) + "\n";
+                                    p.setArrivalTime(0);
+
+                                    Event event = Event(ARRIVAL, 0, p);
+
+                                    events->push(event);
+                                }
+                                int hyperPeriod = std::lcm(taskSet[0].second, taskSet[1].second);
+                                for (int j=2; j<taskSet.size(); j++) {
+                                    hyperPeriod = std::lcm(hyperPeriod, taskSet[j].second);
+                                }
+                                cnt += 1;
+
+                                DES ddes(selectedAlgorithm);
+                                ddes.setRealTime(true);
+                                ddes.setEvents(events);
+                                ddes.setToStop(hyperPeriod);
+                                auto m = ddes.startSimulation(selectedNumberOfCores);
+                                if (m[m.size() - 1].getContextSwitches() == 0) {
+                                    scheduled += 1;
+                                }
+                            }
+                            startUtil += 0.1;
+                            if (cnt == lastcnt && lastcnt != 0) break;
+                            lastcnt = cnt;
+                            if (cnt == 0) rowZeros += 1;
+
+                            if (rowZeros > 2) break;
+                        }
+                        cout << selectedAlgorithm << ": s-au planificat " << scheduled << " dintr-un total de " << cnt << "\n";
+                        scheduledD.push_back(scheduled);
+                        cntT.push_back(cnt);
+                    }
+            }
+
+
+
+
+
+
+            ui->stackedWidget->setCurrentWidget(ui->running);
+            lastWidget = ui->InputData;
+
+            auto* layout = qobject_cast<QVBoxLayout*>(ui->running->layout());
+
+            double mean = 0;
+            double median = 0;
+            int len = 0;
+            for (int k=0; k<cntT.size(); k++) {
+                if (cntT[k] != 0) {
+                    mean += (scheduledD[k] + 0.0) / cntT[k] * 100;
+                    len += 1;
+                }
+            }
+
+            mean /= len;
+
+            for (int k=0; k<cntT.size(); k++) {
+                if (cntT[k] != 0) {
+                    median += ((scheduledD[k] + 0.0) / cntT[k] * 100 - mean) * ((scheduledD[k] + 0.0) / cntT[k] * 100 - mean);
+                }
+            }
+            median = std::sqrt(median / len);
+
+            if (!layout) {
+                layout = new QVBoxLayout(ui->running);
+                layout->setSpacing(0);
+                ui->running->setLayout(layout);
+            }
+
+            clearWidgets(layout);
+
+
+
+            auto *label = new QLabel(QString::fromStdString("Algoritmul " + selectedAlgorithm + " a planificat in medie " + to_string(mean) + "% din multimi, cu o deviatie standard de " +
+                                             to_string(median) + "%."));
+
+            QFont font;
+            font.setPointSize(16);
+            label->setFont(font);
+            layout->addWidget(label);
+
+            goBackButton(ui->running->layout(), ui->StartPage);
+
+
         });
 
 
@@ -389,6 +551,7 @@ void MainWindow::selectedAlgorithmButton(const string &algorithmName, QLayout *l
 }
 
 void MainWindow::goBackButton(QLayout *layout, QWidget *parent) {
+
     auto *goBackButton = new QPushButton("Go Back");
     goBackButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     goBackButton->setStyleSheet(QString::fromStdString(ButtonStyle::getButtonStyle()));
@@ -398,6 +561,7 @@ void MainWindow::goBackButton(QLayout *layout, QWidget *parent) {
     goBackButton->setFont(font);
 
     connect(goBackButton, &QPushButton::clicked, this, [this, parent, &layout]() {
+        sendInstructionToPipeAndWait("reset", "");
         ui->stackedWidget->setCurrentWidget(parent);
     });
 
@@ -536,6 +700,7 @@ void MainWindow::setupInputData(QWidget *parent, bool isMultiCore) {
 void MainWindow::generateDataButton(QLayout *layout, QWidget *parent, bool isMultiCore) {
 
     DES *des = new DES(selectedAlgorithm);
+//    des->resetAlgos();
     des->setRoundRobinQuant(quantum);
     des->setIsMultiCore(isMultiCore);
 
