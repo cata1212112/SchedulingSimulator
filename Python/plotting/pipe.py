@@ -242,7 +242,7 @@ def plotFairness(data):
     for x in data.split("\n")[0].split():
         tmp.append(float(x))
 
-    multicore.append(tmp)
+    multicore.append((algname, tmp))
 
     plt.figure()
 
@@ -250,7 +250,7 @@ def plotFairness(data):
     plt.xlabel('Numarul operatiei de load balancing')
     plt.ylabel('Diferenta maxima de virtual runtime')
     for x in multicore:
-        plt.plot(x, label=algname)
+        plt.plot(x[1], label=x[0])
 
     plt.legend()
     plt.savefig("fairness.png")
