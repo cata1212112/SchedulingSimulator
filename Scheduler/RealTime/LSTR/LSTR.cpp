@@ -63,7 +63,7 @@ vector<Event> LSTR::schedule(int time, Metrics &stats, bool timerExpired) {
 
         Process p2(p);
         p2.setRemainingBurst(1);
-        cores[i]->addEvent(Event(ARRIVAL, time, p2));
+//        cores[i]->addEvent(Event(ARRIVAL, time, p2));
         stats.addToGantt(to_string(time) + " " + "Core " + to_string(i) + " Task " + to_string( p2.getId()) + " 1\n");
 
 //        std::cout << time << " " << "Core " << i << " Task " << p2.getId() << " " << 1 << "\n";

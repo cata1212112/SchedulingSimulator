@@ -139,7 +139,10 @@ public:
 //        result.pop_back();
 //        result.pop_back();
         std::vector<double> utilizations;
-
+//        cout << result << "\n";
+        if (result == "" || result == "\n") {
+            return {};
+        }
         std::stringstream ss(result);
         std::string token;
         while (ss >> token) {

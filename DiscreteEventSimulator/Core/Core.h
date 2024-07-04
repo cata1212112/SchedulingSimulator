@@ -13,6 +13,7 @@
 #include <mutex>
 #include <barrier>
 #include <future>
+#include <functional>
 #include <condition_variable>
 
 class Core {
@@ -29,6 +30,14 @@ private:
     std::promise<Metrics> p;
     bool *osTimeUpdated;
     std::barrier<> *secondBarrier;
+
+    std::barrier<> *firstCoresBarrier;
+    std::barrier<> *secondCoresBarrier;
+    std::mutex *m;
+    int *cateSunt;
+    vector<int> *minimums;
+    priority_queue<Event> *DESevents;
+
     bool finished = false;
     std::barrier<> *barrier;
     int coreID;
@@ -38,16 +47,24 @@ private:
     int numberOfProcesses = 0;
     map<int, bool> seenIds;
     bool isRealTime = false;
+    int hyperPeriod;
+    int numCPUs;
 
 public:
+    int getHyperPeriod() const;
+
+    void setHyperPeriod(int hyperPeriod);
+
     int loadBalanceState;
 
     bool isSentFinish() const;
 
     void setSentFinish(bool sentFinish);
 
-    Core(int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
-         bool *osTimeUpdated, std::barrier<> *barrier, std::barrier<> *secondBarrier,int coreID, int roundRobinQuant = 10);
+    Core(int numCPUs, int *osTime, condition_variable *cv, mutex *cvMutex, string algorithm,
+         bool *osTimeUpdated, std::barrier<> *barrier, std::barrier<> *secondBarrier,int coreID,
+         std::barrier<> *firstCoresBarrier, std::barrier<> *secondCoresBarrier, mutex *m, int *cateSunt, vector<int> *minimums, priority_queue<Event> *DESevents,
+         int roundRobinQuant = 10);
 
     void setIsRealTime(bool isRealTime);
 

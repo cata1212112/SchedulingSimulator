@@ -159,7 +159,7 @@ vector<pair<vector<Process>, double>> FSS::progressBalancing(int numCores, vecto
             wmax = max(wmax, prio_to_weight[p.getPriority()]);
         }
     }
-    cout << (load_balanicng_period + 0.0) / wmin * 100 << "\n";
+//    cout << (load_balanicng_period + 0.0) / wmin * 100 << "\n";
 //    cout << wmin << "\n";
 //    cout << wmax << "\n";
     vector<int> toDelete;

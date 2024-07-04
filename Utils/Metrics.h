@@ -36,6 +36,14 @@ public:
         }
     }
 
+    const string &getAlgorithm() const {
+        return algorithm;
+    }
+
+    void setAlgorithm(const string &algorithm) {
+        Metrics::algorithm = algorithm;
+    }
+
     bool isPromtGantt() const {
         return promtGantt;
     }
